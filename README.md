@@ -49,29 +49,24 @@
 
 ### Quick Install (Recommended)
 
-One command to install dawos-cli system-wide. The installer checks Python, installs [pipx](https://pipx.pypa.io) if needed, and registers the `dawos` command globally.
-
 **macOS / Linux:**
 
 ```bash
-git clone https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
-cd dawos-cli
-./installer.sh
+curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
 ```
 
-**Windows (PowerShell — Run as Administrator):**
+**Windows (PowerShell as Administrator):**
 
 ```powershell
-git clone https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
-cd dawos-cli
-.\installer.ps1
+irm https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.ps1 | iex
 ```
 
-> After install, open a **new terminal** and run `dawos --version` to verify.
+> The installer checks Python, installs [pipx](https://pipx.pypa.io) if needed, and registers the `dawos` command globally.
+> Open a **new terminal** after installation, then run `dawos --version` to verify.
 
 ### Manual Install
 
-#### Option A — pipx (Isolated, Recommended)
+#### Option A — pipx (Isolated)
 
 ```bash
 # macOS
@@ -87,7 +82,7 @@ pip install --user pipx && python -m pipx ensurepath
 pipx install git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
 ```
 
-#### Option B — pip (Into Active Environment)
+#### Option B — pip
 
 ```bash
 pip install git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
@@ -117,26 +112,6 @@ make dev            # Create venv + install deps
 source .venv/bin/activate
 ```
 
-### Verify Installation
-
-```bash
-dawos --version
-# dawos-cli 0.1.0
-
-dawos --help
-```
-
-### Configuration Directory
-
-dawos-cli stores profiles in a platform-appropriate location:
-
-| Platform | Default Path |
-|----------|-------------|
-| **macOS / Linux** | `~/.config/dawos/config.json` |
-| **Windows** | `%APPDATA%\dawos\config.json` |
-
-Override with the `DAWOS_CONFIG_DIR` environment variable on any platform.
-
 ### Upgrade
 
 ```bash
@@ -164,24 +139,7 @@ pip uninstall dawos-cli
 
 ## Quick Start
 
-### 1. Install
-
-**macOS / Linux:**
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
-```
-
-**Windows (PowerShell as Administrator):**
-
-```powershell
-irm https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.ps1 | iex
-```
-
-> Requires Python 3.9+. The installer automatically installs [pipx](https://pipx.pypa.io) if needed.
-> Open a **new terminal** after installation to use `dawos`.
-
-### 2. Configure — Add Your First BNG Node
+### 1. Add Your First BNG Node
 
 ```bash
 dawos profile add production http://192.168.1.100:8470 YOUR_API_KEY
@@ -189,13 +147,13 @@ dawos profile add production http://192.168.1.100:8470 YOUR_API_KEY
 
 This creates a profile named `production` pointing to your dawos-agent instance. The first profile is automatically set as active.
 
-### 3. Verify Connection
+### 2. Verify Connection
 
 ```bash
 dawos status
 ```
 
-### 4. Start Managing
+### 3. Start Managing
 
 ```bash
 # System overview
