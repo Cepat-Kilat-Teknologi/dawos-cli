@@ -35,7 +35,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli"
-Documentation = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli#readme"
+Documentation = "https://Cepat-Kilat-Teknologi.github.io/dawos-cli"
 Repository = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli"
 Changelog = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli/blob/main/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli/issues"
@@ -51,6 +51,16 @@ dev = [
     "black>=24",
     "pylint>=3",
     "ruff",
+]
+shell = [
+    "prompt_toolkit>=3",
+]
+yaml = [
+    "pyyaml>=6",
+]
+all = [
+    "prompt_toolkit>=3",
+    "pyyaml>=6",
 ]
 
 [tool.setuptools.packages.find]
@@ -78,6 +88,7 @@ disable = [
     "C0116",  # missing-function-docstring (CLI commands have help= instead)
     "R0801",  # duplicate-code (CLI commands share patterns by design)
     "R0903",  # too-few-public-methods
+    "R0917",  # too-many-positional-arguments (Typer callback signatures)
     "W0613",  # unused-argument (typer callback signatures)
     "W0622",  # redefined-builtin (e.g. typer.Option `help`)
     "C0301",  # line-too-long (handled by black)
