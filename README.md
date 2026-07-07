@@ -142,13 +142,27 @@ pip uninstall dawos-cli
 ### 1. Add Your First BNG Node
 
 ```bash
-dawos profile add production http://192.168.1.100:8470 YOUR_API_KEY
+dawos profile add production --url http://192.168.1.100:8470 --key YOUR_API_KEY
 ```
 
-> **Where to get the API key?** The API key is the `DAWOS_API_KEY` value configured on your [dawos-agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) server (see [Configuration docs](https://github.com/Cepat-Kilat-Teknologi/dawos-agent/blob/main/docs/CONFIGURATION.md#authentication)). Generate one with:
+> **Where to get the API key?** The API key is the `DAWOS_API_KEY` value on your [dawos-agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) server. Run this on the server to check:
 > ```bash
-> python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+> sudo cat /etc/dawos-agent/agent.env | grep DAWOS_API_KEY
 > ```
+>
+> - **Key already set?** Copy the value and use it in the command above.
+> - **Key not set yet?** Generate one and configure the server (see [Authentication docs](https://github.com/Cepat-Kilat-Teknologi/dawos-agent/blob/main/docs/CONFIGURATION.md#authentication)):
+>   ```bash
+>   # 1. Generate a secure key
+>   python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+>
+>   # 2. Set it on the server
+>   sudo nano /etc/dawos-agent/agent.env    # add: DAWOS_API_KEY=<generated-key>
+>   sudo systemctl restart dawos-agent
+>
+>   # 3. Use the same key in dawos-cli
+>   dawos profile add production --url http://<server-ip>:8470 --key <generated-key>
+>   ```
 
 This creates a profile named `production` pointing to your dawos-agent instance. The first profile is automatically set as active.
 
@@ -202,8 +216,8 @@ Manage multiple BNG nodes from a single installation:
 
 ```bash
 # Add profiles
-dawos profile add bng1 http://10.0.0.1:8470 API_KEY_1
-dawos profile add bng2 http://10.0.0.2:8470 API_KEY_2
+dawos profile add bng1 --url http://10.0.0.1:8470 --key API_KEY_1
+dawos profile add bng2 --url http://10.0.0.2:8470 --key API_KEY_2
 
 # List all profiles
 dawos profile list
@@ -213,9 +227,6 @@ dawos profile use bng2
 
 # Test connectivity
 dawos profile test bng1
-
-# View profile details
-dawos profile show bng1
 
 # Remove a profile
 dawos profile remove bng2
@@ -269,7 +280,7 @@ DAWOS_PROFILE=bng1 dawos session list
 
 | Group | Description | Subcommands |
 |-------|-------------|-------------|
-| **profile** | Connection profile management | `add`, `list`, `use`, `remove`, `test`, `show` |
+| **profile** | Connection profile management | `add`, `list`, `use`, `remove`, `test` |
 | **system** | System information and health | `info`, `health`, `metrics` |
 | **service** | BNG service control | `status`, `start`, `stop`, `restart`, `cmd` |
 | **session** | PPPoE session management | `list`, `stats`, `find`, `terminate`, `restart`, `by-sid`, `by-ip`, `snapshot`, `drop-by-mac` |
@@ -281,7 +292,7 @@ DAWOS_PROFILE=bng1 dawos session list
 | **traffic** | Live traffic monitoring | `watch`, `watch-user`, `queue`, `ratelimit`, `ratelimit-restore` |
 | **routing** | Dynamic routing protocols | `bgp`, `bgp-routes`, `ospf`, `ospf-neighbors`, `ospf-routes`, `rip`, `rip-routes`, `bfd`, `bfd-peers` |
 | **pool** | IP address pool management | `list`, `usage`, `add`, `remove` |
-| **conntrack** | Connection tracking | `config`, `table-size`, `table-size-set`, `timeouts`, `timeout-set`, `helpers`, `profiles`, `profile-apply` |
+| **conntrack** | Connection tracking | `config`, `table-size`, `timeouts`, `timeout-set`, `helpers`, `profiles`, `profile-apply` |
 | **events** | Event hooks and webhooks | `hooks`, `hook-add`, `hook-del`, `fire`, `history`, `history-clear` |
 | **scheduler** | Scheduled job management | `list`, `add`, `remove`, `run` |
 | **dns** | DNS forwarding | `status`, `config`, `config-set`, `flush` |
