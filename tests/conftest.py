@@ -20,6 +20,7 @@ def _reset_state():
     s.base_url = "http://test-agent:8470"
     s.api_key = "test-api-key"
     s.json_output = False
+    s.output_format = "table"
     s.verbose = False
     s.timeout = 5.0
     yield
