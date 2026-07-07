@@ -78,7 +78,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Shell completion** — Auto-completion for Bash, Zsh, Fish, and PowerShell
 - **File-based config input** — `@filename` syntax for config update and apply commands
 - **Environment variable support** — `DAWOS_PROFILE` and `DAWOS_CONFIG_DIR` overrides
-- **Comprehensive test suite** — 129 tests with 93% code coverage
+- **Comprehensive test suite** — 425 tests with 93% code coverage
 - **Code quality** — Black formatting, Pylint 10.0/10, Ruff clean, pre-commit hooks
 - **Project documentation** — README, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, LICENSE, CHANGELOG
 

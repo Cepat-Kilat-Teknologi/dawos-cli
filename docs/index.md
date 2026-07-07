@@ -65,3 +65,11 @@ dawos top
 
 - Python 3.9+
 - A running [dawos-agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) instance
+
+## Install
+
+```bash
+pip install dawos-cli
+```
+
+See [Installation](getting-started/installation.md) for more options (pipx, Homebrew, installer script).

@@ -1,36 +1,35 @@
 # Installation
 
-## Recommended: pipx (isolated install)
+## Recommended: pip or pipx
 
-=== "Linux / macOS"
+=== "pip (Quick)"
 
     ```bash
-    # One-line installer
-    curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
+    pip install dawos-cli
     ```
 
-    Or manually:
-    ```bash
-    pipx install git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
-    ```
-
-=== "Windows"
-
-    ```powershell
-    irm https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.ps1 | iex
-    ```
-
-    Or manually:
-    ```powershell
-    pipx install git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
-    ```
-
-=== "PyPI"
+=== "pipx (Isolated)"
 
     ```bash
     pipx install dawos-cli
-    # or
-    pip install dawos-cli
+    ```
+
+=== "Homebrew"
+
+    ```bash
+    brew install Cepat-Kilat-Teknologi/tap/dawos-cli
+    ```
+
+=== "One-line Installer"
+
+    **Linux / macOS:**
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
+    ```
+
+    **Windows (PowerShell):**
+    ```powershell
+    irm https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.ps1 | iex
     ```
 
 ## Requirements
@@ -80,11 +79,19 @@ dawos --version
 ## Updating
 
 ```bash
+# Built-in (recommended)
 dawos update
+
+# Or manually
+pip install --upgrade dawos-cli
 ```
 
 ## Uninstalling
 
 ```bash
+# pip
+pip uninstall dawos-cli
+
+# pipx
 pipx uninstall dawos-cli
 ```

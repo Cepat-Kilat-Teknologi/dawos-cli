@@ -1,6 +1,7 @@
 <p align="center">
   <strong>dawos-cli</strong><br>
   <em>Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line.</em><br>
+  <a href="https://pypi.org/project/dawos-cli/">PyPI</a> |
   <a href="https://cepat-kilat-teknologi.github.io/dawos-cli/">Documentation</a> |
   <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases">Releases</a>
 </p>
@@ -58,7 +59,23 @@
 
 ### Quick Install (Recommended)
 
-**macOS / Linux:**
+```bash
+pip install dawos-cli
+```
+
+Or with [pipx](https://pipx.pypa.io) (isolated environment):
+
+```bash
+pipx install dawos-cli
+```
+
+**Homebrew (macOS / Linux):**
+
+```bash
+brew install Cepat-Kilat-Teknologi/tap/dawos-cli
+```
+
+**One-line installer (macOS / Linux):**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
@@ -88,13 +105,13 @@ sudo apt install pipx && pipx ensurepath
 pip install --user pipx && python -m pipx ensurepath
 
 # Then install dawos-cli
-pipx install git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
+pipx install dawos-cli
 ```
 
 #### Option B — pip
 
 ```bash
-pip install git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
+pip install dawos-cli
 ```
 
 #### Option C — From Source (Development)
@@ -124,14 +141,14 @@ source .venv/bin/activate
 ### Upgrade
 
 ```bash
+# Built-in (recommended)
+dawos update
+
 # pipx
 pipx upgrade dawos-cli
 
 # pip
 pip install --upgrade dawos-cli
-
-# From source
-cd dawos-cli && git pull && pip install -e .
 ```
 
 ### Uninstall
@@ -573,7 +590,7 @@ dawos-cli/
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
 │       └── zone.py          # Zone-based firewall
-├── tests/                   # 129 tests, 93% coverage
+├── tests/                   # 425 tests, 93% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -698,7 +715,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **129 tests** with **93% coverage** across all source files:
+The project maintains **425 tests** with **93% coverage** across all source files:
 
 ```bash
 # Quick test run

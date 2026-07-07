@@ -71,7 +71,7 @@ bash: dawos: command not found
 export PATH="$HOME/.local/bin:$PATH"
 
 # Or reinstall
-pipx install --force git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
+pip install dawos-cli
 ```
 
 ### Update Check Slow

@@ -2,7 +2,13 @@
 
 Get connected to your BNG node in under 2 minutes.
 
-## 1. Get Your API Key
+## 1. Install
+
+```bash
+pip install dawos-cli
+```
+
+## 2. Get Your API Key
 
 The API key is the `DAWOS_API_KEY` value on your dawos-agent server:
 
@@ -21,7 +27,7 @@ sudo cat /etc/dawos-agent/agent.env | grep DAWOS_API_KEY
     ```
     Restart the agent: `sudo systemctl restart dawos-agent`
 
-## 2. Add Your BNG Node
+## 3. Add Your BNG Node
 
 ```bash
 dawos profile add prod --url http://YOUR_SERVER_IP:8470 --key YOUR_API_KEY
@@ -35,13 +41,13 @@ The CLI will verify connectivity automatically:
 ✓ Profile prod saved.
 ```
 
-## 3. Check Connection
+## 4. Check Connection
 
 ```bash
 dawos status
 ```
 
-## 4. Explore
+## 5. Explore
 
 ```bash
 # List active PPPoE sessions
