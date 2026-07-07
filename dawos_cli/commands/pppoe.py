@@ -25,7 +25,7 @@ def add(
     name: str = typer.Argument(..., help="Interface name to add as PPPoE listener"),
 ) -> None:
     """Add a PPPoE listener interface."""
-    client.post("/api/v1/pppoe/interfaces", json={"name": name})
+    client.post("/api/v1/pppoe/interfaces", json={"interface": name})
     output.success(f"PPPoE listener added on {name}")
 
 
