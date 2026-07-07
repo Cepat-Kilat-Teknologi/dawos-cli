@@ -118,7 +118,7 @@ def dns_set(
 ) -> None:
     """Update DNS resolver servers."""
     server_list = [s.strip() for s in servers.split(",")]
-    client.put("/api/v1/network/dns", json={"servers": server_list})
+    client.put("/api/v1/network/dns", json={"nameservers": server_list})
     output.success(f"DNS servers updated: {', '.join(server_list)}")
 
 
