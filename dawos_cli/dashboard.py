@@ -47,7 +47,7 @@ def _build_stat_panel(stats: Dict[str, Any]) -> Panel:
                 val = _fmt_bytes(int(val))
             t.add_row(label, str(val))
 
-    return Panel(t, title="[bold]📊 Session Stats[/]", border_style="cyan", expand=True)
+    return Panel(t, title="[bold]Session Stats[/]", border_style="cyan", expand=True)
 
 
 def _build_resource_panel(resources: Dict[str, Any]) -> Panel:
@@ -92,7 +92,7 @@ def _build_resource_panel(resources: Dict[str, Any]) -> Panel:
         else:
             t.add_row("Load", str(load))
 
-    return Panel(t, title="[bold]🖥  Resources[/]", border_style="yellow", expand=True)
+    return Panel(t, title="[bold]Resources[/]", border_style="yellow", expand=True)
 
 
 def _build_sessions_table(sessions: List[Dict[str, Any]]) -> Panel:
@@ -124,9 +124,7 @@ def _build_sessions_table(sessions: List[Dict[str, Any]]) -> Panel:
     if not sessions:
         t.add_row("—", "No active sessions", "—", "—", "—", "—", "—", "—", "—")
 
-    return Panel(
-        t, title="[bold]👥 Active Sessions[/]", border_style="green", expand=True
-    )
+    return Panel(t, title="[bold]Active Sessions[/]", border_style="green", expand=True)
 
 
 def _build_header(profile: str, url: str) -> Text:
