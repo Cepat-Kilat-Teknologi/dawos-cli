@@ -80,6 +80,8 @@ nav:
       - Firewall & NAT: commands/firewall.md
       - Traffic & Monitoring: commands/traffic.md
       - All Commands: commands/reference.md
+  - Testing:
+      - CLI Test Report: testing/test-report.md
   - Guides:
       - Multi-Node Management: guides/multi-node.md
       - Scripting & Automation: guides/scripting.md
