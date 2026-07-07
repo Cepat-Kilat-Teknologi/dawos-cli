@@ -49,7 +49,7 @@ def egress_set(
     """Set per-customer NAT egress IP."""
     client.post(
         "/api/v1/firewall/nat/egress",
-        json={"customer_ip": customer_ip, "public_ip": public_ip},
+        json={"target": customer_ip, "public_ip": public_ip},
     )
     output.success(f"Egress: {customer_ip} → {public_ip}")
 
