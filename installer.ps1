@@ -104,7 +104,7 @@ try {
 Write-Host ""
 Write-Host "Quick start:" -ForegroundColor White
 Write-Host "  1. Add your BNG node:"
-Write-Host "     dawos profile add prod http://192.168.1.1:8470 YOUR_API_KEY"
+Write-Host "     dawos profile add prod --url http://192.168.1.1:8470 --key YOUR_API_KEY"
 Write-Host ""
 Write-Host "  2. Check connection:"
 Write-Host "     dawos status"
