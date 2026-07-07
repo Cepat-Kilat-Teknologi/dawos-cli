@@ -27,7 +27,7 @@ fail()  { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 # ── Header ───────────────────────────────────────────────────────────
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
-echo -e "${BOLD}║       dawos-cli installer v0.1.0      ║${NC}"
+echo -e "${BOLD}║         dawos-cli installer           ║${NC}"
 echo -e "${BOLD}╚══════════════════════════════════════╝${NC}"
 echo ""
 
@@ -84,9 +84,14 @@ fi
 info "Installing ${APP}..."
 
 # Detect source: local directory or remote git
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}" 2>/dev/null || echo ".")" && pwd)"
+# When piped via curl | bash, BASH_SOURCE is unset — install from GitHub.
+if [ -n "${BASH_SOURCE[0]+x}" ]; then
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+else
+    SCRIPT_DIR=""
+fi
 
-if [ -f "${SCRIPT_DIR}/pyproject.toml" ]; then
+if [ -n "$SCRIPT_DIR" ] && [ -f "${SCRIPT_DIR}/pyproject.toml" ]; then
     # Running from cloned repo
     info "Installing from local source: ${SCRIPT_DIR}"
     pipx install --force "${SCRIPT_DIR}"
