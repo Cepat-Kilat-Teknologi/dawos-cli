@@ -166,29 +166,30 @@ pip uninstall dawos-cli
 
 ### 1. Install
 
-**macOS / Linux (one-liner):**
+**macOS / Linux:**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
 ```
 
-**Windows (PowerShell one-liner):**
+**Windows (PowerShell as Administrator):**
 
 ```powershell
 irm https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.ps1 | iex
 ```
 
 > Requires Python 3.9+. The installer automatically installs [pipx](https://pipx.pypa.io) if needed.
+> Open a **new terminal** after installation to use `dawos`.
 
-### 2. Add a Connection Profile
+### 2. Configure — Add Your First BNG Node
 
 ```bash
 dawos profile add production http://192.168.1.100:8470 YOUR_API_KEY
 ```
 
-The first profile added is automatically set as the active profile.
+This creates a profile named `production` pointing to your dawos-agent instance. The first profile is automatically set as active.
 
-### 3. Test the Connection
+### 3. Verify Connection
 
 ```bash
 dawos status
@@ -197,7 +198,7 @@ dawos status
 ### 4. Start Managing
 
 ```bash
-# View system information
+# System overview
 dawos system info
 
 # List active PPPoE sessions
@@ -214,32 +215,40 @@ dawos traffic watch
 
 ## Configuration
 
-### Profile Storage
+### Config File Location
 
-Profiles are stored in `~/.config/dawos/config.json` (XDG-compliant on Linux/macOS).
+| Platform | Path |
+|----------|------|
+| **macOS / Linux** | `~/.config/dawos/config.json` |
+| **Linux (XDG)** | `$XDG_CONFIG_HOME/dawos/config.json` |
+| **Windows** | `%APPDATA%\dawos\config.json` |
 
-Override the configuration directory:
+Override on any platform:
 
 ```bash
+# Linux / macOS
 export DAWOS_CONFIG_DIR=/etc/dawos
+
+# Windows PowerShell
+$env:DAWOS_CONFIG_DIR = "C:\dawos"
 ```
 
 ### Profile Management
 
-```bash
-# Add a profile with automatic health check
-dawos profile add bng1 --url http://10.0.0.1:8470 --key SECRET_KEY
+Manage multiple BNG nodes from a single installation:
 
-# Add without health check
-dawos profile add bng2 --url http://10.0.0.2:8470 --key SECRET_KEY --no-check
+```bash
+# Add profiles
+dawos profile add bng1 http://10.0.0.1:8470 API_KEY_1
+dawos profile add bng2 http://10.0.0.2:8470 API_KEY_2
 
 # List all profiles
 dawos profile list
 
-# Switch the active profile
+# Switch active profile
 dawos profile use bng2
 
-# Test connectivity for a specific profile
+# Test connectivity
 dawos profile test bng1
 
 # View profile details
@@ -252,10 +261,10 @@ dawos profile remove bng2
 ### Per-Command Profile Override
 
 ```bash
-# Override the active profile for a single command
+# Override with --profile flag
 dawos --profile bng1 session list
 
-# Or use an environment variable
+# Override with environment variable
 DAWOS_PROFILE=bng1 dawos session list
 ```
 
@@ -264,7 +273,7 @@ DAWOS_PROFILE=bng1 dawos session list
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `DAWOS_PROFILE` | Override the active profile | Active profile from config |
-| `DAWOS_CONFIG_DIR` | Override configuration directory | `~/.config/dawos` |
+| `DAWOS_CONFIG_DIR` | Override configuration directory | Platform default (see above) |
 
 ---
 
