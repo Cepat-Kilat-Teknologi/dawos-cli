@@ -15,8 +15,22 @@ from rich.panel import Panel
 from . import __version__, config, state
 
 # ---------------------------------------------------------------------------
+# ASCII art logo
+# ---------------------------------------------------------------------------
+
+_LOGO = r"""
+     _
+  __| | __ ___      _____  ___
+ / _` |/ _` \ \ /\ / / _ \/ __|
+| (_| | (_| |\ V  V / (_) \__ \
+ \__,_|\__,_| \_/\_/ \___/|___/
+"""
+
+# ---------------------------------------------------------------------------
 # Root app
 # ---------------------------------------------------------------------------
+
+_VALID_FORMATS = ("table", "json", "csv", "yaml")
 
 app = typer.Typer(
     name="dawos",
@@ -40,7 +54,10 @@ console = Console(stderr=True)
 
 def _version_callback(value: bool) -> None:
     if value:
-        Console().print(f"dawos-cli [bold cyan]{__version__}[/]")
+        out = Console()
+        out.print(f"[cyan]{_LOGO.rstrip()}[/]")
+        out.print(f"  [bold cyan]dawos-cli[/] {__version__}")
+        out.print("  [dim]Remote CLI for dawos-agent BNG management[/]\n")
         raise typer.Exit()
 
 
@@ -64,6 +81,12 @@ def main_callback(
         "-j",
         help="Output raw JSON (for scripting / piping).",
     ),
+    output_format: Optional[str] = typer.Option(
+        None,
+        "--format",
+        "-F",
+        help="Output format: table, json, csv, yaml.",
+    ),
     verbose: bool = typer.Option(
         False,
         "--verbose",
@@ -86,6 +109,14 @@ def main_callback(
     ),
 ) -> None:
     """Populate shared state from the selected profile."""
+    # Validate --format
+    if output_format and output_format not in _VALID_FORMATS:
+        console.print(
+            f"[red]Invalid format:[/] '{output_format}'. "
+            f"Choose from: {', '.join(_VALID_FORMATS)}"
+        )
+        raise typer.Exit(1)
+
     # Resolve profile name
     name = profile or config.get_active_name()
     prof = config.get_profile(name) if name else None
@@ -94,6 +125,12 @@ def main_callback(
     s.json_output = json_output
     s.verbose = verbose
     s.timeout = timeout
+
+    # --json is a shortcut for --format json
+    if json_output:
+        s.output_format = "json"
+    elif output_format:
+        s.output_format = output_format
 
     if prof:
         s.profile_name = name or ""
@@ -179,6 +216,19 @@ app.add_typer(zone.app, name="zone", help="Zone-based firewall.")
 app.add_typer(diagnostics.app, name="diagnostics", help="System diagnostics.")
 app.add_typer(logs.app, name="logs", help="Log viewing and streaming.")
 
+# ---------------------------------------------------------------------------
+# Short aliases (hidden duplicates for power users)
+# ---------------------------------------------------------------------------
+
+app.add_typer(sessions.app, name="s", hidden=True)
+app.add_typer(system.app, name="sys", hidden=True)
+app.add_typer(config_cmd.app, name="cfg", hidden=True)
+app.add_typer(network.app, name="net", hidden=True)
+app.add_typer(firewall.app, name="fw", hidden=True)
+app.add_typer(routing.app, name="rt", hidden=True)
+app.add_typer(monitoring.app, name="mon", hidden=True)
+app.add_typer(diagnostics.app, name="diag", hidden=True)
+
 from . import dashboard  # noqa: E402  # pylint: disable=wrong-import-position
 
 # ---------------------------------------------------------------------------
@@ -199,7 +249,9 @@ def top_cmd(
 @app.command("version")
 def version_cmd() -> None:
     """Show version information."""
-    Console().print(
+    out = Console()
+    out.print(f"[cyan]{_LOGO.rstrip()}[/]")
+    out.print(
         Panel(
             f"[bold cyan]dawos-cli[/] {__version__}\n"
             f"[dim]Remote CLI for dawos-agent BNG management[/]",
@@ -282,6 +334,22 @@ def _run_update(*, force: bool = False) -> None:
             "  [dim]pipx install --force "
             "git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git[/]"
         )
+
+
+@app.command("doctor")
+def doctor_cmd() -> None:
+    """Run system diagnostics — check environment, connectivity, and config."""
+    from . import doctor  # pylint: disable=import-outside-toplevel
+
+    doctor.run_doctor()
+
+
+@app.command("shell")
+def shell_cmd() -> None:
+    """Launch interactive REPL shell with auto-complete."""
+    from . import shell  # pylint: disable=import-outside-toplevel
+
+    shell.run_shell()
 
 
 # ---------------------------------------------------------------------------
