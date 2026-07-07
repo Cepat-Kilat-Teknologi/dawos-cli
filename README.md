@@ -166,21 +166,19 @@ pip uninstall dawos-cli
 
 ### 1. Install
 
-**macOS / Linux:**
+**macOS / Linux (one-liner):**
 
 ```bash
-git clone https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
-cd dawos-cli
-./installer.sh
+curl -fsSL https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.sh | bash
 ```
 
-**Windows (PowerShell):**
+**Windows (PowerShell one-liner):**
 
 ```powershell
-git clone https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
-cd dawos-cli
-.\installer.ps1
+irm https://raw.githubusercontent.com/Cepat-Kilat-Teknologi/dawos-cli/main/installer.ps1 | iex
 ```
+
+> Requires Python 3.9+. The installer automatically installs [pipx](https://pipx.pypa.io) if needed.
 
 ### 2. Add a Connection Profile
 
