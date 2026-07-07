@@ -70,6 +70,17 @@ pylint dawos_cli/
 ruff check dawos_cli/ tests/
 ```
 
+### Pre-commit Hooks
+
+Install pre-commit hooks to automatically check code on commit:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+This runs Black, Ruff, and Pylint checks before each commit.
+
 ---
 
 ## Code Style
@@ -164,7 +175,7 @@ pytest tests/test_commands.py::TestSessionCommands::test_terminate
 
 ### Coverage
 
-The project maintains a **minimum 90% code coverage** requirement (currently at 99%):
+The project maintains a **minimum 90% code coverage** requirement (currently at 93%):
 
 ```bash
 # Run with coverage
