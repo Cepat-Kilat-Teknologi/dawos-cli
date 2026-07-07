@@ -109,7 +109,7 @@ def main_callback(
         if latest:
             console.print(
                 f"[yellow]Update available:[/] {__version__} → [bold]{latest}[/] "
-                f"— run [bold cyan]dawos self-update[/] to upgrade"
+                f"— run [bold cyan]dawos update[/] to upgrade"
             )
     except Exception:  # pylint: disable=broad-exception-caught
         pass  # Never let update check break the CLI
@@ -232,9 +232,24 @@ def help_cmd(ctx: typer.Context = typer.Context) -> None:
     raise typer.Exit()
 
 
-@app.command("self-update")
+@app.command("update")
+def update_cmd(
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Skip confirmation prompt."
+    ),
+) -> None:
+    """Check for updates and upgrade dawos-cli."""
+    _run_update(force=force)
+
+
+@app.command("self-update", hidden=True)
 def self_update_cmd() -> None:
-    """Update dawos-cli to the latest version."""
+    """Update dawos-cli to the latest version (alias for update)."""
+    _run_update(force=False)
+
+
+def _run_update(*, force: bool = False) -> None:
+    """Shared update logic for update and self-update commands."""
     from . import updater  # pylint: disable=import-outside-toplevel
 
     out = Console()
@@ -247,12 +262,20 @@ def self_update_cmd() -> None:
         raise typer.Exit(1)
 
     if updater.parse_version(latest) <= updater.parse_version(__version__):
-        out.print(f"[green]Already up-to-date ({__version__}).[/]")
+        out.print(f"[green]✓ Already up-to-date ({__version__}).[/]")
         raise typer.Exit()
 
-    out.print(f"[yellow]Updating to {latest}...[/]")
+    out.print(f"[yellow]New version available:[/] {__version__} → [bold]{latest}[/]")
+
+    if not force:
+        confirm = typer.confirm("Do you want to update?")
+        if not confirm:
+            out.print("[dim]Update skipped.[/]")
+            raise typer.Exit()
+
+    out.print("[cyan]Updating...[/]")
     if updater.run_self_update():
-        out.print(f"[bold green]Updated to {latest}![/] Restart your terminal.")
+        out.print(f"[bold green]✓ Updated to {latest}![/] Restart your terminal.")
     else:
         out.print(
             "[red]Update failed.[/] Try manually:\n"
