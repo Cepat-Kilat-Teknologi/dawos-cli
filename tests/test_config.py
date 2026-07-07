@@ -91,3 +91,81 @@ class TestConfig:
         config.add_profile("bng2", "http://10.0.0.2:8470", "key2")
         # First profile should remain active
         assert config.get_active_name() == "bng1"
+
+
+class TestExportProfiles:
+    def test_export_all(self, tmp_config):
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        config.add_profile("bng2", "http://10.0.0.2:8470", "key2")
+        result = config.export_profiles()
+        assert result["dawos_cli_export"] is True
+        assert result["version"] == 1
+        assert len(result["profiles"]) == 2
+
+    def test_export_single(self, tmp_config):
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        config.add_profile("bng2", "http://10.0.0.2:8470", "key2")
+        result = config.export_profiles("bng1")
+        assert len(result["profiles"]) == 1
+        assert "bng1" in result["profiles"]
+
+    def test_export_nonexistent(self, tmp_config):
+        result = config.export_profiles("nope")
+        assert result == {}
+
+    def test_export_empty(self, tmp_config):
+        result = config.export_profiles()
+        assert result["profiles"] == {}
+
+
+class TestImportProfiles:
+    def test_import_merge(self, tmp_config):
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        payload = {
+            "dawos_cli_export": True,
+            "version": 1,
+            "active_profile": "bng2",
+            "profiles": {
+                "bng2": {"url": "http://10.0.0.2:8470", "api_key": "key2"},
+            },
+        }
+        count = config.import_profiles(payload, merge=True)
+        assert count == 1
+        assert config.get_profile("bng1") is not None  # preserved
+        assert config.get_profile("bng2") is not None  # imported
+
+    def test_import_replace(self, tmp_config):
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        payload = {
+            "profiles": {
+                "bng2": {"url": "http://10.0.0.2:8470", "api_key": "key2"},
+            },
+        }
+        count = config.import_profiles(payload, merge=False)
+        assert count == 1
+        assert config.get_profile("bng1") is None  # replaced
+        assert config.get_profile("bng2") is not None
+
+    def test_import_empty(self, tmp_config):
+        count = config.import_profiles({"profiles": {}})
+        assert count == 0
+
+    def test_import_sets_active_profile(self, tmp_config):
+        payload = {
+            "active_profile": "bng1",
+            "profiles": {
+                "bng1": {"url": "http://10.0.0.1:8470", "api_key": "key1"},
+            },
+        }
+        config.import_profiles(payload)
+        assert config.get_active_name() == "bng1"
+
+    def test_import_fallback_active(self, tmp_config):
+        """When no active_profile in payload, pick the first imported."""
+        payload = {
+            "profiles": {
+                "bng1": {"url": "http://10.0.0.1:8470", "api_key": "key1"},
+            },
+        }
+        config.import_profiles(payload)
+        assert config.get_active_name() == "bng1"
