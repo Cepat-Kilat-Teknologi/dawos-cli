@@ -117,7 +117,7 @@ fi
 echo ""
 echo -e "${BOLD}Quick start:${NC}"
 echo "  1. Add your BNG node:"
-echo "     dawos profile add prod http://192.168.1.1:8470 YOUR_API_KEY"
+echo "     dawos profile add prod --url http://192.168.1.1:8470 --key YOUR_API_KEY"
 echo ""
 echo "  2. Check connection:"
 echo "     dawos status"
