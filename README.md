@@ -14,10 +14,17 @@
 - **26 command groups** covering sessions, firewall, NAT, routing, traffic, pools, DHCP, DNS, VRRP, and more
 - **Multi-profile support** for managing multiple BNG nodes from a single installation
 - **Live dashboard** (`dawos top`) with real-time session statistics and system metrics
+- **Interactive shell** (`dawos shell`) with tab completion and command history
+- **Multiple output formats** — `--format table|json|csv|yaml` for any workflow
+- **Self-diagnostics** (`dawos doctor`) — environment, connectivity, and config checks
 - **SSE streaming** for live traffic monitoring and log tailing
 - **Rich terminal output** with tables, panels, and color — or `--json` for scripting
+- **Command aliases** — `s`, `sys`, `cfg`, `net`, `fw`, `rt`, `mon`, `diag` for power users
+- **Self-updating** — built-in update notifications and `dawos update`
 - **Shell completion** for Bash, Zsh, Fish, and PowerShell
 - **Guarded configuration** with automatic rollback on failure
+- **Config export/import** — back up and share profiles across machines
+- **Opt-in telemetry** — anonymous usage statistics (disabled by default)
 
 ---
 
@@ -257,6 +264,7 @@ DAWOS_PROFILE=bng1 dawos session list
 |--------|-------|-------------|
 | `--profile NAME` | `-p` | Use a specific profile (overrides active) |
 | `--json` | `-j` | Output raw JSON (for scripting and piping) |
+| `--format FMT` | `-F` | Output format: `table`, `json`, `csv`, `yaml` |
 | `--verbose` | `-v` | Show request URLs and timing |
 | `--timeout SECS` | `-t` | Request timeout in seconds (default: 30) |
 | `--version` | `-V` | Show version and exit |
@@ -275,37 +283,40 @@ DAWOS_PROFILE=bng1 dawos session list
 | `dawos status` | Quick connection and service health check |
 | `dawos top` | Launch the live full-screen monitoring dashboard |
 | `dawos version` | Show version information |
+| `dawos update` | Check for updates and upgrade |
+| `dawos doctor` | Run system diagnostics (environment, connectivity, config) |
+| `dawos shell` | Launch interactive REPL with tab completion |
 
 ### Command Groups
 
-| Group | Description | Subcommands |
-|-------|-------------|-------------|
-| **profile** | Connection profile management | `add`, `list`, `use`, `remove`, `test` |
-| **system** | System information and health | `info`, `health`, `metrics` |
-| **service** | BNG service control | `status`, `start`, `stop`, `restart`, `cmd` |
-| **session** | PPPoE session management | `list`, `stats`, `find`, `terminate`, `restart`, `by-sid`, `by-ip`, `snapshot`, `drop-by-mac` |
-| **config** | BNG configuration | `show`, `update`, `backups`, `revisions`, `diff`, `rollback`, `apply`, `confirm`, `apply-status` |
-| **network** | Network interfaces and routing | `interfaces`, `interface`, `interface-config`, `routes`, `add-route`, `del-route`, `dns`, `dns-set`, `vlans`, `vlan-add`, `vlan-del`, `vlan-state` |
-| **firewall** | Firewall, sysctl, and conntrack | `status`, `rules`, `save`, `validate`, `sysctl`, `sysctl-set`, `conntrack`, `conntrack-set`, `snmp`, `groups`, `group-add`, `group-del`, `group-members` |
-| **nat** | NAT and masquerade management | `status`, `masquerade-on`, `masquerade-off`, `egress`, `egress-set`, `egress-del`, `public-ip-add`, `public-ip-del`, `box-egress`, `box-egress-set` |
-| **pppoe** | PPPoE interface management | `interfaces`, `add`, `remove`, `mac-filter`, `mac-add`, `mac-del`, `pado`, `pado-set` |
-| **traffic** | Live traffic monitoring | `watch`, `watch-user`, `queue`, `ratelimit`, `ratelimit-restore` |
-| **routing** | Dynamic routing protocols | `bgp`, `bgp-routes`, `ospf`, `ospf-neighbors`, `ospf-routes`, `rip`, `rip-routes`, `bfd`, `bfd-peers` |
-| **pool** | IP address pool management | `list`, `usage`, `add`, `remove` |
-| **conntrack** | Connection tracking | `config`, `table-size`, `timeouts`, `timeout-set`, `helpers`, `profiles`, `profile-apply` |
-| **events** | Event hooks and webhooks | `hooks`, `hook-add`, `hook-del`, `fire`, `history`, `history-clear` |
-| **scheduler** | Scheduled job management | `list`, `add`, `remove`, `run` |
-| **dns** | DNS forwarding | `status`, `config`, `config-set`, `flush` |
-| **dhcp** | DHCP server and relay | `status`, `leases`, `relay`, `restart`, `relay-restart` |
-| **ntp** | NTP time synchronization | `status`, `sources` |
-| **lldp** | LLDP link-layer discovery | `status`, `neighbors`, `neighbor` |
-| **vrrp** | VRRP high-availability | `status`, `group`, `failover`, `restart` |
-| **flow** | Flow accounting (NetFlow/sFlow) | `status`, `collectors`, `stats`, `restart` |
-| **monitoring** | Monitoring and metrics | `status`, `metrics`, `metrics-service`, `configure`, `restart` |
-| **limits** | Connection limits | `show`, `set`, `interface` |
-| **zone** | Zone-based firewall | `list`, `show`, `add`, `remove` |
-| **diagnostics** | System diagnostics | `doctor` |
-| **logs** | Log viewing and streaming | `tail`, `stream` |
+| Group | Alias | Description | Subcommands |
+|-------|-------|-------------|-------------|
+| **profile** | — | Connection profile management | `add`, `list`, `use`, `remove`, `test`, `show`, `export`, `import` |
+| **system** | `sys` | System information and health | `info`, `health`, `metrics` |
+| **service** | — | BNG service control | `status`, `start`, `stop`, `restart`, `cmd` |
+| **session** | `s` | PPPoE session management | `list`, `stats`, `find`, `terminate`, `restart`, `by-sid`, `by-ip`, `snapshot`, `drop-by-mac` |
+| **config** | `cfg` | BNG configuration | `show`, `update`, `backups`, `revisions`, `diff`, `rollback`, `apply`, `confirm`, `apply-status` |
+| **network** | `net` | Network interfaces and routing | `interfaces`, `interface`, `interface-config`, `routes`, `add-route`, `del-route`, `dns`, `dns-set`, `vlans`, `vlan-add`, `vlan-del`, `vlan-state` |
+| **firewall** | `fw` | Firewall, sysctl, and conntrack | `status`, `rules`, `save`, `validate`, `sysctl`, `sysctl-set`, `conntrack`, `conntrack-set`, `snmp`, `groups`, `group-add`, `group-del`, `group-members` |
+| **nat** | — | NAT and masquerade management | `status`, `masquerade-on`, `masquerade-off`, `egress`, `egress-set`, `egress-del`, `public-ip-add`, `public-ip-del`, `box-egress`, `box-egress-set` |
+| **pppoe** | — | PPPoE interface management | `interfaces`, `add`, `remove`, `mac-filter`, `mac-add`, `mac-del`, `pado`, `pado-set` |
+| **traffic** | — | Live traffic monitoring | `watch`, `watch-user`, `queue`, `ratelimit`, `ratelimit-restore` |
+| **routing** | `rt` | Dynamic routing protocols | `bgp`, `bgp-routes`, `ospf`, `ospf-neighbors`, `ospf-routes`, `rip`, `rip-routes`, `bfd`, `bfd-peers` |
+| **pool** | — | IP address pool management | `list`, `usage`, `add`, `remove` |
+| **conntrack** | — | Connection tracking | `config`, `table-size`, `timeouts`, `timeout-set`, `helpers`, `profiles`, `profile-apply` |
+| **events** | — | Event hooks and webhooks | `hooks`, `hook-add`, `hook-del`, `fire`, `history`, `history-clear` |
+| **scheduler** | — | Scheduled job management | `list`, `add`, `remove`, `run` |
+| **dns** | — | DNS forwarding | `status`, `config`, `config-set`, `flush` |
+| **dhcp** | — | DHCP server and relay | `status`, `leases`, `relay`, `restart`, `relay-restart` |
+| **ntp** | — | NTP time synchronization | `status`, `sources` |
+| **lldp** | — | LLDP link-layer discovery | `status`, `neighbors`, `neighbor` |
+| **vrrp** | — | VRRP high-availability | `status`, `group`, `failover`, `restart` |
+| **flow** | — | Flow accounting (NetFlow/sFlow) | `status`, `collectors`, `stats`, `restart` |
+| **monitoring** | `mon` | Monitoring and metrics | `status`, `metrics`, `metrics-service`, `configure`, `restart` |
+| **limits** | — | Connection limits | `show`, `set`, `interface` |
+| **zone** | — | Zone-based firewall | `list`, `show`, `add`, `remove` |
+| **diagnostics** | `diag` | System diagnostics | `doctor` |
+| **logs** | — | Log viewing and streaming | `tail`, `stream` |
 
 ---
 
@@ -447,6 +458,39 @@ dawos logs stream --service accel-ppp
 
 # System diagnostics
 dawos diagnostics doctor
+
+# Built-in doctor command
+dawos doctor
+```
+
+### Interactive Shell
+
+```bash
+# Launch interactive REPL with tab completion
+dawos shell
+
+# Inside the shell, type commands without 'dawos' prefix:
+#   session list
+#   system info
+#   s list          (alias for session list)
+#   exit
+```
+
+### Output Formats
+
+```bash
+# Default Rich table
+dawos session list
+
+# JSON output for scripting
+dawos session list --json
+dawos -j session list
+
+# CSV for spreadsheets
+dawos session list --format csv > sessions.csv
+
+# YAML output
+dawos session list --format yaml
 ```
 
 ### JSON Output for Scripting
@@ -494,8 +538,12 @@ dawos-cli/
 │   ├── state.py             # Shared state singleton (profile, flags)
 │   ├── config.py            # Profile management (~/.config/dawos/config.json)
 │   ├── client.py            # httpx HTTP client (GET/POST/PUT/DELETE/SSE)
-│   ├── output.py            # Rich output helpers (table, detail, kvtable, JSON)
+│   ├── output.py            # Rich output helpers (table, json, csv, yaml)
 │   ├── dashboard.py         # Live full-screen dashboard (Rich Live)
+│   ├── doctor.py            # System diagnostics (dawos doctor)
+│   ├── shell.py             # Interactive REPL with tab completion (dawos shell)
+│   ├── updater.py           # Version update checker (GitHub Releases)
+│   ├── telemetry.py         # Opt-in anonymous usage statistics
 │   └── commands/            # 26 command group modules
 │       ├── config_cmd.py    # Configuration management
 │       ├── conntrack.py     # Connection tracking
@@ -523,16 +571,30 @@ dawos-cli/
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
 │       └── zone.py          # Zone-based firewall
-├── tests/                   # 344 tests, 99% coverage
+├── tests/                   # 129 tests, 93% coverage
 │   ├── conftest.py          # Shared fixtures
-│   ├── test_app.py          # App-level tests
+│   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
 │   ├── test_commands.py     # All command group tests
-│   ├── test_config.py       # Configuration tests
+│   ├── test_config.py       # Configuration and profile export/import tests
 │   ├── test_dashboard.py    # Dashboard tests
-│   ├── test_output.py       # Output helper tests
-│   └── test_state.py        # State management tests
+│   ├── test_doctor.py       # Doctor diagnostics tests
+│   ├── test_output.py       # Output format tests (table, json, csv, yaml)
+│   ├── test_shell.py        # Interactive shell tests
+│   ├── test_state.py        # State management tests
+│   └── test_telemetry.py    # Telemetry module tests
+├── .github/
+│   └── workflows/
+│       ├── ci.yml           # GitHub Actions CI (lint + test on push/PR)
+│       └── release.yml      # PyPI publish + GitHub Releases on tag
+├── .pre-commit-config.yaml  # Pre-commit hooks (black, ruff, pylint)
+├── docs/                    # MkDocs Material documentation site
+├── mkdocs.yml               # MkDocs configuration
+├── dawos-cli.spec           # PyInstaller standalone binary spec
+├── homebrew/
+│   └── dawos-cli.rb         # Homebrew tap formula
 ├── pyproject.toml           # Project metadata, build config, tool settings
+├── Makefile                 # Development shortcuts
 ├── README.md                # This file
 ├── CHANGELOG.md             # Version history
 ├── CONTRIBUTING.md          # Contribution guidelines
@@ -548,7 +610,7 @@ dawos-cli/
 | **Shared state** | Profile name, base URL, API key, and flags are set once by the global callback and read by all commands via `state.current`. |
 | **Lazy HTTP client** | A single `httpx.Client` is created on first use and reused for all requests within a session. |
 | **Consistent errors** | HTTP errors are caught, formatted with Rich, and exit with code 1. |
-| **JSON mode** | `--json` flag switches all output to raw JSON for piping and scripting. |
+| **Multi-format output** | `--json` flag or `--format csv/yaml` switches output for scripting. |
 | **Confirmation prompts** | Destructive operations require `y/n` confirmation (skip with `--force`). |
 | **Modular commands** | Each command file exposes a `typer.Typer()` as `app`, mounted in `app.py`. |
 
@@ -580,6 +642,7 @@ pip install -e ".[dev]"
 | **[Ruff](https://docs.astral.sh/ruff/)** | Fast linting (complementary) | `pyproject.toml` `[tool.ruff]` |
 | **[pytest](https://docs.pytest.org/)** | Test framework | `pyproject.toml` `[tool.pytest]` |
 | **[pytest-cov](https://pytest-cov.readthedocs.io/)** | Coverage reporting | `pyproject.toml` `[tool.coverage]` |
+| **[pre-commit](https://pre-commit.com/)** | Git hooks (black + ruff + pylint) | `.pre-commit-config.yaml` |
 
 ### Running Code Quality Checks
 
@@ -602,6 +665,22 @@ pytest tests/test_commands.py -v
 
 # Run a specific test class
 pytest tests/test_commands.py::TestSessionCommands -v
+
+# All checks at once (via Makefile)
+make check
+```
+
+### Pre-commit Hooks
+
+Pre-commit hooks run automatically on `git commit` to enforce code quality:
+
+```bash
+# Install hooks (one-time setup)
+pip install pre-commit
+pre-commit install
+
+# Run manually on all files
+pre-commit run --all-files
 ```
 
 ### Project Conventions
@@ -617,7 +696,7 @@ pytest tests/test_commands.py::TestSessionCommands -v
 
 ## Testing
 
-The project maintains **344 tests** with **99% coverage** across all source files:
+The project maintains **129 tests** with **93% coverage** across all source files:
 
 ```bash
 # Quick test run
@@ -631,14 +710,22 @@ pytest --cov=dawos_cli --cov-report=term-missing
 
 | Module | Statements | Coverage |
 |--------|-----------|----------|
-| `dawos_cli/*.py` | 429 | 100% |
-| `dawos_cli/commands/*.py` | 995 | 100% |
-| **Total** | **1,424** | **99.58%** |
+| `dawos_cli/commands/*.py` | 795 | 100% |
+| `dawos_cli/client.py` | 101 | 96% |
+| `dawos_cli/config.py` | 81 | 98% |
+| `dawos_cli/output.py` | 107 | 96% |
+| `dawos_cli/dashboard.py` | 135 | 100% |
+| `dawos_cli/doctor.py` | 83 | 100% |
+| `dawos_cli/shell.py` | 73 | 66% |
+| `dawos_cli/telemetry.py` | 49 | 88% |
+| `dawos_cli/updater.py` | 76 | 49% |
+| **Total** | **1,881** | **93.89%** |
 
 ### Test Categories
 
 - **Core modules** — state, config, client, output, dashboard
 - **All 26 command groups** — every subcommand tested
+- **New features** — doctor diagnostics, interactive shell, telemetry, output formats
 - **Confirmation prompts** — all destructive operations
 - **Error handling** — HTTP 401, 404, 422, 500, connection errors
 - **SSE streaming** — traffic watch, log stream
