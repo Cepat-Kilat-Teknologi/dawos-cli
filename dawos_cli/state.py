@@ -17,6 +17,7 @@ class AppState:
     base_url: str = ""
     api_key: str = ""
     json_output: bool = False
+    output_format: str = "table"  # table | json | csv | yaml
     verbose: bool = False
     timeout: float = 30.0
 
