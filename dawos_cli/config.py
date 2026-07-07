@@ -111,3 +111,55 @@ def use_profile(name: str) -> bool:
 def config_path() -> Path:
     """Return the config file path (for display in help text)."""
     return CONFIG_FILE
+
+
+def export_profiles(name: Optional[str] = None) -> Dict[str, Any]:
+    """Export profiles as a portable dict.
+
+    If *name* is given, export only that profile. Otherwise export all.
+    """
+    data = _load()
+    profiles = data.get("profiles", {})
+    if name:
+        prof = profiles.get(name)
+        if prof is None:
+            return {}
+        profiles = {name: prof}
+    return {
+        "dawos_cli_export": True,
+        "version": 1,
+        "active_profile": data.get("active_profile", ""),
+        "profiles": profiles,
+    }
+
+
+def import_profiles(payload: Dict[str, Any], *, merge: bool = True) -> int:
+    """Import profiles from an exported payload.
+
+    When *merge* is True (default), existing profiles are preserved and
+    incoming profiles are added/overwritten.  When False, existing profiles
+    are replaced entirely.
+
+    Returns the number of profiles imported.
+    """
+    incoming = payload.get("profiles", {})
+    if not incoming:
+        return 0
+
+    data = _load()
+    if merge:
+        data.setdefault("profiles", {}).update(incoming)
+    else:
+        data["profiles"] = incoming
+
+    # If no active profile is set, adopt the incoming active.
+    if not data.get("active_profile") and payload.get("active_profile"):
+        if payload["active_profile"] in data["profiles"]:
+            data["active_profile"] = payload["active_profile"]
+
+    # Fallback: just pick the first profile.
+    if not data.get("active_profile") and data["profiles"]:
+        data["active_profile"] = next(iter(data["profiles"]))
+
+    _save(data)
+    return len(incoming)
