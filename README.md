@@ -145,6 +145,8 @@ pip uninstall dawos-cli
 dawos profile add production http://192.168.1.100:8470 YOUR_API_KEY
 ```
 
+> **Where to get the API key?** The API key is configured on your [dawos-agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) instance. Check your dawos-agent configuration file or ask your system administrator for the `X-API-Key` value.
+
 This creates a profile named `production` pointing to your dawos-agent instance. The first profile is automatically set as active.
 
 ### 2. Verify Connection
