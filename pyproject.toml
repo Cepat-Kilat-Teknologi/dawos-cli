@@ -1,0 +1,117 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dawos-cli"
+version = "0.1.0"
+description = "Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Cepat Kilat Teknologi"}]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: System :: Networking",
+    "Topic :: System :: Systems Administration",
+    "Typing :: Typed",
+]
+keywords = ["cli", "bng", "pppoe", "accel-ppp", "network", "isp"]
+dependencies = [
+    "typer[all]>=0.9",
+    "httpx>=0.24",
+]
+
+[project.urls]
+Homepage = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli"
+Documentation = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli#readme"
+Repository = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli"
+Changelog = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/Cepat-Kilat-Teknologi/dawos-cli/issues"
+
+[project.scripts]
+dawos = "dawos_cli.app:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "pytest-cov",
+    "respx>=0.20",
+    "black>=24",
+    "pylint>=3",
+    "ruff",
+]
+
+[tool.setuptools.packages.find]
+include = ["dawos_cli*"]
+
+# ---------------------------------------------------------------------------
+# Black — code formatting
+# ---------------------------------------------------------------------------
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+
+# ---------------------------------------------------------------------------
+# Pylint — static analysis
+# ---------------------------------------------------------------------------
+[tool.pylint.main]
+py-version = "3.9"
+jobs = 0
+load-plugins = []
+
+[tool.pylint."messages control"]
+disable = [
+    "C0114",  # missing-module-docstring (we use file-level docstrings selectively)
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring (CLI commands have help= instead)
+    "R0801",  # duplicate-code (CLI commands share patterns by design)
+    "R0903",  # too-few-public-methods
+    "W0613",  # unused-argument (typer callback signatures)
+    "W0622",  # redefined-builtin (e.g. typer.Option `help`)
+    "C0301",  # line-too-long (handled by black)
+    "C0103",  # invalid-name (short var names ok in CLI)
+]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.design]
+max-args = 8
+
+# ---------------------------------------------------------------------------
+# Ruff — fast linting (complementary to pylint)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+omit = ["dawos_cli/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 90
