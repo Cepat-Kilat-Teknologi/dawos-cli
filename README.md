@@ -3,15 +3,6 @@
   <em>Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line.</em>
 </p>
 
-<p align="center">
-  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.9%2B-blue.svg" alt="Python 3.9+"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT License"></a>
-  <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black"></a>
-  <a href="https://pylint.readthedocs.io/"><img src="https://img.shields.io/badge/linting-pylint%2010.0-brightgreen.svg" alt="Pylint: 10.0"></a>
-  <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli/actions"><img src="https://img.shields.io/badge/tests-344%20passed-brightgreen.svg" alt="Tests: 344 passed"></a>
-  <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli/actions"><img src="https://img.shields.io/badge/coverage-99%25-brightgreen.svg" alt="Coverage: 99%"></a>
-</p>
-
 ---
 
 ## Overview
@@ -173,24 +164,39 @@ pip uninstall dawos-cli
 
 ## Quick Start
 
-### 1. Add a Connection Profile
+### 1. Install
+
+**macOS / Linux:**
 
 ```bash
-dawos profile add production \
-  --url http://192.168.1.100:8470 \
-  --key YOUR_API_KEY
+git clone https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
+cd dawos-cli
+./installer.sh
 ```
 
-The first profile added is automatically set as the active profile. Use `--no-check` to skip the health check during profile creation.
+**Windows (PowerShell):**
 
-### 2. Test the Connection
+```powershell
+git clone https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git
+cd dawos-cli
+.\installer.ps1
+```
+
+### 2. Add a Connection Profile
+
+```bash
+dawos profile add production http://192.168.1.100:8470 YOUR_API_KEY
+```
+
+The first profile added is automatically set as the active profile.
+
+### 3. Test the Connection
 
 ```bash
 dawos status
-# ✓ Connected to production (http://192.168.1.100:8470)
 ```
 
-### 3. Start Managing
+### 4. Start Managing
 
 ```bash
 # View system information
