@@ -436,7 +436,7 @@ class TestNetworkCommands:
         result = cli("network", "dns-set", "8.8.8.8,1.1.1.1")
         assert result.exit_code == 0
         mock_client["put"].assert_called_with(
-            "/api/v1/network/dns", json={"servers": ["8.8.8.8", "1.1.1.1"]}
+            "/api/v1/network/dns", json={"nameservers": ["8.8.8.8", "1.1.1.1"]}
         )
 
     def test_vlans(self, cli, mock_client):
