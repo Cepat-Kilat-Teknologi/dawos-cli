@@ -101,6 +101,19 @@ def main_callback(
         s.api_key = prof.get("api_key", "")
     # else: state stays empty — commands that need a profile will error in client.py
 
+    # Non-blocking update check (cached, runs at most once per day)
+    try:
+        from . import updater  # pylint: disable=import-outside-toplevel
+
+        latest = updater.check_for_update()
+        if latest:
+            console.print(
+                f"[yellow]Update available:[/] {__version__} → [bold]{latest}[/] "
+                f"— run [bold cyan]dawos self-update[/] to upgrade"
+            )
+    except Exception:  # pylint: disable=broad-exception-caught
+        pass  # Never let update check break the CLI
+
 
 # ---------------------------------------------------------------------------
 # Mount sub-command groups
@@ -209,6 +222,43 @@ def quick_status() -> None:
         output.response(data, title="Health")
     except SystemExit:
         pass  # client already printed the error
+
+
+@app.command("help", hidden=True)
+def help_cmd(ctx: typer.Context = typer.Context) -> None:
+    """Show help message (alias for --help)."""
+    click_ctx = ctx.parent or ctx
+    Console().print(click_ctx.get_help())
+    raise typer.Exit()
+
+
+@app.command("self-update")
+def self_update_cmd() -> None:
+    """Update dawos-cli to the latest version."""
+    from . import updater  # pylint: disable=import-outside-toplevel
+
+    out = Console()
+    out.print(f"[dim]Current version:[/] {__version__}")
+    out.print("[cyan]Checking for updates...[/]")
+
+    latest = updater.fetch_latest_tag()
+    if not latest:
+        out.print("[yellow]Could not reach GitHub. Check your connection.[/]")
+        raise typer.Exit(1)
+
+    if updater.parse_version(latest) <= updater.parse_version(__version__):
+        out.print(f"[green]Already up-to-date ({__version__}).[/]")
+        raise typer.Exit()
+
+    out.print(f"[yellow]Updating to {latest}...[/]")
+    if updater.run_self_update():
+        out.print(f"[bold green]Updated to {latest}![/] Restart your terminal.")
+    else:
+        out.print(
+            "[red]Update failed.[/] Try manually:\n"
+            "  [dim]pipx install --force "
+            "git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git[/]"
+        )
 
 
 # ---------------------------------------------------------------------------
