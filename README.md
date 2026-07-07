@@ -1,6 +1,8 @@
 <p align="center">
   <strong>dawos-cli</strong><br>
-  <em>Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line.</em>
+  <em>Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line.</em><br>
+  <a href="https://cepat-kilat-teknologi.github.io/dawos-cli/">Documentation</a> |
+  <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases">Releases</a>
 </p>
 
 ---

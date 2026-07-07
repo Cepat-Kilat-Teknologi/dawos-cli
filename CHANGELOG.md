@@ -15,10 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - **GitHub Actions CI** — Automated lint + test pipeline on push and pull requests (`.github/workflows/ci.yml`)
-- **GitHub Actions Release** — PyPI publish + GitHub Releases on version tag (`.github/workflows/release.yml`)
+- **GitHub Actions Release** — PyPI publish + [GitHub Releases](https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases) on version tag (`.github/workflows/release.yml`)
 - **Output format options** — `--format csv|yaml` and `-F` shorthand flag alongside existing `--json`
 - **Pre-commit hooks** — Black, Ruff, and Pylint run automatically on `git commit` (`.pre-commit-config.yaml`)
-- **MkDocs Material documentation** — Full documentation site with getting-started, commands, guides, and development sections (`docs/`, `mkdocs.yml`)
+- **MkDocs Material documentation** — Full documentation site at [cepat-kilat-teknologi.github.io/dawos-cli](https://cepat-kilat-teknologi.github.io/dawos-cli/) (`docs/`, `mkdocs.yml`)
 - **ASCII branding** — Branded logo in `dawos version` and `dawos --version` output
 - **`dawos doctor` command** — System diagnostics checking Python version, CLI version, update status, profile, connectivity, shell, config file, and pipx
 - **Config export/import** — `dawos profile export` and `dawos profile import` for backup and cross-machine sharing
