@@ -18,9 +18,13 @@ function Write-Fail  { param($msg) Write-Host "[ERROR] $msg" -ForegroundColor Re
 
 # ── Header ───────────────────────────────────────────────────────────
 Write-Host ""
-Write-Host "+======================================+" -ForegroundColor White
-Write-Host "|      dawos-cli installer v0.1.0       |" -ForegroundColor White
-Write-Host "+======================================+" -ForegroundColor White
+Write-Host "     _                        " -ForegroundColor Cyan
+Write-Host "  __| | __ ___      _____  ___" -ForegroundColor Cyan
+Write-Host " / _`` |/ _`` \ \ /\ / / _ \/ __|" -ForegroundColor Cyan
+Write-Host "| (_| | (_| |\ V  V / (_) \__ \" -ForegroundColor Cyan
+Write-Host " \__,_|\__,_| \_/\_/ \___/|___/" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "  dawos-cli installer" -ForegroundColor White
 Write-Host ""
 
 # ── 1. Check Python ──────────────────────────────────────────────────
