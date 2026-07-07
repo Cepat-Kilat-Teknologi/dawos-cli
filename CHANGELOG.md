@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **GitHub Actions CI** — Automated lint + test pipeline on push and pull requests (`.github/workflows/ci.yml`)
+- **GitHub Actions Release** — PyPI publish + GitHub Releases on version tag (`.github/workflows/release.yml`)
+- **Output format options** — `--format csv|yaml` and `-F` shorthand flag alongside existing `--json`
+- **Pre-commit hooks** — Black, Ruff, and Pylint run automatically on `git commit` (`.pre-commit-config.yaml`)
+- **MkDocs Material documentation** — Full documentation site with getting-started, commands, guides, and development sections (`docs/`, `mkdocs.yml`)
+- **ASCII branding** — Branded logo in `dawos version` and `dawos --version` output
+- **`dawos doctor` command** — System diagnostics checking Python version, CLI version, update status, profile, connectivity, shell, config file, and pipx
+- **Config export/import** — `dawos profile export` and `dawos profile import` for backup and cross-machine sharing
+- **Homebrew tap formula** — `homebrew/dawos-cli.rb` for macOS/Linux installation via `brew install`
+- **Interactive shell** — `dawos shell` REPL with tab completion, command history, and readline fallback
+- **Command aliases** — Short aliases for power users: `s` (session), `sys` (system), `cfg` (config), `net` (network), `fw` (firewall), `rt` (routing), `mon` (monitoring), `diag` (diagnostics)
+- **Standalone binary** — PyInstaller spec for building single-file executables (`dawos-cli.spec`)
+- **Opt-in telemetry** — Anonymous usage statistics disabled by default, enabled with `DAWOS_TELEMETRY=1`
+- **`dawos update` / `dawos self-update`** — Built-in update commands with confirmation prompt
+- **Automatic update check** — Non-blocking daily check on CLI startup with cache
+
+### Changed
+
+- Output module now uses Rich console for JSON output instead of raw `print()` for consistent capture
+- Dashboard panel titles cleaned up (removed decorative emoji icons, kept functional symbols)
+
+---
+
 ## [0.1.0] - 2026-07-07
 
 ### Added
@@ -47,8 +74,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **Shell completion** — Auto-completion for Bash, Zsh, Fish, and PowerShell
 - **File-based config input** — `@filename` syntax for config update and apply commands
 - **Environment variable support** — `DAWOS_PROFILE` and `DAWOS_CONFIG_DIR` overrides
-- **Comprehensive test suite** — 344 tests with 99% code coverage
-- **Code quality** — Black formatting, Pylint 10.0/10, Ruff clean
+- **Comprehensive test suite** — 129 tests with 93% code coverage
+- **Code quality** — Black formatting, Pylint 10.0/10, Ruff clean, pre-commit hooks
 - **Project documentation** — README, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, LICENSE, CHANGELOG
 
 ### Fixed
@@ -63,12 +90,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Adopted [Black](https://black.readthedocs.io/) as the code formatter (88-char line length)
 - Adopted [Pylint](https://pylint.readthedocs.io/) as the primary static analyzer
 - Removed 46 unused variable assignments across command modules (identified by Ruff)
-
----
-
-## [Unreleased]
-
-_No unreleased changes._
 
 ---
 
