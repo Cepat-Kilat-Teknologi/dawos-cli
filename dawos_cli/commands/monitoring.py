@@ -36,12 +36,16 @@ def metrics_service(
 
 @app.command("configure")
 def configure(
-    target: str = typer.Option(..., "--target", "-t", help="Target to configure"),
-    value: str = typer.Option(..., "--value", "-v", help="Configuration value"),
+    service: str = typer.Option(..., "--service", "-s", help="Exporter service name"),
+    enable: bool = typer.Option(True, "--enable/--disable", help="Enable or disable"),
 ) -> None:
-    """Update monitoring configuration."""
-    client.post("/api/v1/monitoring/configure", json={"target": target, "value": value})
-    output.success(f"Monitoring config updated: {target}")
+    """Enable or disable a monitoring exporter."""
+    client.post(
+        "/api/v1/monitoring/configure",
+        json={"service": service, "enable": enable},
+    )
+    state = "enabled" if enable else "disabled"
+    output.success(f"Monitoring exporter '{service}' {state}")
 
 
 @app.command("restart")
