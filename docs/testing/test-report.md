@@ -1,6 +1,6 @@
 # CLI Test Report
 
-Live integration test results for **dawos-cli v0.2.0** against a real dawos-agent instance.
+Live integration test results for **dawos-cli v0.3.0** against a real dawos-agent instance.
 
 ---
 
@@ -8,8 +8,8 @@ Live integration test results for **dawos-cli v0.2.0** against a real dawos-agen
 
 | Field | Value |
 |-------|-------|
-| **CLI Version** | 0.2.0 |
-| **Agent Version** | 0.1.0 |
+| **CLI Version** | 0.3.0 |
+| **Agent Version** | 0.2.0 |
 | **Server** | BNG dev node (private LAN) |
 | **Profile** | `development` (active) |
 | **Client OS** | macOS (operator workstation) |

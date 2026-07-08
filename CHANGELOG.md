@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-08
+
 ### Changed
 
 - **DELETE operations now expect 204 No Content** — All DELETE API calls updated to match dawos-agent 204 standardization. The HTTP client already handled 204 responses correctly; no functional changes required.
@@ -116,6 +118,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+[0.3.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.0
 [0.1.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.2.0
-[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.0...HEAD
