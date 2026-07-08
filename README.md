@@ -599,7 +599,7 @@ dawos-cli/
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
 │       └── zone.py          # Zone-based firewall
-├── tests/                   # 425 tests, 97% coverage
+├── tests/                   # 426 tests, 97% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -724,7 +724,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **425 tests** with **97% coverage** across all source files:
+The project maintains **426 tests** with **97% coverage** across all source files:
 
 ```bash
 # Quick test run
