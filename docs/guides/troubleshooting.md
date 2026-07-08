@@ -15,7 +15,7 @@ This checks Python version, connectivity, profile status, and more.
 ### Connection Refused
 
 ```
-✗ Cannot reach http://192.168.1.1:8470/health
+ERROR: Cannot reach http://192.168.1.1:8470/health
 ```
 
 **Causes:**
@@ -36,7 +36,7 @@ curl http://SERVER_IP:8470/health
 ### Authentication Failed (401)
 
 ```
-✗ 401 Unauthorized
+ERROR: 401 Unauthorized
 ```
 
 **Fix:** Verify your API key matches the server:
@@ -51,7 +51,7 @@ dawos profile add prod --url http://SERVER:8470 --key CORRECT_KEY
 ### No Active Profile
 
 ```
-✗ No profile configured
+ERROR: No profile configured
 ```
 
 **Fix:**
