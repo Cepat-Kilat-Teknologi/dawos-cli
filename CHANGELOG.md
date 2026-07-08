@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- **DELETE operations now expect 204 No Content** — All DELETE API calls updated to match dawos-agent 204 standardization. The HTTP client already handled 204 responses correctly; no functional changes required.
+
 ### Added
 
 - **Live PPPoE session test report** — 25 commands tested with real PPPoE session (terminate, restart, ratelimit, queue, drop-by-mac)
@@ -20,6 +24,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - **PPPoE add field name** — `dawos pppoe add` sent `{"name": ...}` instead of `{"interface": ...}`, causing 422 errors
 - **DNS set field name** — `dawos network dns-set` sent `{"servers": [...]}` instead of `{"nameservers": [...]}`, causing 422 errors
 - **NAT egress set field name** — `dawos nat egress-set` sent `{"customer_ip": ...}` instead of `{"target": ...}`, causing 422 errors
+- **Conntrack set field name** — `dawos firewall conntrack-set` sent `{"max": N}` instead of `{"max_value": N}`, causing 422 validation errors on `PUT /api/v1/firewall/conntrack`
+- **Monitoring configure redesign** — `dawos monitoring configure` sent `{"target": ..., "value": ...}` but API expects `ConfigureExporterRequest` with `{"service": ..., "enable": bool}`; redesigned CLI to use `--service`/`-s` and `--enable/--disable` flags
 
 ---
 
