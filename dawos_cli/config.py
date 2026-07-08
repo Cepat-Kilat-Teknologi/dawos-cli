@@ -51,6 +51,10 @@ def _save(data: Dict[str, Any]) -> None:
     """Persist config to disk, creating the directory if needed."""
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     CONFIG_FILE.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    try:
+        os.chmod(CONFIG_FILE, 0o600)
+    except OSError:
+        pass  # best-effort; Windows may not support Unix permissions
 
 
 def list_profiles() -> Dict[str, Dict[str, str]]:
