@@ -10,7 +10,7 @@ dawos firewall validate RULES   # Validate nftables configuration
 dawos firewall sysctl           # Show sysctl settings
 dawos firewall sysctl-set K V   # Set a sysctl parameter
 dawos firewall conntrack        # Show conntrack settings
-dawos firewall conntrack-set K V # Set conntrack parameter
+dawos firewall conntrack-set N  # Set conntrack max entries (sends max_value)
 dawos firewall snmp             # SNMP firewall settings
 dawos firewall groups           # List firewall groups
 dawos firewall group-add NAME   # Add a firewall group
