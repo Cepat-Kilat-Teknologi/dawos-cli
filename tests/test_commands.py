@@ -511,6 +511,9 @@ class TestFirewallCommands:
     def test_conntrack_set(self, cli, mock_client):
         result = cli("firewall", "conntrack-set", "262144")
         assert result.exit_code == 0
+        mock_client["put"].assert_called_with(
+            "/api/v1/firewall/conntrack", json={"max_value": 262144}
+        )
 
     def test_snmp(self, cli, mock_client):
         result = cli("firewall", "snmp")
@@ -1140,8 +1143,20 @@ class TestMonitoringCommands:
         mock_client["get"].assert_called_with("/api/v1/monitoring/metrics/frr")
 
     def test_configure(self, cli, mock_client):
-        result = cli("monitoring", "configure", "-t", "prometheus", "-v", "enabled")
+        result = cli("monitoring", "configure", "-s", "accel-ppp", "--enable")
         assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/monitoring/configure",
+            json={"service": "accel-ppp", "enable": True},
+        )
+
+    def test_configure_disable(self, cli, mock_client):
+        result = cli("monitoring", "configure", "-s", "prometheus", "--disable")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/monitoring/configure",
+            json={"service": "prometheus", "enable": False},
+        )
 
     def test_restart(self, cli, mock_client):
         result = cli("monitoring", "restart", "prometheus", "--force")
