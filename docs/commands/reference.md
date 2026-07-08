@@ -103,7 +103,7 @@ Complete reference for all dawos-cli commands.
 | `dawos firewall sysctl` | Show sysctl settings |
 | `dawos firewall sysctl-set K V` | Set sysctl parameter |
 | `dawos firewall conntrack` | Conntrack settings |
-| `dawos firewall conntrack-set K V` | Set conntrack parameter |
+| `dawos firewall conntrack-set N` | Set conntrack max entries |
 | `dawos firewall snmp` | SNMP settings |
 | `dawos firewall groups` | List firewall groups |
 | `dawos firewall group-add NAME` | Add firewall group |
@@ -137,6 +137,10 @@ Complete reference for all dawos-cli commands.
 | `dawos vrrp` | — | VRRP high-availability |
 | `dawos flow` | — | NetFlow/sFlow accounting |
 | `dawos monitoring` | `mon` | Monitoring and metrics |
+| `dawos monitoring status` | | Monitoring service status |
+| `dawos monitoring metrics SERVICE` | | Metrics for a service |
+| `dawos monitoring configure -s SVC` | | Enable/disable a monitoring exporter |
+| `dawos monitoring restart SERVICE` | | Restart a monitoring service |
 | `dawos limits` | — | Connection limits |
 | `dawos zone` | — | Zone-based firewall |
 | `dawos diagnostics` | `diag` | System diagnostics |
