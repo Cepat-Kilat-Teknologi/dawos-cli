@@ -36,9 +36,9 @@ dawos profile add prod --url http://YOUR_SERVER_IP:8470 --key YOUR_API_KEY
 The CLI will verify connectivity automatically:
 
 ```
-ℹ Checking connectivity to http://192.168.1.1:8470 ...
-✓ Connected — node=bng-prod-01 version=0.1.0
-✓ Profile prod saved.
+Checking connectivity to http://192.168.1.1:8470 ...
+Connected -- node=bng-prod-01 version=0.1.0
+Profile prod saved.
 ```
 
 ## 4. Check Connection
