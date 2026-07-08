@@ -22,7 +22,6 @@ Complete reference for all dawos-cli commands.
 | `dawos profile use NAME` | Set active profile |
 | `dawos profile remove NAME` | Remove a profile |
 | `dawos profile test [NAME]` | Test connectivity |
-| `dawos profile show [NAME]` | Show profile details |
 | `dawos profile export` | Export profiles to JSON |
 | `dawos profile import FILE` | Import profiles from JSON |
 

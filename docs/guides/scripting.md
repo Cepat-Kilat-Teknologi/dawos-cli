@@ -2,33 +2,35 @@
 
 dawos-cli is designed for automation with `--json` and `--format` output modes.
 
+> **Note:** `--json`, `-j`, `--format`, and `-F` are global options — they must be placed **before** the command group (e.g., `dawos --json session list`, not `dawos session list --json`).
+
 ## JSON Output
 
 ```bash
 # Get raw JSON for piping
-dawos session list --json
+dawos --json session list
 
 # Parse with jq
-dawos session list --json | jq '.[].username'
+dawos -j session list | jq '.[].username'
 
 # Count active sessions
-dawos session list --json | jq 'length'
+dawos -j session list | jq 'length'
 ```
 
 ## CSV Output
 
 ```bash
 # Export to CSV for spreadsheets
-dawos session list --format csv > sessions.csv
+dawos -F csv session list > sessions.csv
 
 # Use with standard Unix tools
-dawos session list --format csv | cut -d',' -f1,2
+dawos -F csv session list | cut -d',' -f1,2
 ```
 
 ## YAML Output
 
 ```bash
-dawos session list --format yaml
+dawos -F yaml session list
 ```
 
 ## Shell Scripts
@@ -37,7 +39,7 @@ dawos session list --format yaml
 #!/bin/bash
 # Monitor session count and alert if below threshold
 
-COUNT=$(dawos session list --json | jq 'length')
+COUNT=$(dawos -j session list | jq 'length')
 if [ "$COUNT" -lt 10 ]; then
     echo "ALERT: Only $COUNT sessions active!"
 fi
@@ -47,10 +49,10 @@ fi
 
 ```bash
 # Export session stats every hour
-0 * * * * dawos --profile prod session stats --json >> /var/log/dawos-stats.jsonl
+0 * * * * dawos --profile prod -j session stats >> /var/log/dawos-stats.jsonl
 
 # Daily session report
-0 8 * * * dawos session list --format csv > /reports/sessions-$(date +%F).csv
+0 8 * * * dawos -F csv session list > /reports/sessions-$(date +%F).csv
 ```
 
 ## CI/CD Integration
@@ -61,7 +63,7 @@ export DAWOS_NO_UPDATE_CHECK=1
 
 # Use environment variable for profile
 export DAWOS_PROFILE=prod
-dawos system health --json
+dawos -j system health
 ```
 
 ## Error Handling

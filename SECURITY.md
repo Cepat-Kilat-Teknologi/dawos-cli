@@ -4,7 +4,7 @@
 
 | Version | Supported |
 |---------|-----------|
-| 0.1.x   | :white_check_mark: |
+| 0.2.x   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
@@ -73,7 +73,7 @@ When using dawos-cli in production:
 
 - Use `--verbose` mode sparingly in production — it may expose sensitive information in logs.
 - Avoid using `--json` output with sensitive data in shared terminal sessions.
-- Review the `dawos diagnostics doctor` output regularly to ensure proper security configuration.
+- Review the `dawos doctor` output regularly to ensure proper security configuration.
 
 ## Known Security Considerations
 

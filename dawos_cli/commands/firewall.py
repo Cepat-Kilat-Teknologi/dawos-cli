@@ -110,7 +110,10 @@ def group_add(
     body = {"name": name, "group_type": group_type}
     if elements:
         body["elements"] = [e.strip() for e in elements.split(",")]
-    client.post("/api/v1/firewall/groups", json=body)
+    data = client.post("/api/v1/firewall/groups", json=body)
+    if isinstance(data, dict) and data.get("success") is False:
+        output.error(data.get("message") or "Group creation failed")
+        raise typer.Exit(1)
     output.success(f"Group '{name}' created (type: {group_type})")
 
 
@@ -119,7 +122,10 @@ def group_del(
     name: str = typer.Argument(..., help="Group name to delete"),
 ) -> None:
     """Delete a firewall group."""
-    client.delete(f"/api/v1/firewall/groups/{name}")
+    data = client.delete(f"/api/v1/firewall/groups/{name}")
+    if isinstance(data, dict) and data.get("success") is False:
+        output.error(data.get("message") or "Group deletion failed")
+        raise typer.Exit(1)
     output.success(f"Group '{name}' deleted")
 
 
@@ -130,5 +136,10 @@ def group_members(
 ) -> None:
     """Add members to a firewall group."""
     elems = [e.strip() for e in elements.split(",")]
-    client.post(f"/api/v1/firewall/groups/{name}/members", json={"elements": elems})
+    data = client.post(
+        f"/api/v1/firewall/groups/{name}/members", json={"elements": elems}
+    )
+    if isinstance(data, dict) and data.get("success") is False:
+        output.error(data.get("message") or "Failed to add members")
+        raise typer.Exit(1)
     output.success(f"Added {len(elems)} member(s) to '{name}'")

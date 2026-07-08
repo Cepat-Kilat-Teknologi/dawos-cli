@@ -39,7 +39,9 @@ def _print_csv(rows: Sequence[Dict[str, Any]], columns: Sequence[str]) -> None:
     writer = _csv.DictWriter(buf, fieldnames=list(columns), extrasaction="ignore")
     writer.writeheader()
     for row in rows:
-        writer.writerow({k: str(row.get(k, "")) for k in columns})
+        writer.writerow(
+            {k: str(row.get(k, row.get(k.replace("_", "-"), ""))) for k in columns}
+        )
     sys.stdout.write(buf.getvalue())
 
 
@@ -105,8 +107,8 @@ def print_json(data: Any) -> None:
 
 
 def print_raw(text: str) -> None:
-    """Print plain text."""
-    console.print(text)
+    """Print plain text (markup disabled to preserve brackets)."""
+    console.print(text, markup=False, highlight=False)
 
 
 def success(message: str) -> None:
@@ -157,7 +159,9 @@ def table(
             labels.get(col, col.replace("_", " ").title()), style=styles.get(col, "")
         )
     for row in rows:
-        t.add_row(*[str(row.get(col, "—")) for col in columns])
+        t.add_row(
+            *[str(row.get(col, row.get(col.replace("_", "-"), "—"))) for col in columns]
+        )
     if not rows:
         t.add_row(*["—" for _ in columns])
     console.print(t)

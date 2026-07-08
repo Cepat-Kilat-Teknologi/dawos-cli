@@ -46,6 +46,8 @@ dawos-cli provides **30+ commands** organized into groups for managing every asp
 
 ## Global Options
 
+These options must be placed **before** the command group (e.g., `dawos --json session list`):
+
 ```
 --profile, -p    Profile name (overrides active profile)
 --json, -j       Raw JSON output

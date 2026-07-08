@@ -68,7 +68,7 @@ All commands support multiple output formats:
 
 ```bash
 dawos session list                    # Rich table (default)
-dawos session list --json             # JSON output
-dawos session list --format csv       # CSV for spreadsheets
-dawos session list --format yaml      # YAML output
+dawos --json session list             # JSON output
+dawos -F csv session list             # CSV for spreadsheets
+dawos -F yaml session list            # YAML output
 ```

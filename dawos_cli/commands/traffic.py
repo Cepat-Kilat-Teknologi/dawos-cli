@@ -75,7 +75,7 @@ def ratelimit(
     rate: str = typer.Argument(..., help="Rate in up/down format (e.g. 5M/20M)"),
 ) -> None:
     """Change a subscriber's shaper live (temporary, bypasses RADIUS)."""
-    client.post("/api/v1/traffic/ratelimit", json={"username": username, "rate": rate})
+    client.post(f"/api/v1/traffic/ratelimit/{username}", json={"rate": rate})
     output.success(f"{username} shaper → {rate}")
 
 

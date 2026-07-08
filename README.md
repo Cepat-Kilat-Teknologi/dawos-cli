@@ -192,6 +192,11 @@ dawos profile add production --url http://192.168.1.100:8470 --key YOUR_API_KEY
 
 This creates a profile named `production` pointing to your dawos-agent instance. The first profile is automatically set as active.
 
+> **Tip:** Use `--no-check` to skip connectivity verification when adding a profile (useful for offline setup):
+> ```bash
+> dawos profile add production --url http://192.168.1.100:8470 --key YOUR_KEY --no-check
+> ```
+
 ### 2. Verify Connection
 
 ```bash
@@ -274,6 +279,8 @@ DAWOS_PROFILE=bng1 dawos session list
 |----------|-------------|---------|
 | `DAWOS_PROFILE` | Override the active profile | Active profile from config |
 | `DAWOS_CONFIG_DIR` | Override configuration directory | Platform default (see above) |
+| `DAWOS_NO_UPDATE_CHECK` | Disable update notifications (`1` to disable) | Not set |
+| `DAWOS_TELEMETRY` | Enable anonymous usage stats (`1` to enable) | Not set |
 
 ---
 
@@ -497,19 +504,21 @@ dawos shell
 
 ### Output Formats
 
+> **Note:** `--json`, `-j`, `--format`, and `-F` are global options — place them **before** the command group.
+
 ```bash
 # Default Rich table
 dawos session list
 
 # JSON output for scripting
-dawos session list --json
+dawos --json session list
 dawos -j session list
 
 # CSV for spreadsheets
-dawos session list --format csv > sessions.csv
+dawos -F csv session list > sessions.csv
 
 # YAML output
-dawos session list --format yaml
+dawos -F yaml session list
 ```
 
 ### JSON Output for Scripting
@@ -590,7 +599,7 @@ dawos-cli/
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
 │       └── zone.py          # Zone-based firewall
-├── tests/                   # 425 tests, 93% coverage
+├── tests/                   # 425 tests, 97% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -715,7 +724,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **425 tests** with **93% coverage** across all source files:
+The project maintains **425 tests** with **97% coverage** across all source files:
 
 ```bash
 # Quick test run
@@ -729,16 +738,18 @@ pytest --cov=dawos_cli --cov-report=term-missing
 
 | Module | Statements | Coverage |
 |--------|-----------|----------|
-| `dawos_cli/commands/*.py` | 795 | 100% |
-| `dawos_cli/client.py` | 101 | 96% |
-| `dawos_cli/config.py` | 81 | 98% |
-| `dawos_cli/output.py` | 107 | 96% |
+| `dawos_cli/commands/*.py` | 1,024 | 99% |
+| `dawos_cli/app.py` | 139 | 79% |
 | `dawos_cli/dashboard.py` | 135 | 100% |
+| `dawos_cli/output.py` | 107 | 97% |
+| `dawos_cli/client.py` | 101 | 96% |
 | `dawos_cli/doctor.py` | 83 | 100% |
+| `dawos_cli/config.py` | 81 | 98% |
+| `dawos_cli/updater.py` | 76 | 49% |
 | `dawos_cli/shell.py` | 73 | 66% |
 | `dawos_cli/telemetry.py` | 49 | 88% |
-| `dawos_cli/updater.py` | 76 | 49% |
-| **Total** | **1,881** | **93.89%** |
+| `dawos_cli/state.py` | 12 | 100% |
+| **Total** | **1,881** | **97%** |
 
 ### Test Categories
 

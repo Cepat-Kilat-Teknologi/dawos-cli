@@ -8,6 +8,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- **Live PPPoE session test report** — 25 commands tested with real PPPoE session (terminate, restart, ratelimit, queue, drop-by-mac)
+- **Live integration test report** — 133 total commands tested against real BNG node (`docs/testing/test-report.md`)
+
+### Fixed
+
+- **Traffic ratelimit URL path** — `dawos traffic ratelimit` sent `POST /api/v1/traffic/ratelimit` with username in body, but API expects `POST /api/v1/traffic/ratelimit/{username}` with only rate in body, causing 404 errors
+- **Session table hyphen/underscore mismatch** — `rate-limit`, `rx-bytes`, `tx-bytes` fields from accel-ppp were not displayed because `output.table()` and `_print_csv()` only looked up underscored keys; added fallback lookup for hyphenated variants
+- **PPPoE add field name** — `dawos pppoe add` sent `{"name": ...}` instead of `{"interface": ...}`, causing 422 errors
+- **DNS set field name** — `dawos network dns-set` sent `{"servers": [...]}` instead of `{"nameservers": [...]}`, causing 422 errors
+- **NAT egress set field name** — `dawos nat egress-set` sent `{"customer_ip": ...}` instead of `{"target": ...}`, causing 422 errors
+
 ---
 
 ## [0.2.0] - 2026-07-07
@@ -46,7 +59,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - `service` — BNG service control (start, stop, restart, raw command)
   - `session` — PPPoE session management (list, find, terminate, restart, snapshot, by-sid, by-ip, drop-by-mac)
   - `config` — Configuration management (show, update, backups, revisions, diff, rollback, guarded apply with confirm)
-  - `profile` — Multi-profile connection management (add, list, use, remove, test, show)
+  - `profile` — Multi-profile connection management (add, list, use, remove, test, export, import)
   - `network` — Network interfaces, routes, VLANs, DNS
   - `firewall` — nftables rules, sysctl, conntrack, SNMP, firewall groups
   - `nat` — NAT masquerade, egress, public IP management, box egress

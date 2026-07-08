@@ -632,7 +632,7 @@ class TestTrafficCommands:
         result = cli("traffic", "ratelimit", "user1", "5M/20M")
         assert result.exit_code == 0
         mock_client["post"].assert_called_with(
-            "/api/v1/traffic/ratelimit", json={"username": "user1", "rate": "5M/20M"}
+            "/api/v1/traffic/ratelimit/user1", json={"rate": "5M/20M"}
         )
 
     def test_ratelimit_restore(self, cli, mock_client):
