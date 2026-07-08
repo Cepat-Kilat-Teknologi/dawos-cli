@@ -71,7 +71,7 @@ def conntrack_set(
     max_entries: int = typer.Argument(..., help="Max conntrack entries"),
 ) -> None:
     """Update conntrack table max size."""
-    client.put("/api/v1/firewall/conntrack", json={"max": max_entries})
+    client.put("/api/v1/firewall/conntrack", json={"max_value": max_entries})
     output.success(f"Conntrack max → {max_entries}")
 
 
