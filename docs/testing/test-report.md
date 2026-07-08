@@ -15,7 +15,7 @@ Live integration test results for **dawos-cli v0.2.0** against a real dawos-agen
 | **Client OS** | macOS (operator workstation) |
 | **Install Method** | pipx |
 | **Test Date** | 2026-07-08 |
-| **Unit Tests** | 425 passing (97% coverage) |
+| **Unit Tests** | 426 passing (97% coverage) |
 
 ---
 
@@ -24,11 +24,11 @@ Live integration test results for **dawos-cli v0.2.0** against a real dawos-agen
 | Category | Tested | Passed | Fixed | N/A | Notes |
 |----------|:------:|:------:|:-----:|:---:|-------|
 | Read commands | 60 | 60 | 0 | 0 | All 29 API groups covered |
-| Write commands | 48 | 45 | 3 | 0 | Full CRUD cycles for every writable resource |
+| Write commands | 52 | 49 | 5 | 0 | Full CRUD cycles for every writable resource |
 | Live PPPoE session | 25 | 25 | 2 | 0 | Terminate, restart, ratelimit, queue, drop-by-mac |
-| **Total** | **133** | **130** | **5** | **0** | **100% pass rate** |
+| **Total** | **137** | **134** | **7** | **0** | **100% pass rate** |
 
-- **5 bugs fixed** during testing (PPPoE/DNS/NAT field names, ratelimit URL path, hyphen/underscore display).
+- **7 bugs fixed** during testing (PPPoE/DNS/NAT/conntrack/monitoring field names, ratelimit URL path, hyphen/underscore display).
 - **0 commands N/A** — all traffic commands verified with live PPPoE session.
 
 ---
@@ -91,6 +91,31 @@ Live integration test results for **dawos-cli v0.2.0** against a real dawos-agen
 | **Fix** | Added fallback lookup: `row.get(col, row.get(col.replace("_", "-"), "—"))` in both `table()` and `_print_csv()` |
 | **File** | `dawos_cli/output.py` lines 42, 163 |
 | **Status** | Fixed and verified — Rate Limit, Rx Bytes, Tx Bytes display correctly in table, CSV, and JSON formats |
+
+### BUG #9: Conntrack Set Sends Wrong Field Name
+
+| Field | Detail |
+|-------|--------|
+| **Severity** | High |
+| **Symptom** | `dawos firewall conntrack-set 262144` returns `422: Field required` for `body.max_value` |
+| **Root Cause** | CLI sends `{"max": 262144}` but API expects `{"max_value": 262144}` per `ConntrackUpdateRequest` model |
+| **Fix** | Changed `json={"max": max_entries}` to `json={"max_value": max_entries}` in `dawos_cli/commands/firewall.py` |
+| **File** | `dawos_cli/commands/firewall.py` line 74 |
+| **Test Updated** | `tests/test_commands.py::TestFirewallCommands::test_conntrack_set` — now asserts correct payload |
+| **Status** | Fixed and verified — `conntrack-set 262144` succeeds, read-back confirms `nf_conntrack_max=262144` |
+
+### BUG #10: Monitoring Configure Sends Wrong Fields
+
+| Field | Detail |
+|-------|--------|
+| **Severity** | High |
+| **Symptom** | `dawos monitoring configure -t prometheus -v enabled` returns `422: Field required` for `body.service` |
+| **Root Cause** | CLI accepted `--target`/`-t` and `--value`/`-v` and sent `{"target": "prometheus", "value": "enabled"}`, but API expects `ConfigureExporterRequest` with `{"service": str, "enable": bool}` |
+| **Fix** | Redesigned command interface: replaced `--target`/`-t` and `--value`/`-v` with `--service`/`-s` (required) and `--enable/--disable` (boolean flag). Updated docstring. |
+| **File** | `dawos_cli/commands/monitoring.py` lines 37-48 |
+| **Test Updated** | `tests/test_commands.py::TestMonitoringCommands::test_configure` — uses new flags |
+| **Test Added** | `tests/test_commands.py::TestMonitoringCommands::test_configure_disable` — verifies disable path |
+| **Status** | Fixed and verified — `configure -s accel-ppp --enable` and `--disable` both succeed |
 
 ---
 
@@ -284,24 +309,21 @@ Every read command returns exit code 0 with properly formatted Rich table output
 
 Full create-verify-delete cycles. All resources cleaned up after testing.
 
-### Pool CRUD (3/3) ✅
-
+### Pool CRUD (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos pool add test-pool 10.99.0.0/24` | Pool created |
 | `dawos pool list` | Pool visible in list |
 | `dawos pool remove test-pool` | Pool removed |
 
-### Zone CRUD (3/3) ✅
-
+### Zone CRUD (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos zone add test-zone` | Zone created |
 | `dawos zone list` | Zone visible in list |
 | `dawos zone remove test-zone` | Zone removed |
 
-### Scheduler CRUD + Run (4/4) ✅
-
+### Scheduler CRUD + Run (4/4)
 | Command | Result |
 |---------|--------|
 | `dawos scheduler add test-job -c "show stat" -i 300` | Job created: every 300s |
@@ -309,8 +331,7 @@ Full create-verify-delete cycles. All resources cleaned up after testing.
 | `dawos scheduler list` | Job visible in list |
 | `dawos scheduler remove test-job` | Job removed |
 
-### Event Hook CRUD + Fire (4/4) ✅
-
+### Event Hook CRUD + Fire (4/4)
 | Command | Result |
 |---------|--------|
 | `dawos events hook-add test-hook -e session-up -a https://httpbin.org/post` | Hook registered |
@@ -318,32 +339,28 @@ Full create-verify-delete cycles. All resources cleaned up after testing.
 | `dawos events hooks` | Hook visible in list |
 | `dawos events hook-del test-hook` | Hook removed |
 
-### PPPoE Interface CRUD (3/3) ✅
-
+### PPPoE Interface CRUD (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos pppoe add ens19` | Interface added (BUG #4 fixed) |
 | `dawos pppoe interfaces` | Interface visible in list |
 | `dawos pppoe remove ens19` | Interface removed |
 
-### MAC Filter CRUD (3/3) ✅
-
+### MAC Filter CRUD (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos pppoe mac-add AA:BB:CC:DD:EE:FF` | MAC added to filter |
 | `dawos pppoe mac-filter` | MAC visible in list |
 | `dawos pppoe mac-del AA:BB:CC:DD:EE:FF` | MAC removed |
 
-### Route CRUD (3/3) ✅
-
+### Route CRUD (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos network add-route 10.99.99.0/24 --gw 10.0.0.1` | Route added |
 | `dawos network routes` | Route visible in table |
 | `dawos network del-route 10.99.99.0/24 --gw 10.0.0.1` | Route removed |
 
-### VLAN CRUD (5/5) ✅
-
+### VLAN CRUD (5/5)
 | Command | Result |
 |---------|--------|
 | `dawos network vlan-add eth0 --id 999` | VLAN eth0.999 created |
@@ -352,36 +369,32 @@ Full create-verify-delete cycles. All resources cleaned up after testing.
 | `dawos network vlan-state eth0.999 up` | VLAN set to up |
 | `dawos network vlan-del eth0.999` | VLAN deleted |
 
-### DNS Set (3/3) ✅
-
+### DNS Set (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos network dns-set 8.8.8.8,1.1.1.1` | DNS updated (BUG #5 fixed) |
 | `dawos network dns` | Nameservers confirmed: 8.8.8.8, 1.1.1.1 |
 | `dawos network dns-set 127.0.0.53` | Original DNS restored |
 
-### NAT Masquerade (2/2) ✅
-
+### NAT Masquerade (2/2)
 | Command | Result |
 |---------|--------|
 | `dawos nat masquerade-on eth0` | Masquerade enabled |
 | `dawos nat masquerade-off eth0` | Masquerade disabled |
 
-### NAT Public IP (2/2) ✅
-
+### NAT Public IP (2/2)
 | Command | Result |
 |---------|--------|
 | `dawos nat public-ip-add 203.0.113.10` | Public IP bound |
 | `dawos nat public-ip-del 203.0.113.10` | Public IP unbound |
 
-### NAT Box Egress (2/2) ✅
-
+### NAT Box Egress (2/2)
 | Command | Result |
 |---------|--------|
 | `dawos nat box-egress-set true` | Box egress enabled |
 | `dawos nat box-egress-set false` | Box egress disabled |
 
-### NAT Egress Set (1/1) ✅ (BUG #6 fixed, infra N/A)
+### NAT Egress Set (1/1) (BUG #6 fixed, infra N/A)
 
 | Command | Result |
 |---------|--------|
@@ -389,8 +402,20 @@ Full create-verify-delete cycles. All resources cleaned up after testing.
 
 > **Note:** After BUG #6 fix, CLI sends correct `{"target": ...}` (no more 422). HTTP 400 is because the nftables `accelnat` table with `cust_egress` map doesn't exist on this dev server — infrastructure dependency, not a code bug.
 
-### Conntrack Tuning (4/4) ✅
+### Monitoring (2/2)
 
+| Command | Result |
+|---------|--------|
+| `dawos monitoring configure -s accel-ppp --enable` | Exporter enabled (BUG #10 fixed) |
+| `dawos monitoring configure -s accel-ppp --disable` | Exporter disabled |
+
+### Firewall Conntrack (1/1)
+
+| Command | Result |
+|---------|--------|
+| `dawos firewall conntrack-set 262144` | Max entries set to 262144 (BUG #9 fixed) |
+
+### Conntrack Tuning (4/4)
 | Command | Result |
 |---------|--------|
 | `dawos conntrack table-size` | Shows current: 65536 |
@@ -398,15 +423,13 @@ Full create-verify-delete cycles. All resources cleaned up after testing.
 | `dawos conntrack timeout-set tcp_timeout_established 7200` | Timeout set to 7200s |
 | `dawos conntrack profile-apply gaming` | Gaming profile applied |
 
-### PADO Delay (2/2) ✅
-
+### PADO Delay (2/2)
 | Command | Result |
 |---------|--------|
 | `dawos pppoe pado-set 200` | Delay set to 200ms |
 | `dawos pppoe pado-set 0` | Delay cleared |
 
-### Firewall Group CRUD (4/4) ✅
-
+### Firewall Group CRUD (4/4)
 | Command | Result |
 |---------|--------|
 | `dawos firewall group-add test-grp -t address -e "10.0.0.1,10.0.0.2"` | Group created (success=false — nft not configured, expected) |
@@ -414,28 +437,24 @@ Full create-verify-delete cycles. All resources cleaned up after testing.
 | `dawos firewall group-members test-grp "10.0.0.3,10.0.0.4"` | Members added |
 | `dawos firewall group-del test-grp` | Group deleted |
 
-### Config Update (1/1) ✅
-
+### Config Update (1/1)
 | Command | Result |
 |---------|--------|
 | `dawos config update @/tmp/test-accel-config.conf -f` | Config updated |
 
-### Config Guarded Apply Cycle (3/3) ✅
-
+### Config Guarded Apply Cycle (3/3)
 | Command | Result |
 |---------|--------|
 | `dawos config apply @/tmp/test-accel-config.conf -f` | Applied with 5m rollback window |
 | `dawos config apply-status` | `Pending: True` confirmed |
 | `dawos config confirm` | Auto-rollback cancelled |
 
-### Config Rollback (1/1) ✅
-
+### Config Rollback (1/1)
 | Command | Result |
 |---------|--------|
 | `dawos config rollback "accel-ppp.conf.20260707_184800.bak" -f` | Config rolled back |
 
-### Service Command (1/1) ✅
-
+### Service Command (1/1)
 | Command | Result |
 |---------|--------|
 | `dawos service cmd "show stat"` | accel-ppp statistics returned |
@@ -473,8 +492,7 @@ Tested with a real PPPoE session: PPPoE Client → BNG ens20 → accel-ppp.
 | **Client MAC** | bc:24:11:c8:32:9e |
 | **MTU** | 1400 |
 
-### Session Lifecycle (8/8) ✅
-
+### Session Lifecycle (8/8)
 | Command | Result |
 |---------|--------|
 | `dawos session list` | Session displayed with all fields |
@@ -486,27 +504,24 @@ Tested with a real PPPoE session: PPPoE Client → BNG ens20 → accel-ppp.
 | `dawos session restart testuser1 -f` | "CPE should reconnect", auto-reconnected |
 | `dawos session drop-by-mac bc:24:11:c8:32:9e -f` | Dropped 1 session, auto-reconnected |
 
-### Traffic Shaping (7/7) ✅
-
+### Traffic Shaping (7/7)
 | Command | Result |
 |---------|--------|
-| `dawos traffic ratelimit testuser1 5M/20M` | ✓ shaper → 5M/20M (BUG #7 fixed) |
+| `dawos traffic ratelimit testuser1 5M/20M` | PASS shaper → 5M/20M (BUG #7 fixed) |
 | `dawos session list` (verify) | Rate Limit column: 20000/5000 (BUG #8 fixed) |
 | `dawos traffic queue testuser1` | TC qdisc tbf + police rules displayed |
-| `dawos traffic ratelimit testuser1 10M/50M` | ✓ shaper → 10M/50M |
+| `dawos traffic ratelimit testuser1 10M/50M` | PASS shaper → 10M/50M |
 | `dawos traffic queue testuser1` (verify) | TC rules: rate 50Mbit + police 10Mbit |
-| `dawos traffic ratelimit-restore testuser1` | ✓ shaper restored |
+| `dawos traffic ratelimit-restore testuser1` | PASS shaper restored |
 | `dawos session list` (verify) | Rate Limit column empty (cleared) |
 
-### Session Stats (2/2) ✅
-
+### Session Stats (2/2)
 | Command | Result |
 |---------|--------|
 | `dawos session stats` | Active: 1, Pool used: 0, Pool total: 9 |
 | `dawos service cmd "show stat"` | sessions.active: 1, pppoe.active: 1 |
 
-### Output Formats with Live Data (4/4) ✅
-
+### Output Formats with Live Data (4/4)
 | Command | Result |
 |---------|--------|
 | `dawos session list` | Rich table with Rate Limit column |
@@ -514,12 +529,11 @@ Tested with a real PPPoE session: PPPoE Client → BNG ens20 → accel-ppp.
 | `dawos -F csv session list` | CSV with rate_limit column populated |
 | `dawos session find testuser1` | Table with rx_bytes, tx_bytes columns |
 
-### Edge Cases (4/4) ✅
-
+### Edge Cases (4/4)
 | Command | Result | Notes |
 |---------|--------|-------|
-| `dawos session find nonexistent123` | ⚠ warning (not error) | Correct: no session found |
-| `dawos session terminate nonexistent123 -f` | ✓ success message | accel-cmd doesn't validate existence |
+| `dawos session find nonexistent123` | WARNING warning (not error) | Correct: no session found |
+| `dawos session terminate nonexistent123 -f` | PASS success message | accel-cmd doesn't validate existence |
 | `dawos traffic ratelimit nonexistent123 5M/20M` | 404: No live session | Correct rejection |
 | `dawos session by-ip 10.99.99.99` | Found: false | Correct: IP not in use |
 
@@ -602,6 +616,9 @@ Correct syntax for all write commands verified through testing:
 | `firewall group-add` | `dawos firewall group-add NAME -t TYPE -e ELEMENTS` | `-t` required, `-e` optional |
 | `firewall group-members` | `dawos firewall group-members NAME ELEMENTS` | Comma-separated elements |
 | `firewall group-del` | `dawos firewall group-del NAME` | |
+| `firewall conntrack-set` | `dawos firewall conntrack-set N` | Max entries integer, sends `{"max_value": N}` |
+| `monitoring configure` | `dawos monitoring configure -s SVC --enable` | `--service`/`-s` required, `--enable/--disable` toggle |
+| `monitoring restart` | `dawos monitoring restart SVC -f` | `-f` skips confirmation |
 | `config update` | `dawos config update @FILENAME -f` | `@file` reads from disk |
 | `config apply` | `dawos config apply @FILENAME -f` | Guarded with 5m rollback |
 | `config confirm` | `dawos config confirm` | Cancels auto-rollback |
@@ -629,7 +646,7 @@ Correct syntax for all write commands verified through testing:
 | `session` | `list`, `stats` | — |
 | `config` | `show`, `backups`, `revisions`, `apply-status` | `update`, `apply`, `confirm`, `rollback` |
 | `network` | `interfaces`, `routes`, `vlans`, `dns` | `add-route`, `del-route`, `vlan-add`, `vlan-del`, `vlan-state`, `dns-set` |
-| `firewall` | `rules`, `conntrack`, `sysctl`, `groups` | `group-add`, `group-del`, `group-members` |
+| `firewall` | `rules`, `conntrack`, `sysctl`, `groups` | `group-add`, `group-del`, `group-members`, `conntrack-set`, `sysctl-set` |
 | `nat` | `status`, `egress` | `masquerade-on`, `masquerade-off`, `egress-set`, `egress-del`, `public-ip-add`, `public-ip-del`, `box-egress-set` |
 | `pppoe` | `interfaces`, `pado`, `mac-filter` | `add`, `remove`, `pado-set`, `mac-add`, `mac-del` |
 | `pool` | `list`, `usage` | `add`, `remove` |
@@ -642,7 +659,7 @@ Correct syntax for all write commands verified through testing:
 | `lldp` | `status`, `neighbors` | — |
 | `vrrp` | `status` | — |
 | `flow` | `status`, `stats`, `collectors` | — |
-| `monitoring` | `status` | — |
+| `monitoring` | `status`, `metrics SERVICE`, `metrics-service SERVICE` | `configure`, `restart` |
 | `limits` | `show` | — |
 | `zone` | `list` | `add`, `remove` |
 | `diagnostics` | `doctor` | — |
