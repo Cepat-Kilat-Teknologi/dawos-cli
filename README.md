@@ -599,7 +599,7 @@ dawos-cli/
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
 │       └── zone.py          # Zone-based firewall
-├── tests/                   # 508 tests, 97% coverage
+├── tests/                   # 587 tests, 100% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -724,7 +724,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **508 tests** with **97% coverage** across all source files:
+The project maintains **587 tests** with **100% coverage** across all source files:
 
 ```bash
 # Quick test run
@@ -738,18 +738,20 @@ pytest --cov=dawos_cli --cov-report=term-missing
 
 | Module | Statements | Coverage |
 |--------|-----------|----------|
-| `dawos_cli/commands/*.py` | 1,024 | 99% |
-| `dawos_cli/app.py` | 139 | 79% |
+| `dawos_cli/commands/*.py` | 1,085 | 100% |
+| `dawos_cli/app.py` | 144 | 100% |
 | `dawos_cli/dashboard.py` | 135 | 100% |
-| `dawos_cli/output.py` | 107 | 97% |
-| `dawos_cli/client.py` | 101 | 96% |
+| `dawos_cli/config.py` | 105 | 100% |
+| `dawos_cli/output.py` | 107 | 100% |
+| `dawos_cli/client.py` | 101 | 100% |
 | `dawos_cli/doctor.py` | 83 | 100% |
-| `dawos_cli/config.py` | 81 | 98% |
-| `dawos_cli/updater.py` | 76 | 49% |
-| `dawos_cli/shell.py` | 73 | 66% |
-| `dawos_cli/telemetry.py` | 49 | 88% |
+| `dawos_cli/updater.py` | 76 | 100% |
+| `dawos_cli/shell.py` | 73 | 100% |
+| `dawos_cli/wizards.py` | 72 | 100% |
+| `dawos_cli/multi.py` | 61 | 100% |
+| `dawos_cli/telemetry.py` | 49 | 100% |
 | `dawos_cli/state.py` | 12 | 100% |
-| **Total** | **1,881** | **97%** |
+| **Total** | **2,421** | **100%** |
 
 ### Test Categories
 

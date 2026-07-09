@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-07-09
+
+### Changed
+
+- **100% test coverage** — up from 97% (587 tests, 2421 statements, 0 uncovered lines)
+- **587 tests** — up from 508, with 79 new tests covering all edge cases across 12 modules: updater, shell, wizard, telemetry, firewall, config, output, playbook, app, client, audit, config_cmd
+
 ## [0.3.1] - 2026-07-09
 
 ### Added
