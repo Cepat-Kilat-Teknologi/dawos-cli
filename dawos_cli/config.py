@@ -167,3 +167,50 @@ def import_profiles(payload: Dict[str, Any], *, merge: bool = True) -> int:
 
     _save(data)
     return len(incoming)
+
+
+# ---------------------------------------------------------------------------
+# Node groups — named sets of profiles for multi-node execution
+# ---------------------------------------------------------------------------
+
+
+def list_groups() -> Dict[str, list]:
+    """Return all node groups as {name: [profile_names]}."""
+    return _load().get("groups", {})
+
+
+def get_group(name: str) -> Optional[list]:
+    """Return the profile list for a group, or None if not found."""
+    return _load().get("groups", {}).get(name)
+
+
+def add_group(name: str, profiles: list) -> None:
+    """Create or overwrite a node group with the given profile names.
+
+    Validates that all referenced profiles exist before saving.
+
+    Args:
+        name: Group name.
+        profiles: List of profile names to include.
+
+    Raises:
+        ValueError: If any referenced profile does not exist.
+    """
+    data = _load()
+    existing = set(data.get("profiles", {}).keys())
+    missing = [p for p in profiles if p not in existing]
+    if missing:
+        raise ValueError(f"Unknown profiles: {', '.join(missing)}")
+    data.setdefault("groups", {})[name] = profiles
+    _save(data)
+
+
+def remove_group(name: str) -> bool:
+    """Delete a node group. Returns True if it existed."""
+    data = _load()
+    groups = data.get("groups", {})
+    if name not in groups:
+        return False
+    del groups[name]
+    _save(data)
+    return True
