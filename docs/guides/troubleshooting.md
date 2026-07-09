@@ -19,7 +19,7 @@ ERROR: Cannot reach http://192.168.1.1:8470/health
 ```
 
 **Causes:**
-- dawos-agent is not running on the server
+- DawOS Agent is not running on the server
 - Wrong IP address or port
 - Firewall blocking port 8470
 

@@ -1,6 +1,6 @@
 # Commands Overview
 
-dawos-cli provides **30+ commands** organized into groups for managing every aspect of your BNG router.
+DawOS CLI provides **30+ commands** organized into groups for managing every aspect of your BNG router.
 
 ## Top-Level Commands
 

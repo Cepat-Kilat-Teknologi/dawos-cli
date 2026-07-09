@@ -40,7 +40,7 @@ dawos_cli/
 
 ## Design Principles
 
-1. **Thin client** — dawos-cli is a pure HTTP client. All logic lives in dawos-agent.
+1. **Thin client** — DawOS CLI is a pure HTTP client. All logic lives in DawOS Agent.
 2. **Consistent output** — Every command uses `output.py` helpers for uniform formatting.
 3. **Global state** — `state.py` singleton avoids threading context through every command.
 4. **Multi-profile** — Operators manage multiple BNG nodes without re-typing credentials.

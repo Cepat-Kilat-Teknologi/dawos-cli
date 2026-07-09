@@ -4,11 +4,11 @@
 
 | Version | Supported |
 |---------|-----------|
-| 0.2.x   | :white_check_mark: |
+| 0.2.x   | Yes |
 
 ## Reporting a Vulnerability
 
-The dawos-cli team takes security issues seriously. We appreciate your efforts to responsibly disclose your findings.
+The DawOS CLI team takes security issues seriously. We appreciate your efforts to responsibly disclose your findings.
 
 ### How to Report
 
@@ -46,7 +46,7 @@ When reporting a vulnerability, please include:
 
 ## Security Best Practices
 
-When using dawos-cli in production:
+When using DawOS CLI in production:
 
 ### API Key Management
 
@@ -65,9 +65,9 @@ When using dawos-cli in production:
 
 ### Network Security
 
-- Always use dawos-cli over trusted networks or VPN connections.
-- Consider placing dawos-agent behind a reverse proxy with TLS termination.
-- Restrict dawos-agent access to authorized IP addresses.
+- Always use DawOS CLI over trusted networks or VPN connections.
+- Consider placing DawOS Agent behind a reverse proxy with TLS termination.
+- Restrict DawOS Agent access to authorized IP addresses.
 
 ### Operational Security
 
@@ -79,10 +79,10 @@ When using dawos-cli in production:
 
 1. **Plain-text API keys**: Profile configuration stores API keys without encryption. This is by design for CLI simplicity but requires proper file permissions.
 
-2. **HTTP transport**: dawos-cli communicates with dawos-agent over HTTP by default. For production deployments, use HTTPS via a reverse proxy.
+2. **HTTP transport**: DawOS CLI communicates with DawOS Agent over HTTP by default. For production deployments, use HTTPS via a reverse proxy.
 
 3. **No certificate pinning**: The client does not implement certificate pinning. Use network-level controls for secure communication.
 
 ## Acknowledgments
 
-We thank all security researchers who help improve the security of dawos-cli. Contributors will be acknowledged (with permission) in release notes.
+We thank all security researchers who help improve the security of DawOS CLI. Contributors will be acknowledged (with permission) in release notes.

@@ -2,7 +2,7 @@
 
 ## Profiles
 
-dawos-cli uses **profiles** to manage connections to multiple BNG nodes. Each profile stores a URL and API key.
+DawOS CLI uses **profiles** to manage connections to multiple BNG nodes. Each profile stores a URL and API key.
 
 ### Config Location
 

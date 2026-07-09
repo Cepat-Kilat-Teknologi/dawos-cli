@@ -1,6 +1,6 @@
-# dawos-cli
+# DawOS CLI
 
-**Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line.**
+**Broadband management, simplified. Remote CLI for DawOS Agent.**
 
 <div class="grid cards" markdown>
 
@@ -30,9 +30,9 @@
 
 </div>
 
-## What is dawos-cli?
+## What is DawOS CLI?
 
-`dawos-cli` is a command-line tool for managing PPPoE/BNG routers powered by [accel-ppp](https://accel-ppp.org/) through the [dawos-agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) REST API.
+DawOS CLI is a command-line tool for managing PPPoE/BNG routers powered by [accel-ppp](https://accel-ppp.org/) through the [DawOS Agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) REST API.
 
 ### Features
 
@@ -64,7 +64,7 @@ dawos top
 ## Requirements
 
 - Python 3.9+
-- A running [dawos-agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) instance
+- A running [DawOS Agent](https://github.com/Cepat-Kilat-Teknologi/dawos-agent) instance
 
 ## Install
 

@@ -1,6 +1,6 @@
 # Scripting & Automation
 
-dawos-cli is designed for automation with `--json` and `--format` output modes.
+DawOS CLI is designed for automation with `--json` and `--format` output modes.
 
 > **Note:** `--json`, `-j`, `--format`, and `-F` are global options — they must be placed **before** the command group (e.g., `dawos --json session list`, not `dawos session list --json`).
 
@@ -68,7 +68,7 @@ dawos -j system health
 
 ## Error Handling
 
-dawos-cli uses standard exit codes:
+DawOS CLI uses standard exit codes:
 
 | Code | Meaning |
 |------|---------|

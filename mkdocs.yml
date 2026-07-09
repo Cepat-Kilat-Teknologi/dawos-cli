@@ -1,6 +1,6 @@
-site_name: dawos-cli
+site_name: DawOS CLI
 site_url: https://Cepat-Kilat-Teknologi.github.io/dawos-cli
-site_description: Remote CLI client for dawos-agent — manage PPPoE/BNG routers from the command line
+site_description: Broadband management, simplified. Remote CLI for DawOS Agent
 site_author: Cepat Kilat Teknologi
 
 repo_name: Cepat-Kilat-Teknologi/dawos-cli

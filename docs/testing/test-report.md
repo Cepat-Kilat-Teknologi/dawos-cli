@@ -1,6 +1,6 @@
 # CLI Test Report
 
-Live integration test results for **dawos-cli v0.3.0** against a real dawos-agent instance.
+Live integration test results for **DawOS CLI v0.3.0** against a real DawOS Agent instance.
 
 ---
 
@@ -127,7 +127,7 @@ Every read command returns exit code 0 with properly formatted Rich table output
 
 | Command | Result |
 |---------|--------|
-| `dawos status` | Connected, health OK, version 0.1.0, node dawos-dev |
+| `dawos status` | Connected, health OK, version 0.1.0, node bng-node |
 | `dawos version` | CLI version banner displayed |
 | `dawos system info` | Hostname, OS, kernel, arch, uptime |
 | `dawos system metrics` | CPU, memory, disk, load average |
@@ -489,7 +489,7 @@ Tested with a real PPPoE session: PPPoE Client → BNG ens20 → accel-ppp.
 | **Auth** | chap-secrets (PAP/CHAP/MSCHAPv1/v2) |
 | **IP Assignment** | Static (10.99.0.2 via chap-secrets) |
 | **BNG Interface** | ens20 |
-| **Client MAC** | bc:24:11:c8:32:9e |
+| **Client MAC** | aa:bb:cc:dd:ee:ff |
 | **MTU** | 1400 |
 
 ### Session Lifecycle (8/8)
@@ -502,7 +502,7 @@ Tested with a real PPPoE session: PPPoE Client → BNG ens20 → accel-ppp.
 | `dawos session by-sid a35a5ccb37202dbd` | Found: true (uses accel-ppp session ID, not MAC) |
 | `dawos session terminate testuser1 -f` | Terminated, PPPoE client auto-reconnected in ~3s |
 | `dawos session restart testuser1 -f` | "CPE should reconnect", auto-reconnected |
-| `dawos session drop-by-mac bc:24:11:c8:32:9e -f` | Dropped 1 session, auto-reconnected |
+| `dawos session drop-by-mac aa:bb:cc:dd:ee:ff -f` | Dropped 1 session, auto-reconnected |
 
 ### Traffic Shaping (7/7)
 | Command | Result |
