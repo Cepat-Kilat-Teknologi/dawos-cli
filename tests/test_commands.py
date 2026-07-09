@@ -1584,3 +1584,316 @@ class TestNetworkEdgeCases:
         mock_client["get"].return_value = {"status": "ok", "info": "no vlans"}
         result = cli("network", "vlans")
         assert result.exit_code == 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# System — ready (v0.3.1)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestSystemReady:
+    def test_ready(self, cli, mock_client):
+        mock_client["get"].return_value = {"ready": True, "accel_ppp": "running"}
+        result = cli("system", "ready")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/health/ready")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Service — shutdown / shutdown-cancel (v0.3.1)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestServiceShutdown:
+    def test_shutdown_soft(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "message": "Shutdown (soft) initiated",
+            "active_sessions": 5,
+        }
+        result = cli("service", "shutdown", "--force")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/service/shutdown",
+            json={"mode": "soft", "confirm": True},
+        )
+
+    def test_shutdown_hard(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "message": "Shutdown (hard) initiated",
+            "active_sessions": 0,
+        }
+        result = cli("service", "shutdown", "--mode", "hard", "--force")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/service/shutdown",
+            json={"mode": "hard", "confirm": True},
+        )
+
+    def test_shutdown_cancel(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "message": "Shutdown cancelled",
+            "active_sessions": 3,
+        }
+        result = cli("service", "shutdown-cancel")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with("/api/v1/service/shutdown/cancel")
+
+    def test_shutdown_confirm_abort(self, cli, mock_client):
+        result = cli("service", "shutdown", input="n\n")
+        assert result.exit_code != 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Config — revision-content / compare (v0.3.1)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestConfigRevisionContent:
+    def test_revision_content(self, cli, mock_client):
+        mock_client["get"].return_value = {"content": "[ppp]\nverbose=1\n"}
+        result = cli("config", "revision-content", "rev_20260101.conf")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with(
+            "/api/v1/config/revisions/rev_20260101.conf/content"
+        )
+        assert "verbose=1" in result.output
+
+    def test_revision_content_no_content_key(self, cli, mock_client):
+        mock_client["get"].return_value = {"error": "not found"}
+        result = cli("config", "revision-content", "missing.conf")
+        assert result.exit_code == 0
+
+    def test_compare(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "diff": "--- a\n+++ b\n@@ -1 +1 @@\n-old\n+new"
+        }
+        result = cli("config", "compare", "--from", "rev_a.conf", "--to", "rev_b.conf")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with(
+            "/api/v1/config/compare", from_name="rev_a.conf", to_name="rev_b.conf"
+        )
+        assert "old" in result.output
+
+    def test_compare_no_diff_key(self, cli, mock_client):
+        mock_client["get"].return_value = {"message": "identical"}
+        result = cli("config", "compare", "--from", "a", "--to", "b")
+        assert result.exit_code == 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Audit (v0.3.1)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestAuditCommands:
+    def test_list_default(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "count": 2,
+            "entries": [
+                {
+                    "timestamp": "2026-01-01T00:00:00Z",
+                    "method": "POST",
+                    "path": "/api/v1/service/restart",
+                    "role": "admin",
+                    "status": 200,
+                    "duration_ms": 42,
+                },
+                {
+                    "timestamp": "2026-01-01T00:01:00Z",
+                    "method": "DELETE",
+                    "path": "/api/v1/pool/1",
+                    "role": "admin",
+                    "status": 200,
+                    "duration_ms": 15,
+                },
+            ],
+        }
+        result = cli("audit", "list")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/audit", limit=100)
+
+    def test_list_with_filters(self, cli, mock_client):
+        mock_client["get"].return_value = {"count": 0, "entries": []}
+        result = cli(
+            "audit",
+            "list",
+            "--limit",
+            "10",
+            "--method",
+            "POST",
+            "--path",
+            "/api/v1/service",
+            "--role",
+            "admin",
+            "--status",
+            "200",
+        )
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with(
+            "/api/v1/audit",
+            limit=10,
+            method="POST",
+            path="/api/v1/service",
+            role="admin",
+            status=200,
+        )
+
+    def test_list_non_dict(self, cli, mock_client):
+        mock_client["get"].return_value = [{"timestamp": "t", "method": "GET"}]
+        result = cli("audit", "list")
+        assert result.exit_code == 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Bulk (v0.3.1)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestBulkCommands:
+    def test_terminate(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "operation": "terminate",
+            "total": 2,
+            "succeeded": 2,
+            "failed": 0,
+            "results": [
+                {"target": "user1", "success": True, "error": None},
+                {"target": "user2", "success": True, "error": None},
+            ],
+        }
+        result = cli("bulk", "terminate", "user1,user2", "--force")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/bulk/terminate",
+            json={"usernames": ["user1", "user2"]},
+        )
+        assert "2 succeeded" in result.output
+
+    def test_terminate_confirm_abort(self, cli, mock_client):
+        result = cli("bulk", "terminate", "user1", input="n\n")
+        assert result.exit_code != 0
+
+    def test_ratelimit(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "operation": "ratelimit",
+            "total": 2,
+            "succeeded": 1,
+            "failed": 1,
+            "results": [
+                {"target": "u1", "success": True, "error": None},
+                {"target": "u2", "success": False, "error": "not found"},
+            ],
+        }
+        result = cli("bulk", "ratelimit", "u1:5M/20M,u2:10M/50M")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/bulk/ratelimit",
+            json={
+                "items": [
+                    {"username": "u1", "rate": "5M/20M"},
+                    {"username": "u2", "rate": "10M/50M"},
+                ]
+            },
+        )
+        assert "1 succeeded" in result.output
+
+    def test_ratelimit_bad_format(self, cli, mock_client):
+        result = cli("bulk", "ratelimit", "badformat")
+        assert result.exit_code != 0
+
+    def test_shaper_restore(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "operation": "shaper-restore",
+            "total": 1,
+            "succeeded": 1,
+            "failed": 0,
+            "results": [{"target": "user1", "success": True, "error": None}],
+        }
+        result = cli("bulk", "shaper-restore", "user1")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with(
+            "/api/v1/bulk/shaper-restore",
+            json={"usernames": ["user1"]},
+        )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Playbook (v0.3.1)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestPlaybookCommands:
+    def test_list(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "count": 3,
+            "playbooks": [
+                {
+                    "name": "health-check",
+                    "description": "Run health checks",
+                    "min_role": "viewer",
+                },
+                {
+                    "name": "backup-config",
+                    "description": "Backup config",
+                    "min_role": "admin",
+                },
+                {
+                    "name": "safe-restart",
+                    "description": "Safe restart",
+                    "min_role": "admin",
+                },
+            ],
+        }
+        result = cli("playbook", "list")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/playbooks")
+
+    def test_list_non_dict(self, cli, mock_client):
+        mock_client["get"].return_value = [{"name": "health-check"}]
+        result = cli("playbook", "list")
+        assert result.exit_code == 0
+
+    def test_run(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "playbook": "health-check",
+            "success": True,
+            "steps": [
+                {
+                    "name": "check_service",
+                    "success": True,
+                    "output": "running",
+                    "error": None,
+                },
+                {
+                    "name": "check_sessions",
+                    "success": True,
+                    "output": "42 active",
+                    "error": None,
+                },
+            ],
+        }
+        result = cli("playbook", "run", "health-check", "--force")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with("/api/v1/playbooks/health-check/run")
+
+    def test_run_confirm_abort(self, cli, mock_client):
+        result = cli("playbook", "run", "safe-restart", input="n\n")
+        assert result.exit_code != 0
+
+    def test_run_failure(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "playbook": "safe-restart",
+            "success": False,
+            "steps": [
+                {"name": "drain", "success": True, "output": "drained", "error": None},
+                {
+                    "name": "restart",
+                    "success": False,
+                    "output": None,
+                    "error": "timeout",
+                },
+            ],
+        }
+        result = cli("playbook", "run", "safe-restart", "--force")
+        assert result.exit_code == 0
+        assert "✗" in result.output

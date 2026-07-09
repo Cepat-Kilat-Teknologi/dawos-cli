@@ -34,7 +34,7 @@ dawos_cli/
     ├── network.py       # Network interfaces
     ├── firewall.py      # Firewall rules
     ├── nat.py           # NAT/masquerade
-    ├── ... (26 modules)
+    ├── ... (29 modules)
     └── zone.py          # Zone-based firewall
 ```
 

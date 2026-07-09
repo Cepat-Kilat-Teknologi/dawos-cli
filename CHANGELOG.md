@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-07-09
+
+### Added
+
+- **Graceful shutdown commands** — `dawos service shutdown` (soft/hard mode with confirmation) and `dawos service shutdown-cancel` to match dawos-agent v0.3.2 shutdown endpoints
+- **Readiness probe** — `dawos system ready` for load-balancer health checks (`GET /health/ready`)
+- **Config revision content** — `dawos config revision-content <name>` to view full content of a specific config checkpoint revision
+- **Config compare** — `dawos config compare --from <a> --to <b>` for unified diff between two config revisions
+- **Audit log viewer** — `dawos audit list` with filters (`--method`, `--path`, `--role`, `--status`, `--limit`) for reviewing API mutation history
+- **Bulk operations** — `dawos bulk terminate` (batch session termination), `dawos bulk ratelimit` (batch rate changes), `dawos bulk shaper-restore` (batch shaper restoration)
+- **Operational playbooks** — `dawos playbook list` and `dawos playbook run <name>` for pre-defined automation sequences (health-check, backup-config, safe-restart)
+- **29 command modules** — up from 26, with 3 new modules: `audit`, `bulk`, `playbook`
+- **508 tests** — up from 426, with 82 new tests covering all 10 new commands and edge cases
+
 ## [0.3.0] - 2026-07-08
 
 ### Changed
@@ -118,7 +132,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+[0.3.1]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.0
 [0.1.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.2.0
-[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.1...HEAD

@@ -18,7 +18,7 @@
 
 - :material-console: **Commands**
 
-    Full reference for all 26 command groups + 6 top-level commands.
+    Full reference for all 29 command groups + 6 top-level commands.
 
     [:octicons-arrow-right-24: Command Reference](commands/reference.md)
 

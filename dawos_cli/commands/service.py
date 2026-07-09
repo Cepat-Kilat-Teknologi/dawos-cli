@@ -55,3 +55,36 @@ def cmd(
         output.print_raw(data["output"])
     else:
         output.response(data)
+
+
+@app.command("shutdown")
+def shutdown(
+    mode: str = typer.Option("soft", "--mode", "-m", help="'soft' (drain) or 'hard'"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
+) -> None:
+    """Initiate graceful shutdown of accel-ppp.
+
+    Soft (drain) mode stops accepting new connections but keeps existing
+    sessions alive until they disconnect naturally.  Hard mode drops all
+    sessions immediately.
+    """
+    label = "drain (keep existing sessions)" if mode == "soft" else "HARD (drop all)"
+    if not force:
+        typer.confirm(f"Shutdown accel-ppp in {label} mode?", abort=True)
+    data = client.post(
+        "/api/v1/service/shutdown",
+        json={"mode": mode, "confirm": True},
+    )
+    sessions = data.get("active_sessions", 0)
+    msg = data.get("message", f"Shutdown ({mode}) initiated")
+    output.success(f"{msg} — {sessions} active session(s)")
+
+
+@app.command("shutdown-cancel")
+def shutdown_cancel() -> None:
+    """Cancel a pending soft shutdown and resume normal operation."""
+    data = client.post("/api/v1/service/shutdown/cancel")
+    sessions = data.get("active_sessions", 0)
+    output.success(
+        f"{data.get('message', 'Shutdown cancelled')} — {sessions} active session(s)"
+    )

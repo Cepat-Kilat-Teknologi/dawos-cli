@@ -28,3 +28,10 @@ def metrics() -> None:
     """Show system metrics (CPU, memory, disk, load, network)."""
     data = client.get("/api/v1/system/metrics")
     output.response(data, title="System Metrics")
+
+
+@app.command("ready")
+def ready() -> None:
+    """Check accel-ppp readiness (load balancer probe)."""
+    data = client.get("/health/ready")
+    output.response(data, title="Readiness")

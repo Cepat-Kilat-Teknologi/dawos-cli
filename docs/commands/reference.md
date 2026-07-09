@@ -46,11 +46,14 @@ Complete reference for all dawos-cli commands.
 | `dawos system info` | System information |
 | `dawos system health` | Health check |
 | `dawos system metrics` | System metrics |
+| `dawos system ready` | Readiness probe (load balancer) |
 | `dawos service status` | BNG service status |
 | `dawos service start` | Start accel-ppp |
 | `dawos service stop` | Stop accel-ppp |
 | `dawos service restart` | Restart accel-ppp |
 | `dawos service cmd COMMAND` | Run a raw accel-cmd command |
+| `dawos service shutdown` | Graceful shutdown (soft/hard) |
+| `dawos service shutdown-cancel` | Cancel pending soft shutdown |
 
 ## Configuration (`config` / `cfg`)
 
@@ -65,6 +68,8 @@ Complete reference for all dawos-cli commands.
 | `dawos config apply @FILE` | Apply configuration (guarded) |
 | `dawos config confirm` | Confirm applied configuration |
 | `dawos config apply-status` | Check apply status |
+| `dawos config revision-content NAME` | View full revision content |
+| `dawos config compare --from A --to B` | Compare two revisions (diff) |
 
 ## Network & Routing (`network` / `net`, `routing` / `rt`)
 
@@ -145,3 +150,29 @@ Complete reference for all dawos-cli commands.
 | `dawos zone` | — | Zone-based firewall |
 | `dawos diagnostics` | `diag` | System diagnostics |
 | `dawos logs` | — | Log viewing and streaming |
+
+## Audit Log (`audit`)
+
+| Command | Description |
+|---------|-------------|
+| `dawos audit list` | List recent audit log entries |
+| `dawos audit list --method POST` | Filter by HTTP method |
+| `dawos audit list --path /api/v1/service` | Filter by path prefix |
+| `dawos audit list --role admin` | Filter by RBAC role |
+| `dawos audit list --status 200` | Filter by status code |
+| `dawos audit list --limit 50` | Limit entries returned |
+
+## Bulk Operations (`bulk`)
+
+| Command | Description |
+|---------|-------------|
+| `dawos bulk terminate USER1,USER2` | Batch terminate sessions |
+| `dawos bulk ratelimit U1:5M/20M,U2:10M/50M` | Batch rate limit changes |
+| `dawos bulk shaper-restore USER1,USER2` | Batch restore RADIUS shapers |
+
+## Operational Playbooks (`playbook`)
+
+| Command | Description |
+|---------|-------------|
+| `dawos playbook list` | List available playbooks |
+| `dawos playbook run NAME` | Execute a playbook |

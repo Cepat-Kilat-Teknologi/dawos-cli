@@ -157,6 +157,8 @@ def main_callback(
 # ---------------------------------------------------------------------------
 
 from .commands import (  # noqa: E402  # pylint: disable=wrong-import-position
+    audit,
+    bulk,
     config_cmd,
     conntrack,
     dhcp,
@@ -171,7 +173,9 @@ from .commands import (  # noqa: E402  # pylint: disable=wrong-import-position
     monitoring,
     nat,
     network,
+    node,
     ntp,
+    playbook,
     pool,
     pppoe,
     profile,
@@ -182,6 +186,7 @@ from .commands import (  # noqa: E402  # pylint: disable=wrong-import-position
     system,
     traffic,
     vrrp,
+    wizard,
     zone,
 )
 
@@ -215,6 +220,11 @@ app.add_typer(limits.app, name="limits", help="Connection limits.")
 app.add_typer(zone.app, name="zone", help="Zone-based firewall.")
 app.add_typer(diagnostics.app, name="diagnostics", help="System diagnostics.")
 app.add_typer(logs.app, name="logs", help="Log viewing and streaming.")
+app.add_typer(node.app, name="node", help="Multi-node group management and execution.")
+app.add_typer(wizard.app, name="wizard", help="Guided interactive workflows.")
+app.add_typer(audit.app, name="audit", help="Audit log viewer.")
+app.add_typer(bulk.app, name="bulk", help="Bulk operations on multiple subscribers.")
+app.add_typer(playbook.app, name="playbook", help="Operational playbooks (automation).")
 
 # ---------------------------------------------------------------------------
 # Short aliases (hidden duplicates for power users)

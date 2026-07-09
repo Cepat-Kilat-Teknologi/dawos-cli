@@ -127,3 +127,28 @@ def apply_status() -> None:
     """Check the status of a pending guarded apply."""
     data = client.get("/api/v1/config/apply/status")
     output.response(data, title="Apply Status")
+
+
+@app.command("revision-content")
+def revision_content(
+    name: str = typer.Argument(..., help="Revision filename to read"),
+) -> None:
+    """Show the full content of a specific config revision."""
+    data = client.get(f"/api/v1/config/revisions/{name}/content")
+    if isinstance(data, dict) and "content" in data:
+        output.print_raw(data["content"])
+    else:
+        output.response(data, title=f"Revision: {name}")
+
+
+@app.command("compare")
+def compare(
+    from_name: str = typer.Option(..., "--from", help="Older revision filename"),
+    to_name: str = typer.Option(..., "--to", help="Newer revision filename"),
+) -> None:
+    """Compare two config revisions (unified diff)."""
+    data = client.get("/api/v1/config/compare", from_name=from_name, to_name=to_name)
+    if isinstance(data, dict) and "diff" in data:
+        output.print_raw(data["diff"])
+    else:
+        output.response(data, title="Revision Compare")
