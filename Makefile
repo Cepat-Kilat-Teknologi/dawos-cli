@@ -1,4 +1,4 @@
-.PHONY: install install-dev uninstall dev test lint format check clean help
+.PHONY: install install-dev uninstall dev test lint format check docs docs-serve clean help
 
 PYTHON  ?= python3
 VENV    := .venv
@@ -7,6 +7,7 @@ PYTEST  := $(VENV)/bin/pytest
 BLACK   := $(VENV)/bin/black
 PYLINT  := $(VENV)/bin/pylint
 RUFF    := $(VENV)/bin/ruff
+MKDOCS  := $(VENV)/bin/python -m mkdocs
 
 # ----------------------------------------------------------------------
 # Installation
@@ -71,6 +72,20 @@ check: lint test
 	@echo "All checks passed -- ready to commit."
 
 # ----------------------------------------------------------------------
+# Documentation
+# ----------------------------------------------------------------------
+
+## Build MkDocs documentation (strict mode)
+docs:
+	$(MKDOCS) build --strict
+	@echo ""
+	@echo "Docs built in site/ directory."
+
+## Serve docs locally for preview
+docs-serve:
+	$(MKDOCS) serve
+
+# ----------------------------------------------------------------------
 # Cleanup
 # ----------------------------------------------------------------------
 
@@ -78,6 +93,7 @@ check: lint test
 clean:
 	rm -rf build/ dist/ *.egg-info .eggs/
 	rm -rf .pytest_cache/ htmlcov/ .coverage
+	rm -rf site/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	@echo "Cleaned."
 
@@ -97,5 +113,7 @@ help:
 	@echo "  make lint         Run black --check + pylint + ruff"
 	@echo "  make format       Format code with black"
 	@echo "  make check        Run all checks (lint + test)"
+	@echo "  make docs         Build MkDocs documentation"
+	@echo "  make docs-serve   Serve docs locally (http://localhost:8000)"
 	@echo "  make clean        Remove build artifacts"
 	@echo "  make help         Show this help"
