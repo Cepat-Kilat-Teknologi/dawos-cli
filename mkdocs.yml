@@ -89,6 +89,7 @@ nav:
   - Development:
       - Contributing: development/contributing.md
       - Architecture: development/architecture.md
+      - Security: development/security.md
       - Changelog: changelog.md
 
 extra:
