@@ -15,7 +15,7 @@ The DawOS CLI team takes security issues seriously. We appreciate your efforts t
 
 **Do not report security vulnerabilities through public GitHub issues.**
 
-Instead, please report them by emailing the project maintainers directly. You should receive a response within **48 hours** acknowledging your report.
+Instead, please report them by emailing **security@cepat-kilat.id**. You should receive a response within **48 hours** acknowledging your report.
 
 ### What to Include
 
