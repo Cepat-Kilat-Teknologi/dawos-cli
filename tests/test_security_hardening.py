@@ -430,9 +430,11 @@ class TestConfigPermissionCheck:
     def test_permission_check_oserror_suppressed(self, tmp_config):
         """OSError during permission check is silently handled."""
         config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        content = config.CONFIG_FILE.read_text(encoding="utf-8")
 
-        with patch.object(Path, "stat", side_effect=OSError("no stat")):
-            # Should not raise — just skip the check
+        with patch.object(Path, "exists", return_value=True), \
+             patch.object(Path, "stat", side_effect=OSError("no stat")), \
+             patch.object(Path, "read_text", return_value=content):
             data = config._load()
             assert "profiles" in data
 
