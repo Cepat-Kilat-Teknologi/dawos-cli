@@ -34,4 +34,4 @@ Hooks run Black, Ruff, and Pylint automatically on `git commit`.
 - **Black**: line-length 88, target py39
 - **Pylint**: must be 10.00/10
 - **Ruff**: zero violations
-- **Coverage**: minimum 90% (currently 99%)
+- **Coverage**: minimum 90% (currently 100%)
