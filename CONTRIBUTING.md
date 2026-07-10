@@ -175,7 +175,7 @@ pytest tests/test_commands.py::TestSessionCommands::test_terminate
 
 ### Coverage
 
-The project maintains a **minimum 90% code coverage** requirement (currently at 97%):
+The project maintains a **minimum 90% code coverage** requirement (currently at 100%):
 
 ```bash
 # Run with coverage
