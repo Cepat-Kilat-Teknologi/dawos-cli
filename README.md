@@ -318,10 +318,10 @@ DAWOS_PROFILE=bng1 dawos session list
 | Group | Alias | Description | Subcommands |
 |-------|-------|-------------|-------------|
 | **profile** | — | Connection profile management | `add`, `list`, `use`, `remove`, `test`, `show`, `export`, `import` |
-| **system** | `sys` | System information and health | `info`, `health`, `metrics` |
-| **service** | — | BNG service control | `status`, `start`, `stop`, `restart`, `cmd` |
+| **system** | `sys` | System information and health | `info`, `health`, `ready`, `metrics` |
+| **service** | — | BNG service control | `status`, `start`, `stop`, `restart`, `cmd`, `shutdown`, `shutdown-cancel` |
 | **session** | `s` | PPPoE session management | `list`, `stats`, `find`, `terminate`, `restart`, `by-sid`, `by-ip`, `snapshot`, `drop-by-mac` |
-| **config** | `cfg` | BNG configuration | `show`, `update`, `backups`, `revisions`, `diff`, `rollback`, `apply`, `confirm`, `apply-status` |
+| **config** | `cfg` | BNG configuration | `show`, `update`, `backups`, `revisions`, `revision-content`, `compare`, `diff`, `rollback`, `apply`, `confirm`, `apply-status` |
 | **network** | `net` | Network interfaces and routing | `interfaces`, `interface`, `interface-config`, `routes`, `add-route`, `del-route`, `dns`, `dns-set`, `vlans`, `vlan-add`, `vlan-del`, `vlan-state` |
 | **firewall** | `fw` | Firewall, sysctl, and conntrack | `status`, `rules`, `save`, `validate`, `sysctl`, `sysctl-set`, `conntrack`, `conntrack-set`, `snmp`, `groups`, `group-add`, `group-del`, `group-members` |
 | **nat** | — | NAT and masquerade management | `status`, `masquerade-on`, `masquerade-off`, `egress`, `egress-set`, `egress-del`, `public-ip-add`, `public-ip-del`, `box-egress`, `box-egress-set` |
@@ -343,6 +343,11 @@ DAWOS_PROFILE=bng1 dawos session list
 | **zone** | — | Zone-based firewall | `list`, `show`, `add`, `remove` |
 | **diagnostics** | `diag` | System diagnostics | `doctor` |
 | **logs** | — | Log viewing and streaming | `tail`, `stream` |
+| **audit** | — | Audit log viewer | `list`, `detail` |
+| **bulk** | — | Bulk session operations | `terminate`, `restart` |
+| **playbook** | — | Operational playbooks | `list`, `run` |
+| **node** | — | Multi-node management | `list`, `exec`, `health` |
+| **wizard** | `wiz` | Guided interactive workflows | `run`, `list` |
 
 ---
 
@@ -598,8 +603,13 @@ dawos-cli/
 │       ├── system.py        # System info and health
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
-│       └── zone.py          # Zone-based firewall
-├── tests/                   # 675 tests, 99% coverage
+│       ├── zone.py          # Zone-based firewall
+│       ├── audit.py         # Audit log viewer
+│       ├── bulk.py          # Bulk session operations
+│       ├── node.py          # Multi-node management
+│       ├── playbook.py      # Operational playbooks
+│       └── wizard.py        # Guided interactive workflows
+├── tests/                   # 675 tests, 100% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -607,10 +617,15 @@ dawos-cli/
 │   ├── test_config.py       # Configuration and profile export/import tests
 │   ├── test_dashboard.py    # Dashboard tests
 │   ├── test_doctor.py       # Doctor diagnostics tests
+│   ├── test_edge_cases.py   # Edge case and error path tests
+│   ├── test_multi.py        # Multi-node operation tests
+│   ├── test_node.py         # Node management command tests
 │   ├── test_output.py       # Output format tests (table, json, csv, yaml)
+│   ├── test_security_hardening.py  # Security audit fix validation tests
 │   ├── test_shell.py        # Interactive shell tests
 │   ├── test_state.py        # State management tests
-│   └── test_telemetry.py    # Telemetry module tests
+│   ├── test_telemetry.py    # Telemetry module tests
+│   └── test_wizard.py       # Wizard engine tests
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml           # GitHub Actions CI (lint + test on push/PR)
@@ -724,7 +739,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **675 tests** with **99% coverage** across all source files (2 uncovered lines are a Python 3.14 coverage.py artifact):
+The project maintains **675 tests** with **100% coverage** across all source files:
 
 ```bash
 # Quick test run
