@@ -106,7 +106,15 @@ def run_wizard(
             ctx["cancelled"] = True
             break
         except Exception as exc:  # pylint: disable=broad-exception-caught
-            result = StepResult(success=False, message=str(exc))
+            log.debug("Wizard step failed: %s", exc, exc_info=True)
+            result = StepResult(
+                success=False,
+                message=(
+                    str(exc)
+                    if isinstance(exc, (ValueError, TypeError, KeyError))
+                    else f"Step failed ({type(exc).__name__})"
+                ),
+            )
 
         ctx["results"].append(result)
 

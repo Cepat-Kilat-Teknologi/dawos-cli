@@ -20,7 +20,7 @@ def status() -> None:
 def leases() -> None:
     """List active DHCP leases."""
     data = client.get("/api/v1/dhcp/leases")
-    lease_list = data.get("leases", data) if isinstance(data, dict) else data
+    lease_list = output.unwrap(data, "leases")
     if isinstance(lease_list, list):
         output.table(
             lease_list,

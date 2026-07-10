@@ -35,7 +35,7 @@ def _load() -> Dict[str, Any]:
             return json.loads(_TELEMETRY_FILE.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         pass
-    return {"commands": {}, "errors": 0, "sessions": 0, "first_seen": time.time()}
+    return {"commands": {}, "errors": 0, "invocations": 0, "first_seen": time.time()}
 
 
 def _save(data: Dict[str, Any]) -> None:
@@ -55,7 +55,7 @@ def track_command(command: str) -> None:
     data = _load()
     cmds = data.setdefault("commands", {})
     cmds[command] = cmds.get(command, 0) + 1
-    data["sessions"] = data.get("sessions", 0) + 1
+    data["invocations"] = data.get("invocations", 0) + 1
     _save(data)
 
 

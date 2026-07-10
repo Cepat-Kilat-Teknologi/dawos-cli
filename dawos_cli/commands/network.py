@@ -13,7 +13,7 @@ app = typer.Typer(help="Network interfaces, routes, VLANs, DNS.")
 def interfaces() -> None:
     """List all network interfaces."""
     data = client.get("/api/v1/network/interfaces")
-    ifaces = data.get("interfaces", data) if isinstance(data, dict) else data
+    ifaces = output.unwrap(data, "interfaces")
     if isinstance(ifaces, list):
         output.table(
             ifaces,
@@ -58,7 +58,7 @@ def interface_config(
 def routes() -> None:
     """Show routing table."""
     data = client.get("/api/v1/network/routes")
-    rts = data.get("routes", data) if isinstance(data, dict) else data
+    rts = output.unwrap(data, "routes")
     if isinstance(rts, list):
         output.table(
             rts,
@@ -126,7 +126,7 @@ def dns_set(
 def vlans() -> None:
     """List VLAN interfaces."""
     data = client.get("/api/v1/network/vlans")
-    vl = data.get("vlans", data) if isinstance(data, dict) else data
+    vl = output.unwrap(data, "vlans")
     if isinstance(vl, list):
         output.table(vl, ["name", "id", "parent", "state"], title="VLANs")
     else:

@@ -6,6 +6,7 @@ and populates shared state before any sub-command runs.
 
 from __future__ import annotations
 
+import sys
 from typing import Optional
 
 import typer
@@ -50,6 +51,11 @@ console = Console(stderr=True)
 # ---------------------------------------------------------------------------
 # Version callback
 # ---------------------------------------------------------------------------
+
+
+def _stdout_is_tty() -> bool:
+    """Return True when stdout is attached to an interactive terminal."""
+    return sys.stdout.isatty()
 
 
 def _version_callback(value: bool) -> None:
@@ -138,18 +144,20 @@ def main_callback(
         s.api_key = prof.get("api_key", "")
     # else: state stays empty — commands that need a profile will error in client.py
 
-    # Non-blocking update check (cached, runs at most once per day)
-    try:
-        from . import updater  # pylint: disable=import-outside-toplevel
+    # Non-blocking update check (cached, runs at most once per day).
+    # Skipped when stdout is not a TTY (pipes, scripts, CI).
+    if _stdout_is_tty():
+        try:
+            from . import updater  # pylint: disable=import-outside-toplevel
 
-        latest = updater.check_for_update()
-        if latest:
-            console.print(
-                f"[yellow]Update available:[/] {__version__} → [bold]{latest}[/] "
-                f"— run [bold cyan]dawos update[/] to upgrade"
-            )
-    except Exception:  # pylint: disable=broad-exception-caught
-        pass  # Never let update check break the CLI
+            latest = updater.check_for_update()
+            if latest:
+                console.print(
+                    f"[yellow]Update available:[/] {__version__} → [bold]{latest}[/] "
+                    f"— run [bold cyan]dawos update[/] to upgrade"
+                )
+        except Exception:  # pylint: disable=broad-exception-caught
+            pass  # Never let update check break the CLI
 
 
 # ---------------------------------------------------------------------------
@@ -282,8 +290,10 @@ def quick_status() -> None:
             f"({state.current.base_url})"
         )
         output.response(data, title="Health")
-    except SystemExit:
-        pass  # client already printed the error
+    except SystemExit as exc:
+        # client already printed the error — propagate a failure exit code
+        # without duplicating the message.
+        raise typer.Exit(1) from exc
 
 
 @app.command("help", hidden=True)
@@ -336,13 +346,12 @@ def _run_update(*, force: bool = False) -> None:
             raise typer.Exit()
 
     out.print("[cyan]Updating...[/]")
-    if updater.run_self_update():
+    if updater.run_self_update(latest):
         out.print(f"[bold green]✓ Updated to {latest}![/] Restart your terminal.")
     else:
         out.print(
             "[red]Update failed.[/] Try manually:\n"
-            "  [dim]pipx install --force "
-            "git+https://github.com/Cepat-Kilat-Teknologi/dawos-cli.git[/]"
+            f"  [dim]pipx install --force dawos-cli=={latest.lstrip('v')}[/]"
         )
 
 

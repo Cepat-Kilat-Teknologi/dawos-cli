@@ -34,11 +34,9 @@ def list_entries(
     if status is not None:
         params["status"] = status
     data = client.get("/api/v1/audit", **params)
-    entries = data.get("entries", data) if isinstance(data, dict) else data
+    entries = output.unwrap(data, "entries")
     if isinstance(entries, list):
-        count = (
-            data.get("count", len(entries)) if isinstance(data, dict) else len(entries)
-        )
+        count = output.unwrap(data, "count", len(entries))
         output.table(
             entries,
             ["timestamp", "method", "path", "role", "status", "duration_ms"],

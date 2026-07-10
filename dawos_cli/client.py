@@ -73,6 +73,28 @@ def _handle_connection_error(exc: httpx.ConnectError) -> None:
     raise SystemExit(1)
 
 
+def _handle_timeout(exc: httpx.TimeoutException) -> None:
+    """Pretty-print timeout errors."""
+    url = state.current.base_url
+    timeout = state.current.timeout
+    console.print(
+        f"[bold red]Request timed out:[/] No response from [cyan]{url}[/] "
+        f"within {timeout}s.\n"
+        "Try increasing the timeout with [bold]--timeout[/] or check the agent."
+    )
+    raise SystemExit(1)
+
+
+def _handle_request_error(exc: httpx.RequestError) -> None:
+    """Pretty-print generic transport errors (read/write/pool failures)."""
+    url = state.current.base_url
+    console.print(
+        f"[bold red]Request failed:[/] Communication error with [cyan]{url}[/].\n"
+        "Check your network connection and try again."
+    )
+    raise SystemExit(1)
+
+
 def get(path: str, **params: Any) -> Any:
     """GET request, return parsed JSON."""
     try:
@@ -83,6 +105,10 @@ def get(path: str, **params: Any) -> Any:
         _handle_error(exc)
     except httpx.ConnectError as exc:
         _handle_connection_error(exc)
+    except httpx.TimeoutException as exc:
+        _handle_timeout(exc)
+    except httpx.RequestError as exc:
+        _handle_request_error(exc)
     return None  # unreachable — handlers always raise
 
 
@@ -98,6 +124,10 @@ def post(path: str, json: Optional[Dict] = None) -> Any:
         _handle_error(exc)
     except httpx.ConnectError as exc:
         _handle_connection_error(exc)
+    except httpx.TimeoutException as exc:
+        _handle_timeout(exc)
+    except httpx.RequestError as exc:
+        _handle_request_error(exc)
     return None  # unreachable — handlers always raise
 
 
@@ -111,6 +141,10 @@ def put(path: str, json: Optional[Dict] = None) -> Any:
         _handle_error(exc)
     except httpx.ConnectError as exc:
         _handle_connection_error(exc)
+    except httpx.TimeoutException as exc:
+        _handle_timeout(exc)
+    except httpx.RequestError as exc:
+        _handle_request_error(exc)
     return None  # unreachable — handlers always raise
 
 
@@ -126,6 +160,10 @@ def delete(path: str, json: Optional[Dict] = None) -> Any:
         _handle_error(exc)
     except httpx.ConnectError as exc:
         _handle_connection_error(exc)
+    except httpx.TimeoutException as exc:
+        _handle_timeout(exc)
+    except httpx.RequestError as exc:
+        _handle_request_error(exc)
     return None  # unreachable — handlers always raise
 
 
@@ -141,6 +179,10 @@ def stream_sse(path: str) -> Generator[str, None, None]:
         _handle_error(exc)
     except httpx.ConnectError as exc:
         _handle_connection_error(exc)
+    except httpx.TimeoutException as exc:
+        _handle_timeout(exc)
+    except httpx.RequestError as exc:
+        _handle_request_error(exc)
     except KeyboardInterrupt:
         pass
 

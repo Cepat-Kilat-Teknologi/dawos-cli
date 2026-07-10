@@ -62,7 +62,7 @@ class TestTrackCommand:
             data = json.loads(tel_file.read_text())
             assert data["commands"]["status"] == 2
             assert data["commands"]["session list"] == 1
-            assert data["sessions"] == 3
+            assert data["invocations"] == 3
 
 
 class TestTrackError:

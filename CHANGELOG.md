@@ -8,6 +8,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Security
+
+- **Timeout and transport error handling** — `client.py` now catches `httpx.TimeoutException` and `httpx.RequestError` in all 5 HTTP methods (`get`, `post`, `put`, `delete`, `stream_sse`), preventing unhandled exceptions from leaking internal state
+- **Sanitized error output in shell REPL** — `shell.py` catch-all handler now only shows raw messages for safe exception types (`ValueError`, `TypeError`, `KeyError`); all others show a generic message with `--verbose` hint
+- **Sanitized error output in wizard engine** — `wizards.py` step runner applies the same type-aware sanitization to prevent internal path/stack leaks in wizard failure messages
+- **Plaintext API key warning on export** — `profile export` now warns that the output contains plaintext API keys and sets `0600` permissions on export files
+- **Profile import validation** — `import_profiles()` validates each profile dict for required `url` and `api_key` keys; malformed entries are skipped with log warnings
+- **Config file permission check** — `_load()` warns when the config file has group- or world-readable permissions (Unix only)
+- **Atomic config writes** — `_save()` writes to a temp file with `0600` from creation, then atomically replaces via `os.replace()` to eliminate partial-write and world-readable window risks
+- **Rich markup escaping** — `table()`, `detail()`, and `kvtable()` escape untrusted API response data to prevent Rich markup injection
+- **Insecure URL warning** — `profile add` warns when using plain HTTP on non-loopback hosts
+- **Corrupt config handling** — `_load()` catches `JSONDecodeError` on corrupt config files and exits with an actionable error message
+
+### Added
+
+- **Confirmation prompts on destructive operations** — `bulk ratelimit`, `firewall sysctl-set`, `firewall group-delete`, `nat masquerade-disable`, `nat egress-remove`, `nat public-ip-unbind` now require `--force` or interactive confirmation
+- **`output.unwrap()` helper** — DRY response unwrapping replaces inline patterns across 18 command modules
+
+### Fixed
+
+- **Update check suppressed in non-TTY** — pipes, scripts, and CI no longer see update notifications
+- **Updater version comparison** — `fetch_latest_tag()` compares all tags by parsed version instead of trusting API list order
+- **Updater installs pinned PyPI release** — `run_self_update()` installs `dawos-cli==X.Y.Z` from PyPI instead of `git+URL`
+- **Exit code propagation** — `dawos status` propagates failure exit code when agent is unreachable
+
+### Changed
+
+- **675 tests** — up from 587, with 88 new tests covering security hardening, edge cases, confirmation prompts, atomic writes, and output escaping
+
 ## [0.3.2] - 2026-07-09
 
 ### Changed
@@ -139,8 +168,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+[0.3.2]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.2
 [0.3.1]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.0
 [0.1.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.2.0
-[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.2...HEAD

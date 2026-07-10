@@ -11,8 +11,10 @@ import io
 import json as _json
 import sys
 from typing import Any, Dict, List, Optional, Sequence
+from urllib.parse import urlparse
 
 from rich.console import Console
+from rich.markup import escape
 from rich.panel import Panel
 from rich.table import Table
 
@@ -20,6 +22,31 @@ from . import state
 
 console = Console()
 err_console = Console(stderr=True)
+
+_UNWRAP_DEFAULT = object()
+
+
+def unwrap(data: Any, key: str, default: Any = _UNWRAP_DEFAULT) -> Any:
+    """Extract a value from a possibly-wrapped API response.
+
+    Agent endpoints return either a wrapped dict (``{"sessions": [...]}``)
+    or the bare payload.  Returns ``data[key]`` when ``data`` is a dict
+    containing ``key``; otherwise returns ``default`` — which itself
+    defaults to ``data`` unchanged (the common list-unwrap case).
+
+    Args:
+        data: The decoded response (a dict, or an already-unwrapped value).
+        key: The wrapper key to extract.
+        default: Fallback when ``data`` is not a dict or lacks ``key``;
+            defaults to ``data`` itself.
+
+    Returns:
+        The unwrapped value.
+    """
+    fallback = data if default is _UNWRAP_DEFAULT else default
+    if isinstance(data, dict):
+        return data.get(key, fallback)
+    return fallback
 
 
 # ---------------------------------------------------------------------------
@@ -131,6 +158,27 @@ def info(message: str) -> None:
     console.print(f"[dim]ℹ[/] {message}")
 
 
+_LOOPBACK_HOSTS = ("localhost", "127.0.0.1", "::1")
+
+
+def warn_if_insecure_url(url: str) -> None:
+    """Warn when a plain-HTTP URL would send the API key unencrypted.
+
+    Loopback hosts (localhost / 127.0.0.1 / ::1) are exempt because the
+    traffic never leaves the machine.
+    """
+    parsed = urlparse(url)
+    if parsed.scheme != "http":
+        return
+    host = (parsed.hostname or "").lower()
+    if host in _LOOPBACK_HOSTS:
+        return
+    warning(
+        f"[bold]{escape(url)}[/] uses plain HTTP — the API key is sent "
+        "unencrypted. Prefer HTTPS for non-local agents."
+    )
+
+
 # ---------------------------------------------------------------------------
 # Structured output
 # ---------------------------------------------------------------------------
@@ -160,7 +208,10 @@ def table(
         )
     for row in rows:
         t.add_row(
-            *[str(row.get(col, row.get(col.replace("_", "-"), "—"))) for col in columns]
+            *[
+                escape(str(row.get(col, row.get(col.replace("_", "-"), "—"))))
+                for col in columns
+            ]
         )
     if not rows:
         t.add_row(*["—" for _ in columns])
@@ -177,8 +228,8 @@ def detail(data: Dict[str, Any], *, title: str = "") -> None:
 
     lines = []
     for key, value in data.items():
-        label = key.replace("_", " ").title()
-        lines.append(f"[bold]{label}:[/] {value}")
+        label = escape(key.replace("_", " ").title())
+        lines.append(f"[bold]{label}:[/] {escape(str(value))}")
     panel_text = "\n".join(lines)
     console.print(Panel(panel_text, title=title, border_style="cyan", expand=False))
 
@@ -195,8 +246,8 @@ def kvtable(data: Dict[str, Any], *, title: str = "") -> None:
     t.add_column("Key", style="bold cyan", min_width=20)
     t.add_column("Value")
     for key, value in data.items():
-        label = key.replace("_", " ").title()
-        t.add_row(label, str(value))
+        label = escape(key.replace("_", " ").title())
+        t.add_row(label, escape(str(value)))
     console.print(t)
 
 

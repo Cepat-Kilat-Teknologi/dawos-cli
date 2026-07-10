@@ -61,7 +61,7 @@ def backups() -> None:
 def revisions() -> None:
     """List config checkpoint revisions."""
     data = client.get("/api/v1/config/revisions")
-    revs = data.get("revisions", data) if isinstance(data, dict) else data
+    revs = output.unwrap(data, "revisions")
     if isinstance(revs, list):
         output.table(revs, ["name", "timestamp", "size"], title="Checkpoint Revisions")
     else:

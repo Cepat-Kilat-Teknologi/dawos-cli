@@ -20,7 +20,7 @@ def status() -> None:
 def collectors() -> None:
     """List configured flow collectors."""
     data = client.get("/api/v1/flow/collectors")
-    coll = data.get("collectors", data) if isinstance(data, dict) else data
+    coll = output.unwrap(data, "collectors")
     if isinstance(coll, list):
         output.table(
             coll,

@@ -20,7 +20,7 @@ def status() -> None:
 def sources() -> None:
     """List NTP upstream sources."""
     data = client.get("/api/v1/ntp/sources")
-    src_list = data.get("sources", data) if isinstance(data, dict) else data
+    src_list = output.unwrap(data, "sources")
     if isinstance(src_list, list):
         output.table(
             src_list,

@@ -13,7 +13,7 @@ app = typer.Typer(help="IP address pool management.")
 def list_pools() -> None:
     """List all configured IP pools."""
     data = client.get("/api/v1/ip-pool")
-    pools = data.get("pools", data) if isinstance(data, dict) else data
+    pools = output.unwrap(data, "pools")
     if isinstance(pools, list):
         output.table(
             pools,

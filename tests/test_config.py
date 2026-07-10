@@ -1,5 +1,15 @@
 """Tests for dawos_cli.config module."""
 
+from __future__ import annotations
+
+import stat
+import sys
+from pathlib import Path
+from unittest.mock import patch
+
+import pytest
+import typer
+
 from dawos_cli import config
 
 
@@ -91,6 +101,64 @@ class TestConfig:
         config.add_profile("bng2", "http://10.0.0.2:8470", "key2")
         # First profile should remain active
         assert config.get_active_name() == "bng1"
+
+
+class TestLoadErrorHandling:
+    """DC-M02: corrupt or unreadable config exits cleanly, no traceback."""
+
+    def test_corrupt_json_exits_cleanly(self, tmp_config, capsys):
+        config.CONFIG_FILE.write_text("{corrupt json!!", encoding="utf-8")
+        with pytest.raises(typer.Exit) as excinfo:
+            config._load()
+        assert excinfo.value.exit_code == 1
+        err = capsys.readouterr().err
+        assert str(config.CONFIG_FILE) in err
+        assert "corrupt or unreadable" in err
+
+    def test_corrupt_json_cli_exit_code(self, cli, tmp_config):
+        """A CLI command over a corrupt config exits 1 without a traceback."""
+        config.CONFIG_FILE.write_text("{corrupt json!!", encoding="utf-8")
+        result = cli("profile", "list")
+        assert result.exit_code == 1
+
+    def test_unreadable_file_exits_cleanly(self, tmp_config):
+        config.CONFIG_FILE.write_text("{}", encoding="utf-8")
+        with patch.object(Path, "read_text", side_effect=OSError("denied")):
+            with pytest.raises(typer.Exit) as excinfo:
+                config._load()
+        assert excinfo.value.exit_code == 1
+
+
+class TestSaveAtomicPermissions:
+    """DC-M07: config is written atomically and never world-readable."""
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="POSIX permissions")
+    def test_saved_file_mode_is_0600(self, tmp_config):
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        mode = stat.S_IMODE(config.CONFIG_FILE.stat().st_mode)
+        assert mode == 0o600
+
+    def test_no_temp_file_left_behind(self, tmp_config):
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        assert not (tmp_config / "config.json.tmp").exists()
+        assert config.get_profile("bng1") is not None
+
+    def test_stale_temp_file_is_replaced(self, tmp_config):
+        """A leftover temp file from a crashed write does not block saving."""
+        stale = tmp_config / "config.json.tmp"
+        stale.write_text("stale", encoding="utf-8")
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        assert not stale.exists()
+        assert config.get_profile("bng1") is not None
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="POSIX permissions")
+    def test_overwrite_keeps_0600(self, tmp_config):
+        """Re-saving over an existing looser-mode file tightens it to 0600."""
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        config.CONFIG_FILE.chmod(0o644)
+        config.add_profile("bng2", "http://10.0.0.2:8470", "key2")
+        mode = stat.S_IMODE(config.CONFIG_FILE.stat().st_mode)
+        assert mode == 0o600
 
 
 class TestExportProfiles:

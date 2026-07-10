@@ -14,7 +14,7 @@ source .venv/bin/activate
 ## Development Commands
 
 ```bash
-make test       # Run 426 tests with coverage
+make test       # Run 675 tests with coverage
 make lint       # Black + Pylint + Ruff
 make format     # Auto-format with Black
 make check      # All checks (lint + test)
@@ -34,4 +34,4 @@ Hooks run Black, Ruff, and Pylint automatically on `git commit`.
 - **Black**: line-length 88, target py39
 - **Pylint**: must be 10.00/10
 - **Ruff**: zero violations
-- **Coverage**: minimum 90% (currently 97%)
+- **Coverage**: minimum 90% (currently 99%)

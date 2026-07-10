@@ -1,6 +1,6 @@
 # Commands Overview
 
-DawOS CLI provides **29 command groups** organized for managing every aspect of your BNG router.
+DawOS CLI provides **31 command groups** organized for managing every aspect of your BNG router.
 
 ## Top-Level Commands
 
@@ -46,6 +46,8 @@ DawOS CLI provides **29 command groups** organized for managing every aspect of 
 | `audit` | — | Audit log viewer |
 | `bulk` | — | Bulk operations |
 | `playbook` | — | Operational playbooks |
+| `node` | — | Multi-node group management |
+| `wizard` | — | Guided interactive workflows |
 
 ## Global Options
 

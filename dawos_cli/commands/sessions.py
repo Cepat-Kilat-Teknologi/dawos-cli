@@ -13,7 +13,7 @@ app = typer.Typer(help="PPPoE session management.")
 def list_sessions() -> None:
     """List all active PPPoE sessions."""
     data = client.get("/api/v1/sessions")
-    sessions = data.get("sessions", data) if isinstance(data, dict) else data
+    sessions = output.unwrap(data, "sessions")
     if isinstance(sessions, list):
         output.table(
             sessions,
@@ -38,7 +38,7 @@ def find(
 ) -> None:
     """Find a subscriber's active session by username."""
     data = client.get(f"/api/v1/sessions/find/{username}")
-    sessions = data.get("sessions", data) if isinstance(data, dict) else data
+    sessions = output.unwrap(data, "sessions")
     if isinstance(sessions, list) and sessions:
         output.table(
             sessions,

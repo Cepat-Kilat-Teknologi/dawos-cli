@@ -20,7 +20,7 @@ def status() -> None:
 def neighbors() -> None:
     """List all LLDP neighbors."""
     data = client.get("/api/v1/lldp/neighbors")
-    nbrs = data.get("neighbors", data) if isinstance(data, dict) else data
+    nbrs = output.unwrap(data, "neighbors")
     if isinstance(nbrs, list):
         output.table(
             nbrs,

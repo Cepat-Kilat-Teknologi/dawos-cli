@@ -13,7 +13,7 @@ app = typer.Typer(help="PPPoE listeners, MAC filter, PADO delay.")
 def interfaces() -> None:
     """List PPPoE listener interfaces."""
     data = client.get("/api/v1/pppoe/interfaces")
-    ifaces = data.get("interfaces", data) if isinstance(data, dict) else data
+    ifaces = output.unwrap(data, "interfaces")
     if isinstance(ifaces, list):
         output.table(ifaces, ["name", "status", "sessions"], title="PPPoE Interfaces")
     else:
@@ -45,7 +45,7 @@ def remove(
 def mac_filter() -> None:
     """List MAC filter entries."""
     data = client.get("/api/v1/pppoe/mac-filter")
-    entries = data.get("entries", data) if isinstance(data, dict) else data
+    entries = output.unwrap(data, "entries")
     if isinstance(entries, list):
         output.table(entries, ["mac", "action"], title="MAC Filter")
     else:

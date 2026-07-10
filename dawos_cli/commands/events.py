@@ -13,7 +13,7 @@ app = typer.Typer(help="Event hooks and webhook management.")
 def hooks() -> None:
     """List all configured event hooks."""
     data = client.get("/api/v1/events/hooks")
-    hook_list = data.get("hooks", data) if isinstance(data, dict) else data
+    hook_list = output.unwrap(data, "hooks")
     if isinstance(hook_list, list):
         output.table(
             hook_list,
@@ -78,7 +78,7 @@ def history(
 ) -> None:
     """Show event history."""
     data = client.get("/api/v1/events/history", limit=limit)
-    entries = data.get("entries", data) if isinstance(data, dict) else data
+    entries = output.unwrap(data, "entries")
     if isinstance(entries, list):
         output.table(
             entries,

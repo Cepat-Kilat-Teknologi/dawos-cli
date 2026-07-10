@@ -20,7 +20,7 @@ def doctor() -> None:
     data = client.get("/api/v1/diagnostics/doctor")
 
     # Pretty-print the doctor report
-    checks = data.get("checks", data) if isinstance(data, dict) else data
+    checks = output.unwrap(data, "checks")
     if isinstance(checks, list):
         for check in checks:
             name = check.get("name", "?")

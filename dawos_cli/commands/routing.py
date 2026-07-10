@@ -23,7 +23,7 @@ def bgp() -> None:
 def bgp_routes() -> None:
     """Show BGP routing table."""
     data = client.get("/api/v1/routing/bgp/routes")
-    routes = data.get("routes", data) if isinstance(data, dict) else data
+    routes = output.unwrap(data, "routes")
     if isinstance(routes, list):
         output.table(
             routes,
@@ -48,7 +48,7 @@ def ospf() -> None:
 def ospf_neighbors() -> None:
     """Show OSPF neighbor adjacencies."""
     data = client.get("/api/v1/routing/ospf/neighbors")
-    neighbors = data.get("neighbors", data) if isinstance(data, dict) else data
+    neighbors = output.unwrap(data, "neighbors")
     if isinstance(neighbors, list):
         output.table(
             neighbors,
@@ -97,7 +97,7 @@ def bfd() -> None:
 def bfd_peers() -> None:
     """Show BFD peer sessions."""
     data = client.get("/api/v1/routing/bfd/peers")
-    peers = data.get("peers", data) if isinstance(data, dict) else data
+    peers = output.unwrap(data, "peers")
     if isinstance(peers, list):
         output.table(
             peers, ["peer", "status", "interface", "uptime"], title="BFD Peers"

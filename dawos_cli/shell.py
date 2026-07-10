@@ -6,12 +6,16 @@ Uses prompt_toolkit when available, falls back to stdlib readline.
 
 from __future__ import annotations
 
+import logging
+import os
 import shlex
 import sys
 
 from rich.console import Console
 
 from . import __version__
+
+log = logging.getLogger(__name__)
 
 _console = Console()
 
@@ -80,6 +84,13 @@ def _run_with_prompt_toolkit() -> None:
 
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
     history_file = CONFIG_DIR / ".shell_history"
+    # Pre-create the history file owner-readable only — shell history may
+    # contain hostnames, usernames, and pasted secrets.
+    history_file.touch(exist_ok=True)
+    try:
+        os.chmod(history_file, 0o600)
+    except OSError:
+        pass  # best-effort; Windows may not support Unix permissions
 
     completer = WordCompleter(_COMMANDS, ignore_case=True)
     session: PromptSession = PromptSession(
@@ -152,7 +163,12 @@ def _execute_line(line: str) -> None:
     except SystemExit:
         pass  # Typer raises SystemExit on --help, errors, etc.
     except Exception as exc:  # pylint: disable=broad-exception-caught
-        _console.print(f"[red]Error:[/] {exc}")
+        log.debug("Shell command failed: %s", exc, exc_info=True)
+        _console.print(
+            f"[red]Error:[/] {type(exc).__name__}: {exc}"
+            if isinstance(exc, (ValueError, TypeError, KeyError))
+            else "[red]Error:[/] Command failed. Run with --verbose for details."
+        )
 
 
 def run_shell() -> None:

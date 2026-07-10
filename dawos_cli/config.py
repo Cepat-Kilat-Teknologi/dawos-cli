@@ -14,10 +14,16 @@ from __future__ import annotations
 
 import copy
 import json
+import logging
 import os
+import stat
 import sys
 from pathlib import Path
 from typing import Any, Dict, Optional
+
+import typer
+
+log = logging.getLogger(__name__)
 
 
 def _default_config_dir() -> Path:
@@ -43,18 +49,44 @@ _DEFAULT: Dict[str, Any] = {
 def _load() -> Dict[str, Any]:
     """Read the config file, or return defaults if it doesn't exist."""
     if CONFIG_FILE.exists():
-        return json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+        # Warn if config file has overly permissive permissions (Unix only).
+        try:
+            mode = CONFIG_FILE.stat().st_mode
+            if mode & (stat.S_IROTH | stat.S_IWOTH | stat.S_IRGRP | stat.S_IWGRP):
+                log.warning(
+                    "Config file %s has permissive permissions (%o). "
+                    "Run: chmod 600 %s",
+                    CONFIG_FILE,
+                    stat.S_IMODE(mode),
+                    CONFIG_FILE,
+                )
+        except OSError:
+            pass  # Windows or restricted filesystem — skip check
+        try:
+            return json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError) as exc:
+            sys.stderr.write(
+                f"Error: config file {CONFIG_FILE} is corrupt or unreadable: "
+                f"{exc}\nFix or remove the file, then retry.\n"
+            )
+            raise typer.Exit(1) from exc
     return copy.deepcopy(_DEFAULT)
 
 
 def _save(data: Dict[str, Any]) -> None:
-    """Persist config to disk, creating the directory if needed."""
+    """Persist config atomically, owner-readable only (0600) from creation.
+
+    The payload is written to a same-directory temp file opened with mode
+    0600 (no world-readable window), then moved over the config file with
+    ``os.replace`` so readers never observe a partial write.
+    """
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    CONFIG_FILE.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-    try:
-        os.chmod(CONFIG_FILE, 0o600)
-    except OSError:
-        pass  # best-effort; Windows may not support Unix permissions
+    tmp = CONFIG_FILE.with_name(CONFIG_FILE.name + ".tmp")
+    tmp.unlink(missing_ok=True)  # clear stale temp file from a failed write
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(json.dumps(data, indent=2) + "\n")
+    os.replace(tmp, CONFIG_FILE)
 
 
 def list_profiles() -> Dict[str, Dict[str, str]]:
@@ -137,6 +169,23 @@ def export_profiles(name: Optional[str] = None) -> Dict[str, Any]:
     }
 
 
+_REQUIRED_PROFILE_KEYS = {"url", "api_key"}
+
+
+def _validate_profile(name: str, prof: Any) -> bool:
+    """Return True if a profile dict has the required keys."""
+    if not isinstance(prof, dict):
+        log.warning("Skipping profile '%s': not a dict", name)
+        return False
+    missing = _REQUIRED_PROFILE_KEYS - set(prof.keys())
+    if missing:
+        log.warning(
+            "Skipping profile '%s': missing keys %s", name, ", ".join(sorted(missing))
+        )
+        return False
+    return True
+
+
 def import_profiles(payload: Dict[str, Any], *, merge: bool = True) -> int:
     """Import profiles from an exported payload.
 
@@ -144,17 +193,25 @@ def import_profiles(payload: Dict[str, Any], *, merge: bool = True) -> int:
     incoming profiles are added/overwritten.  When False, existing profiles
     are replaced entirely.
 
+    Profiles without the required ``url`` and ``api_key`` keys are
+    silently skipped with a log warning.
+
     Returns the number of profiles imported.
     """
     incoming = payload.get("profiles", {})
-    if not incoming:
+    if not isinstance(incoming, dict) or not incoming:
+        return 0
+
+    # Validate each profile before import.
+    valid = {k: v for k, v in incoming.items() if _validate_profile(k, v)}
+    if not valid:
         return 0
 
     data = _load()
     if merge:
-        data.setdefault("profiles", {}).update(incoming)
+        data.setdefault("profiles", {}).update(valid)
     else:
-        data["profiles"] = incoming
+        data["profiles"] = valid
 
     # If no active profile is set, adopt the incoming active.
     if not data.get("active_profile") and payload.get("active_profile"):
@@ -166,7 +223,7 @@ def import_profiles(payload: Dict[str, Any], *, merge: bool = True) -> int:
         data["active_profile"] = next(iter(data["profiles"]))
 
     _save(data)
-    return len(incoming)
+    return len(valid)
 
 
 # ---------------------------------------------------------------------------

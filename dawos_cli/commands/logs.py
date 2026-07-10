@@ -21,7 +21,7 @@ def tail(
     if service:
         params["service"] = service
     data = client.get("/api/v1/logs/tail", **params)
-    entries = data.get("lines", data) if isinstance(data, dict) else data
+    entries = output.unwrap(data, "lines")
     if isinstance(entries, list):
         for line in entries:
             if isinstance(line, dict):

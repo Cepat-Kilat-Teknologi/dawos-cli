@@ -36,12 +36,13 @@ def _setup_collect_url(ctx: Dict[str, Any]) -> StepResult:
     )
     url = url.rstrip("/")
     ctx["url"] = url
+    output.warn_if_insecure_url(url)
     return StepResult(success=True, message=f"URL: {url}")
 
 
 def _setup_collect_key(ctx: Dict[str, Any]) -> StepResult:
-    """Prompt for the API key."""
-    key = Prompt.ask("  Enter API key", console=console)
+    """Prompt for the API key (input hidden — keys must not echo)."""
+    key = Prompt.ask("  Enter API key", console=console, password=True)
     if not key.strip():
         return StepResult(success=False, message="API key cannot be empty")
     ctx["api_key"] = key.strip()

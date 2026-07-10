@@ -50,7 +50,7 @@ def timeout_set(
 def helpers() -> None:
     """List conntrack helpers (ALGs)."""
     data = client.get("/api/v1/conntrack/helpers")
-    helpers_list = data.get("helpers", data) if isinstance(data, dict) else data
+    helpers_list = output.unwrap(data, "helpers")
     if isinstance(helpers_list, list):
         output.table(
             helpers_list, ["name", "protocol", "port"], title="Conntrack Helpers"

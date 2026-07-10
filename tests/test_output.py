@@ -116,6 +116,57 @@ class TestKvtable:
         assert "10%" in text
 
 
+class TestMarkupEscaping:
+    """DC-M04: server/subscriber strings must render as literals, not markup."""
+
+    def test_table_does_not_interpret_markup(self, capture):
+        """A stray closing tag must not raise MarkupError or be interpreted."""
+        rows = [{"user": "x[/bold]", "note": "[red]evil[/red]"}]
+        output.table(rows, ["user", "note"], title="Escaped")
+        text = capture.getvalue()
+        assert "x[/bold]" in text
+        assert "[red]evil[/red]" in text
+
+    def test_detail_does_not_interpret_markup(self, capture):
+        output.detail({"note[/bold]": "x[/bold]"}, title="Escaped")
+        text = capture.getvalue()
+        assert "x[/bold]" in text
+
+    def test_kvtable_does_not_interpret_markup(self, capture):
+        output.kvtable({"key[/dim]": "x[/bold]"}, title="Escaped")
+        text = capture.getvalue()
+        assert "x[/bold]" in text
+
+
+class TestWarnIfInsecureUrl:
+    """DC-M06: plain-HTTP remote URLs trigger a one-line key exposure warning."""
+
+    def test_http_remote_warns(self, capture):
+        output.warn_if_insecure_url("http://10.0.0.9:8470")
+        assert "unencrypted" in capture.getvalue()
+
+    def test_http_localhost_silent(self, capture):
+        output.warn_if_insecure_url("http://localhost:8470")
+        assert capture.getvalue() == ""
+
+    def test_http_127_silent(self, capture):
+        output.warn_if_insecure_url("http://127.0.0.1:8470")
+        assert capture.getvalue() == ""
+
+    def test_http_ipv6_loopback_silent(self, capture):
+        output.warn_if_insecure_url("http://[::1]:8470")
+        assert capture.getvalue() == ""
+
+    def test_https_silent(self, capture):
+        output.warn_if_insecure_url("https://10.0.0.9:8470")
+        assert capture.getvalue() == ""
+
+    def test_http_no_host_warns(self, capture):
+        """Degenerate http URL without a hostname still warns."""
+        output.warn_if_insecure_url("http://")
+        assert "unencrypted" in capture.getvalue()
+
+
 class TestResponse:
     def test_response_dict(self, capture):
         output.response({"key": "val"}, title="Test")
@@ -195,3 +246,26 @@ class TestYamlFormat:
         with patch.dict("sys.modules", {"yaml": None}):
             output.table([{"name": "pool1"}], ["name"])
             # Should not crash — falls back to JSON
+
+
+class TestUnwrap:
+    """output.unwrap normalizes wrapped/bare API responses (DC-L04)."""
+
+    def test_dict_with_key(self):
+        assert output.unwrap({"sessions": [1, 2]}, "sessions") == [1, 2]
+
+    def test_dict_without_key_returns_data(self):
+        payload = {"other": 1}
+        assert output.unwrap(payload, "sessions") is payload
+
+    def test_non_dict_returns_data(self):
+        assert output.unwrap([1, 2], "sessions") == [1, 2]
+
+    def test_dict_missing_key_uses_custom_default(self):
+        assert output.unwrap({"x": 1}, "count", 5) == 5
+
+    def test_non_dict_uses_custom_default(self):
+        assert output.unwrap([1, 2], "count", 99) == 99
+
+    def test_dict_with_key_and_custom_default(self):
+        assert output.unwrap({"count": 3}, "count", 99) == 3

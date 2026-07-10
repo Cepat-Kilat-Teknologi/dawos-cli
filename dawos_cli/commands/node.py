@@ -23,6 +23,8 @@ from ..multi import execute_multi
 
 app = typer.Typer(help="Multi-node group management and parallel execution.")
 
+_VALID_METHODS = frozenset({"GET", "POST", "PUT", "DELETE", "PATCH"})
+
 
 # ---------------------------------------------------------------------------
 # Group CRUD
@@ -144,6 +146,7 @@ def exec_cmd(
     timeout: float = typer.Option(
         30.0, "--timeout", "-t", help="Per-node timeout in seconds."
     ),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Execute an API request across all nodes in a group.
 
@@ -168,13 +171,18 @@ def exec_cmd(
             raise typer.Exit(1) from exc
 
     http_method = method.upper()
-    valid_methods = {"GET", "POST", "PUT", "DELETE", "PATCH"}
-    if http_method not in valid_methods:
+    if http_method not in _VALID_METHODS:
         output.error(
             f"Invalid HTTP method: {method}. "
-            f"Choose from: {', '.join(sorted(valid_methods))}"
+            f"Choose from: {', '.join(sorted(_VALID_METHODS))}"
         )
         raise typer.Exit(1)
+
+    # Writes across a whole node group are destructive — confirm first.
+    if http_method != "GET" and not force:
+        typer.confirm(
+            f"Run {http_method} {path} on {len(profiles)} node(s)?", abort=True
+        )
 
     output.info(
         f"Executing [bold]{http_method} {path}[/] "

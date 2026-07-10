@@ -66,9 +66,10 @@ class TestStatusCommand:
         assert result.exit_code == 0
 
     def test_status_connection_error(self, cli, mock_client):
+        """Connection failure must propagate a non-zero exit code."""
         mock_client["get"].side_effect = SystemExit(1)
         result = cli("status")
-        assert result.exit_code == 0  # caught SystemExit
+        assert result.exit_code == 1
 
 
 class TestTopCommand:

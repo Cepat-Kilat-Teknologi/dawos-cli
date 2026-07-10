@@ -13,7 +13,7 @@ app = typer.Typer(help="Operational playbooks (health-check, backup, safe-restar
 def list_playbooks() -> None:
     """List available operational playbooks."""
     data = client.get("/api/v1/playbooks")
-    playbooks = data.get("playbooks", data) if isinstance(data, dict) else data
+    playbooks = output.unwrap(data, "playbooks")
     if isinstance(playbooks, list):
         count = (
             data.get("count", len(playbooks))

@@ -13,7 +13,7 @@ app = typer.Typer(help="Task scheduler — cron-like jobs on the BNG.")
 def list_jobs() -> None:
     """List all scheduled jobs."""
     data = client.get("/api/v1/scheduler/jobs")
-    jobs = data.get("jobs", data) if isinstance(data, dict) else data
+    jobs = output.unwrap(data, "jobs")
     if isinstance(jobs, list):
         output.table(
             jobs,

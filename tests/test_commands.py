@@ -288,6 +288,49 @@ class TestProfileCommands:
         )
         assert result.exit_code == 1
 
+    def test_add_warns_on_insecure_remote_url(self, cli, mock_client, tmp_config):
+        """Plain HTTP to a non-loopback host warns about the unencrypted key."""
+        result = cli(
+            "profile",
+            "add",
+            "bng9",
+            "--url",
+            "http://10.0.0.9:8470",
+            "--key",
+            "k",
+            "--no-check",
+        )
+        assert result.exit_code == 0
+        assert "unencrypted" in result.output
+
+    def test_add_no_warning_for_localhost(self, cli, mock_client, tmp_config):
+        result = cli(
+            "profile",
+            "add",
+            "local",
+            "--url",
+            "http://localhost:8470",
+            "--key",
+            "k",
+            "--no-check",
+        )
+        assert result.exit_code == 0
+        assert "unencrypted" not in result.output
+
+    def test_add_no_warning_for_https(self, cli, mock_client, tmp_config):
+        result = cli(
+            "profile",
+            "add",
+            "secure",
+            "--url",
+            "https://10.0.0.9:8470",
+            "--key",
+            "k",
+            "--no-check",
+        )
+        assert result.exit_code == 0
+        assert "unencrypted" not in result.output
+
     def test_list_empty(self, cli, mock_client, tmp_config):
         result = cli("profile", "list")
         assert result.exit_code == 0
@@ -501,8 +544,22 @@ class TestFirewallCommands:
         assert result.exit_code == 0
 
     def test_sysctl_set(self, cli, mock_client):
-        result = cli("firewall", "sysctl-set", "net.ipv4.ip_forward", "1")
+        result = cli("firewall", "sysctl-set", "net.ipv4.ip_forward", "1", "--force")
         assert result.exit_code == 0
+        mock_client["put"].assert_called_with(
+            "/api/v1/firewall/sysctl",
+            json={"key": "net.ipv4.ip_forward", "value": "1"},
+        )
+
+    def test_sysctl_set_confirm_accept(self, cli, mock_client):
+        result = cli("firewall", "sysctl-set", "net.ipv4.ip_forward", "1", input="y\n")
+        assert result.exit_code == 0
+        mock_client["put"].assert_called_once()
+
+    def test_sysctl_set_confirm_abort(self, cli, mock_client):
+        result = cli("firewall", "sysctl-set", "net.ipv4.ip_forward", "1", input="n\n")
+        assert result.exit_code != 0
+        mock_client["put"].assert_not_called()
 
     def test_conntrack(self, cli, mock_client):
         result = cli("firewall", "conntrack")
@@ -550,8 +607,19 @@ class TestFirewallCommands:
         assert result.exit_code == 0
 
     def test_group_del(self, cli, mock_client):
-        result = cli("firewall", "group-del", "blocked")
+        result = cli("firewall", "group-del", "blocked", "--force")
         assert result.exit_code == 0
+        mock_client["delete"].assert_called_with("/api/v1/firewall/groups/blocked")
+
+    def test_group_del_confirm_accept(self, cli, mock_client):
+        result = cli("firewall", "group-del", "blocked", input="y\n")
+        assert result.exit_code == 0
+        mock_client["delete"].assert_called_once()
+
+    def test_group_del_confirm_abort(self, cli, mock_client):
+        result = cli("firewall", "group-del", "blocked", input="n\n")
+        assert result.exit_code != 0
+        mock_client["delete"].assert_not_called()
 
     def test_group_members(self, cli, mock_client):
         result = cli("firewall", "group-members", "blocked", "1.2.3.4,5.6.7.8")
@@ -576,8 +644,21 @@ class TestNatCommands:
         )
 
     def test_masquerade_off(self, cli, mock_client):
-        result = cli("nat", "masquerade-off", "eth0")
+        result = cli("nat", "masquerade-off", "eth0", "--force")
         assert result.exit_code == 0
+        mock_client["delete"].assert_called_with(
+            "/api/v1/firewall/nat/masquerade", json={"wan_interface": "eth0"}
+        )
+
+    def test_masquerade_off_confirm_accept(self, cli, mock_client):
+        result = cli("nat", "masquerade-off", "eth0", input="y\n")
+        assert result.exit_code == 0
+        mock_client["delete"].assert_called_once()
+
+    def test_masquerade_off_confirm_abort(self, cli, mock_client):
+        result = cli("nat", "masquerade-off", "eth0", input="n\n")
+        assert result.exit_code != 0
+        mock_client["delete"].assert_not_called()
 
     def test_egress(self, cli, mock_client):
         result = cli("nat", "egress")
@@ -588,8 +669,14 @@ class TestNatCommands:
         assert result.exit_code == 0
 
     def test_egress_del(self, cli, mock_client):
-        result = cli("nat", "egress-del", "10.0.0.1")
+        result = cli("nat", "egress-del", "10.0.0.1", "--force")
         assert result.exit_code == 0
+        mock_client["delete"].assert_called_with("/api/v1/firewall/nat/egress/10.0.0.1")
+
+    def test_egress_del_confirm_abort(self, cli, mock_client):
+        result = cli("nat", "egress-del", "10.0.0.1", input="n\n")
+        assert result.exit_code != 0
+        mock_client["delete"].assert_not_called()
 
     def test_public_ip_add(self, cli, mock_client):
         result = cli("nat", "public-ip-add", "1.2.3.4")
@@ -599,8 +686,16 @@ class TestNatCommands:
         )
 
     def test_public_ip_del(self, cli, mock_client):
-        result = cli("nat", "public-ip-del", "1.2.3.4")
+        result = cli("nat", "public-ip-del", "1.2.3.4", "--force")
         assert result.exit_code == 0
+        mock_client["delete"].assert_called_with(
+            "/api/v1/firewall/nat/public-ip/1.2.3.4"
+        )
+
+    def test_public_ip_del_confirm_abort(self, cli, mock_client):
+        result = cli("nat", "public-ip-del", "1.2.3.4", input="n\n")
+        assert result.exit_code != 0
+        mock_client["delete"].assert_not_called()
 
     def test_box_egress(self, cli, mock_client):
         result = cli("nat", "box-egress")
@@ -1784,7 +1879,7 @@ class TestBulkCommands:
                 {"target": "u2", "success": False, "error": "not found"},
             ],
         }
-        result = cli("bulk", "ratelimit", "u1:5M/20M,u2:10M/50M")
+        result = cli("bulk", "ratelimit", "u1:5M/20M,u2:10M/50M", "--force")
         assert result.exit_code == 0
         mock_client["post"].assert_called_with(
             "/api/v1/bulk/ratelimit",
@@ -1796,6 +1891,16 @@ class TestBulkCommands:
             },
         )
         assert "1 succeeded" in result.output
+
+    def test_ratelimit_confirm_accept(self, cli, mock_client):
+        result = cli("bulk", "ratelimit", "u1:5M/20M", input="y\n")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_once()
+
+    def test_ratelimit_confirm_abort(self, cli, mock_client):
+        result = cli("bulk", "ratelimit", "u1:5M/20M", input="n\n")
+        assert result.exit_code != 0
+        mock_client["post"].assert_not_called()
 
     def test_ratelimit_bad_format(self, cli, mock_client):
         result = cli("bulk", "ratelimit", "badformat")

@@ -13,7 +13,7 @@ app = typer.Typer(help="Zone-based firewall management.")
 def list_zones() -> None:
     """List all firewall zones."""
     data = client.get("/api/v1/zones")
-    zones = data.get("zones", data) if isinstance(data, dict) else data
+    zones = output.unwrap(data, "zones")
     if isinstance(zones, list):
         output.table(
             zones,

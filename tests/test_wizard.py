@@ -240,6 +240,43 @@ class TestSetupWizard:
         assert result.exit_code == 0
         assert "empty" in result.output.lower() or "fail" in result.output.lower()
 
+    def test_api_key_prompt_is_hidden(self):
+        """DC-M05: the API key prompt must not echo input."""
+        from dawos_cli.commands.wizard import _setup_collect_key
+
+        with patch(
+            "dawos_cli.commands.wizard.Prompt.ask", return_value="secret"
+        ) as mock_ask:
+            result = _setup_collect_key({})
+
+        assert result.success
+        assert mock_ask.call_args.kwargs.get("password") is True
+
+    def test_url_step_warns_on_insecure_remote(self, capsys):
+        """DC-M06: plain-HTTP remote URL warns about unencrypted API key."""
+        from dawos_cli.commands.wizard import _setup_collect_url
+
+        with patch(
+            "dawos_cli.commands.wizard.Prompt.ask",
+            return_value="http://10.1.1.1:8470",
+        ):
+            result = _setup_collect_url({})
+
+        assert result.success
+        assert "unencrypted" in capsys.readouterr().out
+
+    def test_url_step_silent_for_localhost(self, capsys):
+        from dawos_cli.commands.wizard import _setup_collect_url
+
+        with patch(
+            "dawos_cli.commands.wizard.Prompt.ask",
+            return_value="http://localhost:8470",
+        ):
+            result = _setup_collect_url({})
+
+        assert result.success
+        assert "unencrypted" not in capsys.readouterr().out
+
 
 class TestTroubleshootWizard:
     """Tests for 'dawos wizard troubleshoot'."""

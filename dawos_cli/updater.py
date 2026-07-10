@@ -17,8 +17,8 @@ from . import __version__
 from .config import CONFIG_DIR
 
 _REPO = "Cepat-Kilat-Teknologi/dawos-cli"
-_REPO_URL = f"https://github.com/{_REPO}.git"
 _API_URL = f"https://api.github.com/repos/{_REPO}/tags"
+_PACKAGE = "dawos-cli"
 _CACHE_FILE = CONFIG_DIR / ".update-check"
 _CHECK_INTERVAL = 86400  # 24 hours in seconds
 
@@ -59,15 +59,23 @@ def _write_cache(latest: str) -> None:
 
 
 def fetch_latest_tag() -> Optional[str]:
-    """Fetch the latest tag name from GitHub API (non-blocking, 3s timeout)."""
+    """Fetch the newest tag name from the GitHub API (non-blocking, 3s timeout).
+
+    Tags are compared by parsed version — the API list order is not
+    trusted, since it is not guaranteed to be newest-first.
+    """
     try:
         import httpx  # pylint: disable=import-outside-toplevel
 
         resp = httpx.get(_API_URL, timeout=3.0, follow_redirects=True)
         if resp.status_code == 200:
-            tags = resp.json()
-            if tags:
-                return tags[0]["name"]
+            names = [
+                tag.get("name", "")
+                for tag in resp.json()
+                if isinstance(tag, dict) and tag.get("name")
+            ]
+            if names:
+                return max(names, key=parse_version)
     except Exception:  # pylint: disable=broad-exception-caught
         pass  # Network error, timeout, etc. — skip silently
     return None
@@ -103,15 +111,29 @@ def check_for_update() -> Optional[str]:
     return None
 
 
-def run_self_update() -> bool:
-    """Run self-update via pipx. Returns True on success."""
+def run_self_update(latest: Optional[str] = None) -> bool:
+    """Install the pinned, released PyPI version via pipx (pip fallback).
+
+    Args:
+        latest: Target release tag (e.g. ``v0.4.0``). When not provided,
+            it is looked up via :func:`fetch_latest_tag`.
+
+    Returns:
+        True on success, False on failure or when no release is known.
+    """
+    if latest is None:
+        latest = fetch_latest_tag()
+    if not latest:
+        return False
+
+    requirement = f"{_PACKAGE}=={latest.lstrip('v').strip()}"
     cmd = [
         sys.executable,
         "-m",
         "pipx",
         "install",
         "--force",
-        f"git+{_REPO_URL}",
+        requirement,
     ]
     try:
         result = subprocess.run(
@@ -129,7 +151,7 @@ def run_self_update() -> bool:
             "pip",
             "install",
             "--upgrade",
-            f"git+{_REPO_URL}",
+            requirement,
         ]
         try:
             result = subprocess.run(

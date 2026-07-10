@@ -4,7 +4,8 @@
 
 | Version | Supported |
 |---------|-----------|
-| 0.2.x   | Yes |
+| 0.3.x   | Yes |
+| 0.2.x   | Security fixes only |
 
 ## Reporting a Vulnerability
 
@@ -77,11 +78,17 @@ When using DawOS CLI in production:
 
 ## Known Security Considerations
 
-1. **Plain-text API keys**: Profile configuration stores API keys without encryption. This is by design for CLI simplicity but requires proper file permissions.
+1. **Plain-text API keys**: Profile configuration stores API keys without encryption. This is by design for CLI simplicity but requires proper file permissions. The CLI now warns on `profile export` that the output contains plaintext keys and sets `0600` permissions on export files automatically.
 
 2. **HTTP transport**: DawOS CLI communicates with DawOS Agent over HTTP by default. For production deployments, use HTTPS via a reverse proxy.
 
 3. **No certificate pinning**: The client does not implement certificate pinning. Use network-level controls for secure communication.
+
+4. **Config file permissions**: The CLI checks config file permissions on load and warns if the file is group- or world-readable. The `_save()` function sets `0600` permissions automatically on write.
+
+5. **Error sanitization**: Shell REPL and wizard engine sanitize catch-all exception output to prevent leaking internal paths or stack traces. Only safe exception types (`ValueError`, `TypeError`, `KeyError`) show their raw messages; all others display a generic failure message.
+
+6. **Import validation**: Profile import validates each profile dict for required `url` and `api_key` keys before persisting. Malformed entries are skipped with log warnings.
 
 ## Acknowledgments
 

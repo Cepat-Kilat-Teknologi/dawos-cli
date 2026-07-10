@@ -28,9 +28,12 @@ def masquerade_on(
 @app.command("masquerade-off")
 def masquerade_off(
     interface: str = typer.Argument(..., help="Interface to remove masquerade from"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Disable NAT masquerade on an interface."""
-    client.delete("/api/v1/firewall/nat/masquerade")
+    if not force:
+        typer.confirm(f"Disable NAT masquerade on {interface}?", abort=True)
+    client.delete("/api/v1/firewall/nat/masquerade", json={"wan_interface": interface})
     output.success(f"Masquerade disabled on {interface}")
 
 
@@ -57,8 +60,11 @@ def egress_set(
 @app.command("egress-del")
 def egress_del(
     customer_ip: str = typer.Argument(..., help="Customer IP to clear egress for"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Remove per-customer NAT egress mapping."""
+    if not force:
+        typer.confirm(f"Remove NAT egress mapping for {customer_ip}?", abort=True)
     client.delete(f"/api/v1/firewall/nat/egress/{customer_ip}")
     output.success(f"Egress cleared for {customer_ip}")
 
@@ -75,8 +81,11 @@ def public_ip_add(
 @app.command("public-ip-del")
 def public_ip_del(
     ip: str = typer.Argument(..., help="Public IP to unbind"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Unbind a public NAT IP from the uplink interface."""
+    if not force:
+        typer.confirm(f"Unbind public IP {ip}?", abort=True)
     client.delete(f"/api/v1/firewall/nat/public-ip/{ip}")
     output.success(f"Public IP {ip} unbound")
 

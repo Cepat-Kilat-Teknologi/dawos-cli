@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -42,6 +43,7 @@ def add(
         if not display_name:
             display_name = node
 
+    output.warn_if_insecure_url(url)
     config.add_profile(name, url, key, display_name)
     output.success(f"Profile [bold]{name}[/] saved.")
 
@@ -138,12 +140,22 @@ def export_profiles(
         output.error(f"No profile found: {label}")
         raise typer.Exit(1)
 
+    count = len(data["profiles"])
+
+    # Warn that exported data contains plaintext API keys.
+    output.warning(
+        f"Export contains [bold]{count}[/] API key(s) in plaintext. "
+        "Store the output securely and do not commit it to version control."
+    )
+
     payload = json.dumps(data, indent=2) + "\n"
     if file:
         file.write_text(payload, encoding="utf-8")
-        output.success(
-            f"Exported {len(data['profiles'])} profile(s) to [bold]{file}[/]"
-        )
+        try:
+            os.chmod(file, 0o600)
+        except OSError:
+            pass  # best-effort; Windows may not support Unix permissions
+        output.success(f"Exported {count} profile(s) to [bold]{file}[/]")
     else:
         sys.stdout.write(payload)
 

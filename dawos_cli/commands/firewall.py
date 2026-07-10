@@ -53,8 +53,11 @@ def sysctl() -> None:
 def sysctl_set(
     key: str = typer.Argument(..., help="Sysctl key (e.g. net.ipv4.ip_forward)"),
     value: str = typer.Argument(..., help="Value to set"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Set a kernel parameter."""
+    if not force:
+        typer.confirm(f"Set kernel parameter {key} = {value}?", abort=True)
     client.put("/api/v1/firewall/sysctl", json={"key": key, "value": value})
     output.success(f"{key} = {value}")
 
@@ -89,7 +92,7 @@ def snmp() -> None:
 def groups() -> None:
     """List firewall groups (address/port/network)."""
     data = client.get("/api/v1/firewall/groups")
-    grps = data.get("groups", data) if isinstance(data, dict) else data
+    grps = output.unwrap(data, "groups")
     if isinstance(grps, list):
         output.table(grps, ["name", "group_type", "elements"], title="Firewall Groups")
     else:
@@ -120,8 +123,11 @@ def group_add(
 @app.command("group-del")
 def group_del(
     name: str = typer.Argument(..., help="Group name to delete"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Delete a firewall group."""
+    if not force:
+        typer.confirm(f"Delete firewall group '{name}'?", abort=True)
     data = client.delete(f"/api/v1/firewall/groups/{name}")
     if isinstance(data, dict) and data.get("success") is False:
         output.error(data.get("message") or "Group deletion failed")

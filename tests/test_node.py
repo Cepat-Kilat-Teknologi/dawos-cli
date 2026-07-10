@@ -259,9 +259,49 @@ class TestNodeExec:
                 "/api/v1/something",
                 "--body",
                 body,
+                "--force",
             )
 
         assert result.exit_code == 0
+
+    def test_exec_write_confirm_accept(self, cli, tmp_config):
+        """Non-GET exec without --force prompts; 'y' proceeds."""
+        from dawos_cli import config
+
+        config.add_profile("bng1", "http://bng1:8470", "key1")
+        config.add_group("core", ["bng1"])
+
+        mock_result = MultiResult(
+            total=1,
+            succeeded=1,
+            failed=0,
+            results=[
+                NodeResult(
+                    profile="bng1",
+                    url="http://bng1:8470",
+                    success=True,
+                    status_code=200,
+                    data={"success": True},
+                )
+            ],
+        )
+        with patch("dawos_cli.commands.node.execute_multi", return_value=mock_result):
+            result = cli("node", "exec", "core", "DELETE", "/api/v1/x", input="y\n")
+
+        assert result.exit_code == 0
+
+    def test_exec_write_confirm_abort(self, cli, tmp_config):
+        """Non-GET exec without --force prompts; 'n' aborts with no calls."""
+        from dawos_cli import config
+
+        config.add_profile("bng1", "http://bng1:8470", "key1")
+        config.add_group("core", ["bng1"])
+
+        with patch("dawos_cli.commands.node.execute_multi") as mock_exec:
+            result = cli("node", "exec", "core", "POST", "/api/v1/x", input="n\n")
+
+        assert result.exit_code != 0
+        mock_exec.assert_not_called()
 
     def test_exec_invalid_body(self, cli, tmp_config):
         """Invalid JSON body is rejected."""

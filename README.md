@@ -14,7 +14,7 @@
 
 ### Key Features
 
-- **29 command groups** covering sessions, firewall, NAT, routing, traffic, pools, DHCP, DNS, VRRP, audit, bulk operations, playbooks, and more
+- **31 command groups** covering sessions, firewall, NAT, routing, traffic, pools, DHCP, DNS, VRRP, audit, bulk operations, playbooks, and more
 - **Multi-profile support** for managing multiple BNG nodes from a single installation
 - **Live dashboard** (`dawos top`) with real-time session statistics and system metrics
 - **Interactive shell** (`dawos shell`) with tab completion and command history
@@ -572,7 +572,7 @@ dawos-cli/
 │   ├── shell.py             # Interactive REPL with tab completion (dawos shell)
 │   ├── updater.py           # Version update checker (GitHub Releases)
 │   ├── telemetry.py         # Opt-in anonymous usage statistics
-│   └── commands/            # 29 command group modules
+│   └── commands/            # 31 command group modules
 │       ├── config_cmd.py    # Configuration management
 │       ├── conntrack.py     # Connection tracking
 │       ├── dhcp.py          # DHCP server and relay
@@ -599,7 +599,7 @@ dawos-cli/
 │       ├── traffic.py       # Traffic monitoring and shaping
 │       ├── vrrp.py          # VRRP high-availability
 │       └── zone.py          # Zone-based firewall
-├── tests/                   # 587 tests, 100% coverage
+├── tests/                   # 675 tests, 99% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -724,7 +724,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **587 tests** with **100% coverage** across all source files:
+The project maintains **675 tests** with **99% coverage** across all source files (2 uncovered lines are a Python 3.14 coverage.py artifact):
 
 ```bash
 # Quick test run
@@ -756,7 +756,7 @@ pytest --cov=dawos_cli --cov-report=term-missing
 ### Test Categories
 
 - **Core modules** — state, config, client, output, dashboard
-- **All 29 command groups** — every subcommand tested
+- **All 31 command groups** — every subcommand tested
 - **New features** — doctor diagnostics, interactive shell, telemetry, output formats
 - **Confirmation prompts** — all destructive operations
 - **Error handling** — HTTP 401, 404, 422, 500, connection errors

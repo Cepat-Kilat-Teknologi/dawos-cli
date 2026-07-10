@@ -32,6 +32,7 @@ def ratelimit(
     items: str = typer.Argument(
         ..., help="Comma-separated user:rate pairs (e.g. user1:5M/20M,user2:10M/50M)"
     ),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
 ) -> None:
     """Change rate limits for multiple subscribers at once."""
     parsed = []
@@ -42,6 +43,10 @@ def ratelimit(
             raise typer.Exit(1)
         user, rate = pair.split(":", 1)
         parsed.append({"username": user.strip(), "rate": rate.strip()})
+    if not force:
+        typer.confirm(
+            f"Change rate limits for {len(parsed)} subscriber(s)?", abort=True
+        )
     data = client.post("/api/v1/bulk/ratelimit", json={"items": parsed})
     ok = data.get("succeeded", 0)
     fail = data.get("failed", 0)
