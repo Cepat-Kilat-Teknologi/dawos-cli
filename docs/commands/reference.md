@@ -87,6 +87,7 @@ Complete reference for all dawos-cli commands.
 | `dawos network vlan-add IFACE` | Add VLAN |
 | `dawos network vlan-del ID` | Delete VLAN |
 | `dawos network vlan-state ID STATE` | Set VLAN state |
+| `dawos network throughput` | Per-interface RX/TX byte counters |
 | `dawos routing bgp` | BGP neighbors |
 | `dawos routing bgp-routes` | BGP routes |
 | `dawos routing ospf` | OSPF status |
@@ -133,6 +134,7 @@ Complete reference for all dawos-cli commands.
 | `dawos traffic` | — | Traffic monitoring and shaping |
 | `dawos pool` | — | IP address pool management |
 | `dawos conntrack` | — | Connection tracking |
+| `dawos conntrack flush` | | Flush conntrack table (`--force` to skip confirm) |
 | `dawos events` | — | Event hooks and webhooks |
 | `dawos scheduler` | — | Scheduled jobs |
 | `dawos dns` | — | DNS forwarding |
