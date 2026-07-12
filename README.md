@@ -609,7 +609,7 @@ dawos-cli/
 │       ├── node.py          # Multi-node management
 │       ├── playbook.py      # Operational playbooks
 │       └── wizard.py        # Guided interactive workflows
-├── tests/                   # 675 tests, 100% coverage
+├── tests/                   # 682 tests, 100% coverage
 │   ├── conftest.py          # Shared fixtures
 │   ├── test_app.py          # App-level and CLI integration tests
 │   ├── test_client.py       # HTTP client tests
@@ -739,7 +739,7 @@ pre-commit run --all-files
 
 ## Testing
 
-The project maintains **675 tests** with **100% coverage** across all source files:
+The project maintains **682 tests** with **100% coverage** across all source files:
 
 ```bash
 # Quick test run
