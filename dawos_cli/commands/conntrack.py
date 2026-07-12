@@ -1,4 +1,4 @@
-"""Conntrack management — config, table size, timeouts, helpers, profiles."""
+"""Conntrack management — config, table size, timeouts, helpers, profiles, flush."""
 
 from __future__ import annotations
 
@@ -73,3 +73,26 @@ def profile_apply(
     """Apply a conntrack tuning profile."""
     client.post("/api/v1/conntrack/profiles/apply", json={"name": name})
     output.success(f"Conntrack profile '{name}' applied")
+
+
+@app.command("flush")
+def flush(
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Skip confirmation prompt."
+    ),
+) -> None:
+    """Flush (clear) the entire conntrack table.
+
+    This is a destructive operation — all tracked connections are removed.
+    Active connections will need to be re-established by the kernel.
+    Requires operator-level API key.
+    """
+    if not force:
+        typer.confirm(
+            "This will flush ALL tracked connections. Continue?",
+            abort=True,
+        )
+    data = client.post("/api/v1/conntrack/flush")
+    entries = data.get("entries_before", 0) if isinstance(data, dict) else 0
+    output.success(f"Conntrack table flushed ({entries} entries cleared)")
+    output.response(data, title="Conntrack Flush")
