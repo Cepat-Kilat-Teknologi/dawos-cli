@@ -15,9 +15,10 @@ dawos network vlans             # List VLANs
 dawos network vlan-add IFACE    # Add a VLAN
 dawos network vlan-del ID       # Delete a VLAN
 dawos network vlan-state ID STATE  # Set VLAN state
+dawos network throughput       # Per-interface RX/TX byte counters
 ```
 
-Alias: `dawos net interfaces`, `dawos net routes`, etc.
+Alias: `dawos net interfaces`, `dawos net routes`, `dawos net throughput`, etc.
 
 ## Routing
 
