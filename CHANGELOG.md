@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-07-12
+
+### Added
+
+- **Network throughput command** — `dawos network throughput` shows per-interface RX/TX byte counters with human-readable formatting (B/KB/MB/GB/TB/PB), matching dawos-agent v0.3.3 `GET /api/v1/network/throughput` endpoint
+- **Conntrack flush command** — `dawos conntrack flush` clears the kernel connection tracking table with confirmation prompt (bypass with `--force`), matching dawos-agent v0.3.3 `POST /api/v1/conntrack/flush` endpoint; displays pre-flush entry count
+
 ### Security
 
 - **Timeout and transport error handling** — `client.py` now catches `httpx.TimeoutException` and `httpx.RequestError` in all 5 HTTP methods (`get`, `post`, `put`, `delete`, `stream_sse`), preventing unhandled exceptions from leaking internal state
@@ -35,7 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
-- **675 tests** — up from 587, with 88 new tests covering security hardening, edge cases, confirmation prompts, atomic writes, and output escaping
+- **682 tests** — up from 675, with 7 new tests covering network throughput and conntrack flush commands (success, confirmation accept/abort, edge cases)
 
 ## [0.3.2] - 2026-07-09
 
@@ -168,9 +175,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+[0.3.3]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.3
 [0.3.2]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.2
 [0.3.1]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.0
 [0.1.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.2.0
-[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.2...HEAD
+[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.3...HEAD
