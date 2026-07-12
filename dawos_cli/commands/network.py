@@ -1,4 +1,4 @@
-"""Network management — interfaces, routes, VLANs, DNS."""
+"""Network management — interfaces, routes, VLANs, DNS, throughput."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ import typer
 
 from .. import client, output
 
-app = typer.Typer(help="Network interfaces, routes, VLANs, DNS.")
+app = typer.Typer(help="Network interfaces, routes, VLANs, DNS, throughput.")
 
 
 @app.command("interfaces")
@@ -166,3 +166,46 @@ def vlan_state(
     """Set VLAN interface state (up/down)."""
     client.put(f"/api/v1/network/vlans/{name}", json={"state": state})
     output.success(f"VLAN {name} → {state}")
+
+
+def _format_bytes(value: int) -> str:
+    """Format byte count into a human-readable string."""
+    for unit in ("B", "KB", "MB", "GB", "TB"):
+        if abs(value) < 1024:
+            return f"{value:.1f} {unit}" if unit != "B" else f"{value} {unit}"
+        value /= 1024  # type: ignore[assignment]
+    return f"{value:.1f} PB"
+
+
+@app.command("throughput")
+def throughput() -> None:
+    """Show per-interface network throughput counters.
+
+    Reads cumulative byte counters from /proc/net/dev on the BNG node.
+    Loopback interfaces are excluded. Only requires viewer-level API key.
+    """
+    data = client.get("/api/v1/network/throughput")
+    ifaces = output.unwrap(data, "interfaces")
+    if isinstance(ifaces, list) and ifaces:
+        rows = []
+        for iface in ifaces:
+            rows.append(
+                {
+                    "name": iface.get("name", "—"),
+                    "rx_bytes": _format_bytes(iface.get("rx_bytes", 0)),
+                    "tx_bytes": _format_bytes(iface.get("tx_bytes", 0)),
+                }
+            )
+        output.table(
+            rows,
+            ["name", "rx_bytes", "tx_bytes"],
+            title="Network Throughput",
+            col_labels={
+                "name": "Interface",
+                "rx_bytes": "RX (received)",
+                "tx_bytes": "TX (transmitted)",
+            },
+            col_styles={"name": "bold"},
+        )
+    else:
+        output.response(data, title="Network Throughput")
