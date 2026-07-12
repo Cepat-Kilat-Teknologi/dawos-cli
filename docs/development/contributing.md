@@ -14,7 +14,7 @@ source .venv/bin/activate
 ## Development Commands
 
 ```bash
-make test       # Run 675 tests with coverage
+make test       # Run 682 tests with coverage
 make lint       # Black + Pylint + Ruff
 make format     # Auto-format with Black
 make check      # All checks (lint + test)
