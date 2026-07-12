@@ -510,6 +510,53 @@ class TestNetworkCommands:
         result = cli("network", "vlan-state", "eth0.100", "up")
         assert result.exit_code == 0
 
+    def test_throughput(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "rx_bytes": 123456789,
+            "tx_bytes": 987654321,
+            "rx_bps": 0.0,
+            "tx_bps": 0.0,
+            "interfaces": [
+                {"name": "eth0", "rx_bytes": 100000000, "tx_bytes": 900000000},
+                {"name": "eth1", "rx_bytes": 23456789, "tx_bytes": 87654321},
+            ],
+        }
+        result = cli("network", "throughput")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/network/throughput")
+        assert "eth0" in result.output
+
+    def test_throughput_empty(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "rx_bytes": 0,
+            "tx_bytes": 0,
+            "interfaces": [],
+        }
+        result = cli("network", "throughput")
+        assert result.exit_code == 0
+
+    def test_throughput_non_list(self, cli, mock_client):
+        mock_client["get"].return_value = {"status": "ok"}
+        result = cli("network", "throughput")
+        assert result.exit_code == 0
+
+    def test_throughput_large_values(self, cli, mock_client):
+        """Cover the PB branch in _format_bytes."""
+        mock_client["get"].return_value = {
+            "rx_bytes": 0,
+            "tx_bytes": 0,
+            "interfaces": [
+                {
+                    "name": "eth0",
+                    "rx_bytes": 2 * 1024**5,  # 2 PB
+                    "tx_bytes": 500 * 1024**4,  # 500 TB
+                },
+            ],
+        }
+        result = cli("network", "throughput")
+        assert result.exit_code == 0
+        assert "PB" in result.output
+
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Firewall
@@ -1009,6 +1056,32 @@ class TestConntrackCommands:
         mock_client["post"].assert_called_with(
             "/api/v1/conntrack/profiles/apply", json={"name": "isp-optimized"}
         )
+
+    def test_flush_force(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "success": True,
+            "message": "Conntrack table flushed",
+            "entries_before": 1234,
+        }
+        result = cli("conntrack", "flush", "--force")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with("/api/v1/conntrack/flush")
+        assert "1234" in result.output
+
+    def test_flush_confirm_accept(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "success": True,
+            "message": "Conntrack table flushed",
+            "entries_before": 500,
+        }
+        result = cli("conntrack", "flush", input="y\n")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_once()
+
+    def test_flush_confirm_abort(self, cli, mock_client):
+        result = cli("conntrack", "flush", input="n\n")
+        assert result.exit_code != 0
+        mock_client["post"].assert_not_called()
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
