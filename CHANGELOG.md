@@ -8,6 +8,35 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-14
+
+### Added
+
+- **Session search commands** — `dawos session search-mac`, `search-ip`, `search-sid` find sessions by MAC address, IP address, or session ID
+- **Extended system stats** — `dawos system stats-extended` shows detailed system statistics (CPU, memory, sessions breakdown)
+- **IP pool detail** — `dawos pool detail` shows per-pool allocation details with individual assignments
+- **Config validation** — `dawos config validate` validates accel-ppp configuration content with line-level error/warning reporting; supports `@filename` syntax to read from file
+- **PPPoE runtime config** — `dawos pppoe runtime` shows current PPPoE runtime settings; `dawos pppoe runtime-set` updates service_name, ac_name, verbose with live reload
+- **Session history module** — 4 new commands under `dawos history`:
+  - `list` — query historical session snapshots with filters (username, IP, date range, pagination)
+  - `snapshot` — capture current active sessions into history database
+  - `purge` — delete history records older than a timestamp (GDPR/disk management)
+  - `stats` — show history database statistics (record count, unique users, DB size)
+- **CSV export module** — 2 new commands under `dawos export`:
+  - `sessions` — export active sessions as RFC 4180 CSV (stdout or `--output` file)
+  - `history` — export history records as CSV with filters (username, IP, date range, limit)
+- **RADIUS diagnostics module** — 3 new commands under `dawos radius`:
+  - `config` — show RADIUS server configuration (secrets never exposed)
+  - `status` — show RADIUS server connection states
+  - `check` — health check with reachability test per server
+- **`client.get_text()` method** — new HTTP client method for raw text responses (used by CSV export endpoints that return `text/csv`)
+
+### Changed
+
+- **34 command modules** — up from 31 (added `history`, `export`, `radius_cmd`)
+- **728 tests** — up from 682 (46 new tests covering all v0.4.0 commands + client error paths)
+- **100% test coverage** maintained
+
 ## [0.3.3] - 2026-07-12
 
 ### Added

@@ -46,9 +46,10 @@ def cli(runner):
 
 @pytest.fixture
 def mock_client():
-    """Patch client.get/post/put/delete/stream_sse/health for command tests."""
+    """Patch client.get/get_text/post/put/delete/stream_sse/health for command tests."""
     with (
         patch("dawos_cli.client.get") as mg,
+        patch("dawos_cli.client.get_text") as mgt,
         patch("dawos_cli.client.post") as mp,
         patch("dawos_cli.client.put") as mpu,
         patch("dawos_cli.client.delete") as md,
@@ -56,6 +57,7 @@ def mock_client():
         patch("dawos_cli.client.health") as mh,
     ):
         mg.return_value = {}
+        mgt.return_value = ""
         mp.return_value = {"status": "ok", "message": "done"}
         mpu.return_value = {"status": "ok", "message": "done"}
         md.return_value = {"status": "ok"}
@@ -63,6 +65,7 @@ def mock_client():
         mh.return_value = {"status": "healthy"}
         yield {
             "get": mg,
+            "get_text": mgt,
             "post": mp,
             "put": mpu,
             "delete": md,

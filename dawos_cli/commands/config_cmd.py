@@ -152,3 +152,44 @@ def compare(
         output.print_raw(data["diff"])
     else:
         output.response(data, title="Revision Compare")
+
+
+@app.command("validate")
+def validate(
+    content: str = typer.Argument(
+        ..., help="Config content to validate (or @filename to read from file)"
+    ),
+) -> None:
+    """Validate accel-ppp configuration without applying it.
+
+    Performs structural and semantic checks: syntax validation,
+    required section verification, IP/CIDR checks, port range
+    validation, and duplicate section detection.
+    """
+    if content.startswith("@"):
+        import pathlib  # pylint: disable=import-outside-toplevel
+
+        path = pathlib.Path(content[1:])
+        if not path.exists():
+            output.error(f"File not found: {path}")
+            raise typer.Exit(1)
+        content = path.read_text(encoding="utf-8")
+    data = client.post("/api/v1/config/validate", json={"content": content})
+    if isinstance(data, dict) and data.get("valid") is True:
+        output.success(
+            f"Configuration is valid " f"({data.get('warnings', 0)} warning(s))"
+        )
+    elif isinstance(data, dict) and data.get("valid") is False:
+        output.error(
+            f"Configuration has {data.get('errors', 0)} error(s), "
+            f"{data.get('warnings', 0)} warning(s)"
+        )
+    if isinstance(data, dict) and data.get("issues"):
+        output.table(
+            data["issues"],
+            ["severity", "line", "section", "message"],
+            title="Validation Issues",
+            col_styles={"severity": "bold"},
+        )
+    elif isinstance(data, dict) and data.get("valid") is None:
+        output.response(data, title="Config Validation")

@@ -121,3 +121,66 @@ def drop_by_mac(
         typer.confirm(f"Drop session with MAC {mac}?", abort=True)
     data = client.post("/api/v1/sessions/control/drop-by-mac", json={"mac": mac})
     output.success(f"Drop by MAC: {data.get('message', 'done')}")
+
+
+# --- Session Search --------------------------------------------------------
+
+
+@app.command("search-mac")
+def search_mac(
+    mac: str = typer.Argument(..., help="MAC address (AA:BB:CC:DD:EE:FF)"),
+) -> None:
+    """Search sessions by calling-station-id (MAC address)."""
+    data = client.get(f"/api/v1/sessions/search/mac/{mac}")
+    sessions = output.unwrap(data, "sessions")
+    if isinstance(sessions, list) and sessions:
+        output.table(
+            sessions,
+            ["username", "ip", "rate_limit", "type", "state", "uptime"],
+            title=f"Sessions matching MAC {mac}",
+            col_styles={"username": "bold", "ip": "cyan"},
+        )
+    elif isinstance(sessions, list):
+        output.warning(f"No sessions found for MAC {mac}.")
+    else:
+        output.response(data)
+
+
+@app.command("search-ip")
+def search_ip(
+    ip: str = typer.Argument(..., help="IP address to search"),
+) -> None:
+    """Search sessions by assigned IP address."""
+    data = client.get(f"/api/v1/sessions/search/ip/{ip}")
+    sessions = output.unwrap(data, "sessions")
+    if isinstance(sessions, list) and sessions:
+        output.table(
+            sessions,
+            ["username", "ip", "rate_limit", "type", "state", "uptime"],
+            title=f"Sessions matching IP {ip}",
+            col_styles={"username": "bold", "ip": "cyan"},
+        )
+    elif isinstance(sessions, list):
+        output.warning(f"No sessions found for IP {ip}.")
+    else:
+        output.response(data)
+
+
+@app.command("search-sid")
+def search_sid(
+    sid: str = typer.Argument(..., help="Session ID to search"),
+) -> None:
+    """Search sessions by accel-ppp session ID."""
+    data = client.get(f"/api/v1/sessions/search/sid/{sid}")
+    sessions = output.unwrap(data, "sessions")
+    if isinstance(sessions, list) and sessions:
+        output.table(
+            sessions,
+            ["username", "ip", "rate_limit", "type", "state", "uptime"],
+            title=f"Sessions matching SID {sid}",
+            col_styles={"username": "bold", "ip": "cyan"},
+        )
+    elif isinstance(sessions, list):
+        output.warning(f"No sessions found for SID {sid}.")
+    else:
+        output.response(data)

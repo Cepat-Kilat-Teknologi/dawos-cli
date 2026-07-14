@@ -2075,3 +2075,471 @@ class TestPlaybookCommands:
         result = cli("playbook", "run", "safe-restart", "--force")
         assert result.exit_code == 0
         assert "✗" in result.output
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Session Search (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestSessionSearch:
+    def test_search_mac(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "count": 1,
+            "sessions": [
+                {
+                    "username": "user1",
+                    "ip": "10.0.0.1",
+                    "rate_limit": "10M",
+                    "type": "pppoe",
+                    "state": "active",
+                    "uptime": "1h",
+                }
+            ],
+        }
+        result = cli("session", "search-mac", "AA:BB:CC:DD:EE:FF")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with(
+            "/api/v1/sessions/search/mac/AA:BB:CC:DD:EE:FF"
+        )
+
+    def test_search_mac_empty(self, cli, mock_client):
+        mock_client["get"].return_value = {"count": 0, "sessions": []}
+        result = cli("session", "search-mac", "AA:BB:CC:DD:EE:FF")
+        assert result.exit_code == 0
+        assert "No sessions found" in result.output
+
+    def test_search_mac_non_list(self, cli, mock_client):
+        mock_client["get"].return_value = {"error": "fail"}
+        result = cli("session", "search-mac", "AA:BB:CC:DD:EE:FF")
+        assert result.exit_code == 0
+
+    def test_search_ip(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "count": 1,
+            "sessions": [
+                {
+                    "username": "user2",
+                    "ip": "10.0.0.2",
+                    "rate_limit": "5M",
+                    "type": "pppoe",
+                    "state": "active",
+                    "uptime": "30m",
+                }
+            ],
+        }
+        result = cli("session", "search-ip", "10.0.0.2")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/sessions/search/ip/10.0.0.2")
+
+    def test_search_ip_empty(self, cli, mock_client):
+        mock_client["get"].return_value = {"count": 0, "sessions": []}
+        result = cli("session", "search-ip", "10.0.0.99")
+        assert result.exit_code == 0
+        assert "No sessions found" in result.output
+
+    def test_search_ip_non_list(self, cli, mock_client):
+        mock_client["get"].return_value = {"error": "fail"}
+        result = cli("session", "search-ip", "10.0.0.99")
+        assert result.exit_code == 0
+
+    def test_search_sid(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "count": 1,
+            "sessions": [
+                {
+                    "username": "user3",
+                    "ip": "10.0.0.3",
+                    "rate_limit": "20M",
+                    "type": "pppoe",
+                    "state": "active",
+                    "uptime": "2h",
+                }
+            ],
+        }
+        result = cli("session", "search-sid", "abc123")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/sessions/search/sid/abc123")
+
+    def test_search_sid_empty(self, cli, mock_client):
+        mock_client["get"].return_value = {"count": 0, "sessions": []}
+        result = cli("session", "search-sid", "no-such-sid")
+        assert result.exit_code == 0
+        assert "No sessions found" in result.output
+
+    def test_search_sid_non_list(self, cli, mock_client):
+        mock_client["get"].return_value = {"error": "fail"}
+        result = cli("session", "search-sid", "abc")
+        assert result.exit_code == 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# System Stats Extended (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestStatsExtended:
+    def test_stats_extended(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "uptime": "5d 3h",
+            "cpu": 12.5,
+            "sessions": {"active": 100},
+        }
+        result = cli("system", "stats-extended")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/system/stats")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Pool Detail (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestPoolDetail:
+    def test_detail(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "pools": [{"name": "pool1", "total": 254, "used": 10, "assignments": []}]
+        }
+        result = cli("pool", "detail")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/ip-pool/detail")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Config Validate (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestConfigValidate:
+    def test_validate_valid(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "valid": True,
+            "errors": 0,
+            "warnings": 0,
+            "sections": ["modules", "pppoe"],
+            "issues": [],
+        }
+        result = cli("config", "validate", "[modules]\npppoe\n")
+        assert result.exit_code == 0
+        assert "valid" in result.output.lower()
+
+    def test_validate_invalid(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "valid": False,
+            "errors": 1,
+            "warnings": 0,
+            "sections": [],
+            "issues": [
+                {
+                    "severity": "error",
+                    "line": 0,
+                    "section": "",
+                    "message": "Required section [modules] is missing",
+                }
+            ],
+        }
+        result = cli("config", "validate", "bad config")
+        assert result.exit_code == 0
+        assert "error" in result.output.lower()
+
+    def test_validate_from_file(self, cli, mock_client, tmp_path):
+        cfg_file = tmp_path / "test.conf"
+        cfg_file.write_text("[modules]\npppoe\n")
+        mock_client["post"].return_value = {
+            "valid": True,
+            "errors": 0,
+            "warnings": 0,
+            "sections": ["modules"],
+            "issues": [],
+        }
+        result = cli("config", "validate", f"@{cfg_file}")
+        assert result.exit_code == 0
+
+    def test_validate_file_not_found(self, cli, mock_client):
+        result = cli("config", "validate", "@/no/such/file.conf")
+        assert result.exit_code == 1
+
+    def test_validate_no_issues(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "valid": None,
+            "errors": 0,
+            "warnings": 0,
+            "sections": [],
+            "issues": [],
+        }
+        result = cli("config", "validate", "content")
+        assert result.exit_code == 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PPPoE Runtime (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestPppoeRuntime:
+    def test_runtime(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "service_name": "*",
+            "ac_name": "bng1",
+            "verbose": False,
+        }
+        result = cli("pppoe", "runtime")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/pppoe/runtime")
+
+    def test_runtime_set(self, cli, mock_client):
+        mock_client["put"].return_value = {
+            "service_name": "myisp",
+            "ac_name": "bng1",
+            "verbose": True,
+        }
+        result = cli(
+            "pppoe",
+            "runtime-set",
+            "--service-name",
+            "myisp",
+            "--verbose",
+            "--force",
+        )
+        assert result.exit_code == 0
+        mock_client["put"].assert_called_with(
+            "/api/v1/pppoe/runtime",
+            json={"service_name": "myisp", "verbose": True},
+        )
+
+    def test_runtime_set_no_fields(self, cli, mock_client):
+        result = cli("pppoe", "runtime-set", "--force")
+        assert result.exit_code == 1
+
+    def test_runtime_set_confirm_abort(self, cli, mock_client):
+        result = cli("pppoe", "runtime-set", "--service-name", "x", input="n\n")
+        assert result.exit_code != 0
+
+    def test_runtime_set_ac_name_only(self, cli, mock_client):
+        mock_client["put"].return_value = {
+            "service_name": "*",
+            "ac_name": "newac",
+            "verbose": False,
+        }
+        result = cli("pppoe", "runtime-set", "--ac-name", "newac", "--force")
+        assert result.exit_code == 0
+        mock_client["put"].assert_called_with(
+            "/api/v1/pppoe/runtime",
+            json={"ac_name": "newac"},
+        )
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Session History (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestHistoryCommands:
+    def test_list(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "records": [
+                {
+                    "snapshot_at": "2026-07-14T10:00:00",
+                    "username": "user1",
+                    "ip": "10.0.0.1",
+                    "ifname": "ppp0",
+                    "state": "active",
+                    "uptime": "1h",
+                }
+            ],
+            "total": 1,
+        }
+        result = cli("history", "list")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with(
+            "/api/v1/sessions/history", limit=100, offset=0
+        )
+
+    def test_list_with_filters(self, cli, mock_client):
+        mock_client["get"].return_value = {"records": [], "total": 0}
+        result = cli(
+            "history",
+            "list",
+            "--username",
+            "user1",
+            "--ip",
+            "10.0.0.1",
+            "--start",
+            "2026-01-01",
+            "--end",
+            "2026-12-31",
+            "--limit",
+            "50",
+        )
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with(
+            "/api/v1/sessions/history",
+            limit=50,
+            offset=0,
+            username="user1",
+            ip="10.0.0.1",
+            start="2026-01-01",
+            end="2026-12-31",
+        )
+
+    def test_list_empty(self, cli, mock_client):
+        mock_client["get"].return_value = {"records": [], "total": 0}
+        result = cli("history", "list")
+        assert result.exit_code == 0
+        assert "No history records" in result.output
+
+    def test_list_non_list(self, cli, mock_client):
+        mock_client["get"].return_value = {"error": "fail"}
+        result = cli("history", "list")
+        assert result.exit_code == 0
+
+    def test_snapshot(self, cli, mock_client):
+        mock_client["post"].return_value = {
+            "captured": 42,
+            "timestamp": "2026-07-14T10:00:00Z",
+        }
+        result = cli("history", "snapshot")
+        assert result.exit_code == 0
+        mock_client["post"].assert_called_with("/api/v1/sessions/history/snapshot")
+        assert "42" in result.output
+
+    def test_purge(self, cli, mock_client):
+        mock_client["delete"].return_value = {"deleted": 100}
+        result = cli("history", "purge", "2026-01-01T00:00:00Z", "--force")
+        assert result.exit_code == 0
+        assert "100" in result.output
+
+    def test_purge_confirm_abort(self, cli, mock_client):
+        result = cli("history", "purge", "2026-01-01T00:00:00Z", input="n\n")
+        assert result.exit_code != 0
+
+    def test_stats(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "total_records": 1000,
+            "unique_users": 50,
+            "db_size_bytes": 123456,
+        }
+        result = cli("history", "stats")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/sessions/history/stats")
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# CSV Export (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestExportCommands:
+    def test_sessions_csv(self, cli, mock_client):
+        mock_client["get_text"].return_value = '"username","ip"\n"user1","10.0.0.1"\n'
+        result = cli("export", "sessions")
+        assert result.exit_code == 0
+        mock_client["get_text"].assert_called_with("/api/v1/export/sessions")
+
+    def test_sessions_csv_to_file(self, cli, mock_client, tmp_path):
+        mock_client["get_text"].return_value = '"username","ip"\n"user1","10.0.0.1"\n'
+        out_file = tmp_path / "sessions.csv"
+        result = cli("export", "sessions", "--output", str(out_file))
+        assert result.exit_code == 0
+        assert out_file.read_text() == '"username","ip"\n"user1","10.0.0.1"\n'
+
+    def test_history_csv(self, cli, mock_client):
+        mock_client["get_text"].return_value = '"id","snapshot_at"\n"1","2026"\n'
+        result = cli("export", "history")
+        assert result.exit_code == 0
+        mock_client["get_text"].assert_called_with(
+            "/api/v1/export/history", limit=10000
+        )
+
+    def test_history_csv_with_filters(self, cli, mock_client):
+        mock_client["get_text"].return_value = '"id"\n'
+        result = cli(
+            "export",
+            "history",
+            "--username",
+            "user1",
+            "--limit",
+            "500",
+        )
+        assert result.exit_code == 0
+        mock_client["get_text"].assert_called_with(
+            "/api/v1/export/history", limit=500, username="user1"
+        )
+
+    def test_history_csv_all_filters(self, cli, mock_client):
+        mock_client["get_text"].return_value = '"id"\n'
+        result = cli(
+            "export",
+            "history",
+            "--username",
+            "u1",
+            "--ip",
+            "10.0.0.1",
+            "--start",
+            "2026-01-01",
+            "--end",
+            "2026-12-31",
+        )
+        assert result.exit_code == 0
+        mock_client["get_text"].assert_called_with(
+            "/api/v1/export/history",
+            limit=10000,
+            username="u1",
+            ip="10.0.0.1",
+            start="2026-01-01",
+            end="2026-12-31",
+        )
+
+    def test_history_csv_to_file(self, cli, mock_client, tmp_path):
+        mock_client["get_text"].return_value = '"id"\n"1"\n'
+        out_file = tmp_path / "history.csv"
+        result = cli("export", "history", "--output", str(out_file))
+        assert result.exit_code == 0
+        assert out_file.exists()
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# RADIUS Diagnostics (v0.4.0)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestRadiusCommands:
+    def test_config(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "servers": [{"address": "10.0.0.1", "auth_port": 1812}],
+            "nas_identifier": "bng1",
+        }
+        result = cli("radius", "config")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/radius/config")
+
+    def test_status(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "servers": [{"address": "10.0.0.1", "state": "active"}]
+        }
+        result = cli("radius", "status")
+        assert result.exit_code == 0
+        mock_client["get"].assert_called_with("/api/v1/radius/status")
+
+    def test_check_healthy(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "healthy": True,
+            "servers": [{"address": "10.0.0.1", "reachable": True, "state": "active"}],
+        }
+        result = cli("radius", "check")
+        assert result.exit_code == 0
+        assert "healthy" in result.output.lower()
+
+    def test_check_unhealthy(self, cli, mock_client):
+        mock_client["get"].return_value = {
+            "healthy": False,
+            "servers": [{"address": "10.0.0.1", "reachable": False, "state": "down"}],
+        }
+        result = cli("radius", "check")
+        assert result.exit_code == 0
+        assert "unhealthy" in result.output.lower()
+
+    def test_check_no_healthy_key(self, cli, mock_client):
+        mock_client["get"].return_value = {"servers": []}
+        result = cli("radius", "check")
+        assert result.exit_code == 0

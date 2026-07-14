@@ -87,3 +87,49 @@ def pado_set(
     """Set PADO delay for PPPoE discovery."""
     client.put("/api/v1/pppoe/pado", json={"delay": delay})
     output.success(f"PADO delay set to {delay}ms")
+
+
+# --- Runtime Config --------------------------------------------------------
+
+
+@app.command("runtime")
+def runtime() -> None:
+    """Show PPPoE runtime configuration (service-name, ac-name, verbose)."""
+    data = client.get("/api/v1/pppoe/runtime")
+    output.response(data, title="PPPoE Runtime Config")
+
+
+@app.command("runtime-set")
+def runtime_set(
+    service_name: str = typer.Option(  # pylint: disable=unused-argument
+        None, "--service-name", help="PPPoE service name"
+    ),
+    ac_name: str = typer.Option(  # pylint: disable=unused-argument
+        None, "--ac-name", help="Access concentrator name"
+    ),
+    verbose: bool = typer.Option(  # pylint: disable=unused-argument
+        None, "--verbose/--no-verbose", help="Enable/disable verbose logging"
+    ),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
+) -> None:
+    """Update PPPoE runtime configuration and reload accel-ppp.
+
+    Only provided fields are updated; omitted fields keep their
+    current values. Triggers a graceful reload after writing.
+    """
+    body = {}
+    if service_name is not None:
+        body["service_name"] = service_name
+    if ac_name is not None:
+        body["ac_name"] = ac_name
+    if verbose is not None:
+        body["verbose"] = verbose
+    if not body:
+        output.warning(
+            "No fields to update. Use --service-name, --ac-name, or --verbose."
+        )
+        raise typer.Exit(1)
+    if not force:
+        typer.confirm("Update PPPoE runtime config and reload?", abort=True)
+    data = client.put("/api/v1/pppoe/runtime", json=body)
+    output.response(data, title="Updated PPPoE Runtime Config")

@@ -112,6 +112,23 @@ def get(path: str, **params: Any) -> Any:
     return None  # unreachable — handlers always raise
 
 
+def get_text(path: str, **params: Any) -> str:
+    """GET request, return raw response text (for CSV downloads)."""
+    try:
+        resp = _get_client().get(path, params=params or None)
+        resp.raise_for_status()
+        return resp.text
+    except httpx.HTTPStatusError as exc:
+        _handle_error(exc)
+    except httpx.ConnectError as exc:
+        _handle_connection_error(exc)
+    except httpx.TimeoutException as exc:
+        _handle_timeout(exc)
+    except httpx.RequestError as exc:
+        _handle_request_error(exc)
+    return ""  # pragma: no cover — unreachable, handlers always raise
+
+
 def post(path: str, json: Optional[Dict] = None) -> Any:
     """POST request, return parsed JSON."""
     try:

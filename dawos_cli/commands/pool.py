@@ -52,3 +52,14 @@ def remove(
         typer.confirm(f"Remove pool '{name}'?", abort=True)
     client.delete(f"/api/v1/ip-pool/{name}")
     output.success(f"Pool '{name}' removed")
+
+
+@app.command("detail")
+def detail() -> None:
+    """Show per-pool utilisation with IP-to-user mappings.
+
+    Cross-references configured pools with active sessions
+    to show which addresses are assigned to which subscribers.
+    """
+    data = client.get("/api/v1/ip-pool/detail")
+    output.response(data, title="Pool Detail")

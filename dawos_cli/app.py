@@ -173,8 +173,10 @@ from .commands import (  # noqa: E402  # pylint: disable=wrong-import-position
     diagnostics,
     dns,
     events,
+    export,
     firewall,
     flow,
+    history,
     limits,
     lldp,
     logs,
@@ -187,6 +189,7 @@ from .commands import (  # noqa: E402  # pylint: disable=wrong-import-position
     pool,
     pppoe,
     profile,
+    radius_cmd,
     routing,
     scheduler,
     service,
@@ -233,6 +236,13 @@ app.add_typer(wizard.app, name="wizard", help="Guided interactive workflows.")
 app.add_typer(audit.app, name="audit", help="Audit log viewer.")
 app.add_typer(bulk.app, name="bulk", help="Bulk operations on multiple subscribers.")
 app.add_typer(playbook.app, name="playbook", help="Operational playbooks (automation).")
+app.add_typer(
+    history.app, name="history", help="Session history snapshots and queries."
+)
+app.add_typer(export.app, name="export", help="Export data as CSV files.")
+app.add_typer(
+    radius_cmd.app, name="radius", help="RADIUS server diagnostics and status."
+)
 
 # ---------------------------------------------------------------------------
 # Short aliases (hidden duplicates for power users)

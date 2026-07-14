@@ -35,3 +35,14 @@ def ready() -> None:
     """Check accel-ppp readiness (load balancer probe)."""
     data = client.get("/health/ready")
     output.response(data, title="Readiness")
+
+
+@app.command("stats-extended")
+def stats_extended() -> None:
+    """Show comprehensive accel-ppp runtime statistics.
+
+    Includes uptime, CPU, memory, core counters, session counts,
+    PPPoE protocol counters, and per-RADIUS-server statistics.
+    """
+    data = client.get("/api/v1/system/stats")
+    output.response(data, title="Extended Statistics")

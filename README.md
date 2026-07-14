@@ -14,7 +14,7 @@
 
 ### Key Features
 
-- **31 command groups** covering sessions, firewall, NAT, routing, traffic, pools, DHCP, DNS, VRRP, audit, bulk operations, playbooks, and more
+- **34 command groups** covering sessions, firewall, NAT, routing, traffic, pools, DHCP, DNS, VRRP, audit, bulk operations, playbooks, session history, CSV export, RADIUS diagnostics, and more
 - **Multi-profile support** for managing multiple BNG nodes from a single installation
 - **Live dashboard** (`dawos top`) with real-time session statistics and system metrics
 - **Interactive shell** (`dawos shell`) with tab completion and command history
@@ -318,17 +318,17 @@ DAWOS_PROFILE=bng1 dawos session list
 | Group | Alias | Description | Subcommands |
 |-------|-------|-------------|-------------|
 | **profile** | — | Connection profile management | `add`, `list`, `use`, `remove`, `test`, `show`, `export`, `import` |
-| **system** | `sys` | System information and health | `info`, `health`, `ready`, `metrics` |
+| **system** | `sys` | System information and health | `info`, `health`, `ready`, `metrics`, `stats-extended` |
 | **service** | — | BNG service control | `status`, `start`, `stop`, `restart`, `cmd`, `shutdown`, `shutdown-cancel` |
-| **session** | `s` | PPPoE session management | `list`, `stats`, `find`, `terminate`, `restart`, `by-sid`, `by-ip`, `snapshot`, `drop-by-mac` |
-| **config** | `cfg` | BNG configuration | `show`, `update`, `backups`, `revisions`, `revision-content`, `compare`, `diff`, `rollback`, `apply`, `confirm`, `apply-status` |
+| **session** | `s` | PPPoE session management | `list`, `stats`, `find`, `terminate`, `restart`, `by-sid`, `by-ip`, `snapshot`, `drop-by-mac`, `search-mac`, `search-ip`, `search-sid` |
+| **config** | `cfg` | BNG configuration | `show`, `update`, `backups`, `revisions`, `revision-content`, `compare`, `diff`, `rollback`, `apply`, `confirm`, `apply-status`, `validate` |
 | **network** | `net` | Network interfaces and routing | `interfaces`, `interface`, `interface-config`, `routes`, `add-route`, `del-route`, `dns`, `dns-set`, `vlans`, `vlan-add`, `vlan-del`, `vlan-state` |
 | **firewall** | `fw` | Firewall, sysctl, and conntrack | `status`, `rules`, `save`, `validate`, `sysctl`, `sysctl-set`, `conntrack`, `conntrack-set`, `snmp`, `groups`, `group-add`, `group-del`, `group-members` |
 | **nat** | — | NAT and masquerade management | `status`, `masquerade-on`, `masquerade-off`, `egress`, `egress-set`, `egress-del`, `public-ip-add`, `public-ip-del`, `box-egress`, `box-egress-set` |
-| **pppoe** | — | PPPoE interface management | `interfaces`, `add`, `remove`, `mac-filter`, `mac-add`, `mac-del`, `pado`, `pado-set` |
+| **pppoe** | — | PPPoE interface management | `interfaces`, `add`, `remove`, `mac-filter`, `mac-add`, `mac-del`, `pado`, `pado-set`, `runtime`, `runtime-set` |
 | **traffic** | — | Live traffic monitoring | `watch`, `watch-user`, `queue`, `ratelimit`, `ratelimit-restore` |
 | **routing** | `rt` | Dynamic routing protocols | `bgp`, `bgp-routes`, `ospf`, `ospf-neighbors`, `ospf-routes`, `rip`, `rip-routes`, `bfd`, `bfd-peers` |
-| **pool** | — | IP address pool management | `list`, `usage`, `add`, `remove` |
+| **pool** | — | IP address pool management | `list`, `usage`, `add`, `remove`, `detail` |
 | **conntrack** | — | Connection tracking | `config`, `table-size`, `timeouts`, `timeout-set`, `helpers`, `profiles`, `profile-apply` |
 | **events** | — | Event hooks and webhooks | `hooks`, `hook-add`, `hook-del`, `fire`, `history`, `history-clear` |
 | **scheduler** | — | Scheduled job management | `list`, `add`, `remove`, `run` |
@@ -348,6 +348,9 @@ DAWOS_PROFILE=bng1 dawos session list
 | **playbook** | — | Operational playbooks | `list`, `run` |
 | **node** | — | Multi-node management | `list`, `exec`, `health` |
 | **wizard** | `wiz` | Guided interactive workflows | `run`, `list` |
+| **history** | — | Session history snapshots | `list`, `snapshot`, `purge`, `stats` |
+| **export** | — | CSV data export | `sessions`, `history` |
+| **radius** | — | RADIUS server diagnostics | `config`, `status`, `check` |
 
 ---
 

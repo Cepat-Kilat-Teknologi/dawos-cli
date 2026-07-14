@@ -284,3 +284,51 @@ class TestHealth:
         )
         result = client_mod.health(f"{BASE}/")
         assert result == {"status": "ok"}
+
+
+class TestGetText:
+    @respx.mock
+    def test_get_text_success(self):
+        respx.get(f"{BASE}/api/v1/export/sessions").mock(
+            return_value=httpx.Response(200, text='"user","ip"\n"u1","1.2.3.4"\n')
+        )
+        result = client_mod.get_text("/api/v1/export/sessions")
+        assert result == '"user","ip"\n"u1","1.2.3.4"\n'
+
+    @respx.mock
+    def test_get_text_with_params(self):
+        respx.get(f"{BASE}/api/v1/export/history").mock(
+            return_value=httpx.Response(200, text='"id"\n')
+        )
+        result = client_mod.get_text("/api/v1/export/history", limit=100)
+        assert result == '"id"\n'
+
+    @respx.mock
+    def test_get_text_http_error(self):
+        respx.get(f"{BASE}/api/v1/export/sessions").mock(
+            return_value=httpx.Response(500, text="fail")
+        )
+        with pytest.raises(SystemExit):
+            client_mod.get_text("/api/v1/export/sessions")
+
+    def test_get_text_connection_error(self):
+        state.current.base_url = "http://unreachable:9999"
+        client_mod._client = None
+        with pytest.raises(SystemExit):
+            client_mod.get_text("/api/v1/export/sessions")
+
+    @respx.mock
+    def test_get_text_timeout(self):
+        respx.get(f"{BASE}/api/v1/export/sessions").mock(
+            side_effect=httpx.ReadTimeout("timeout")
+        )
+        with pytest.raises(SystemExit):
+            client_mod.get_text("/api/v1/export/sessions")
+
+    @respx.mock
+    def test_get_text_request_error(self):
+        respx.get(f"{BASE}/api/v1/export/sessions").mock(
+            side_effect=httpx.ReadError("read fail")
+        )
+        with pytest.raises(SystemExit):
+            client_mod.get_text("/api/v1/export/sessions")
