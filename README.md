@@ -1,5 +1,8 @@
 <p align="center">
-  <strong>DawOS CLI</strong><br>
+  <img src="assets/logo1.png" alt="DawOS CLI" width="480">
+</p>
+
+<p align="center">
   <em>Broadband management, simplified. Remote CLI for DawOS Agent.</em><br>
   <a href="https://pypi.org/project/dawos-cli/">PyPI</a> |
   <a href="https://cepat-kilat-teknologi.github.io/dawos-cli/">Documentation</a> |
