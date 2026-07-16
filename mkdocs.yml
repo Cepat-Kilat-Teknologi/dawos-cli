@@ -9,6 +9,8 @@ edit_uri: edit/main/docs/
 
 theme:
   name: material
+  logo: assets/logo-icon.png
+  favicon: assets/favicon.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -39,6 +41,9 @@ theme:
   font:
     text: Inter
     code: JetBrains Mono
+
+extra_css:
+  - stylesheets/extra.css
 
 plugins:
   - search
