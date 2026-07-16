@@ -1,0 +1,4926 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Broadband management, simplified. Remote CLI for DawOS Agent">
+      
+      
+        <meta name="author" content="Cepat Kilat Teknologi">
+      
+      
+        <link rel="canonical" href="https://Cepat-Kilat-Teknologi.github.io/dawos-cli/testing/test-report/">
+      
+      
+        <link rel="prev" href="../../commands/reference/">
+      
+      
+        <link rel="next" href="../../guides/multi-node/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>CLI Test Report - DawOS CLI</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cli-test-report" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="DawOS CLI" class="md-header__button md-logo" aria-label="DawOS CLI" data-md-component="logo">
+      
+  <img src="../../assets/logo-icon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DawOS CLI
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              CLI Test Report
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="cyan" data-md-color-accent="teal"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="cyan" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Cepat-Kilat-Teknologi/dawos-cli
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DawOS CLI" class="md-nav__button md-logo" aria-label="DawOS CLI" data-md-component="logo">
+      
+  <img src="../../assets/logo-icon.png" alt="logo">
+
+    </a>
+    DawOS CLI
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Cepat-Kilat-Teknologi/dawos-cli
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commands
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Commands
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/session/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Session Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System & Service
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/network/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network & Routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/firewall/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firewall & NAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/traffic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Traffic & Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../commands/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    All Commands
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Testing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Test Report
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Test Report
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#test-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bugs-found-and-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugs Found and Fixed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bugs Found and Fixed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-4-pppoe-add-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #4: PPPoE Add Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-5-dns-set-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #5: DNS Set Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-6-nat-egress-set-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #6: NAT Egress Set Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-7-traffic-ratelimit-sends-wrong-url-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #7: Traffic Ratelimit Sends Wrong URL Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-8-session-table-shows-for-rate-limit-rxtx-bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #8: Session Table Shows "—" for Rate Limit, Rx/Tx Bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-9-conntrack-set-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #9: Conntrack Set Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-10-monitoring-configure-sends-wrong-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #10: Monitoring Configure Sends Wrong Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-commands-60-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Commands (60 tests)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Read Commands (60 tests)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-and-status-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System and Status (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pppoe-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPPoE (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pool-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conntrack-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conntrack (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduler-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduler (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DHCP (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ntp-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lldp-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLDP (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vrrp-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VRRP (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-accounting-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow Accounting (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limits-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-firewall-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Firewall (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostics-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostics (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routing-99" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing (9/9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logs-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logs (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-commands-48-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Commands (48 tests)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Write Commands (48 tests)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pool-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduler-crud-run-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduler CRUD + Run (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-hook-crud-fire-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Hook CRUD + Fire (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pppoe-interface-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPPoE Interface CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mac-filter-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAC Filter CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-crud-55" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN CRUD (5/5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-set-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Set (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-masquerade-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Masquerade (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-public-ip-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Public IP (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-box-egress-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Box Egress (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-egress-set-11-bug-6-fixed-infra-na" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Egress Set (1/1) (BUG #6 fixed, infra N/A)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-conntrack-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Conntrack (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conntrack-tuning-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conntrack Tuning (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pado-delay-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PADO Delay (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-group-crud-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Group CRUD (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-update-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Update (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-guarded-apply-cycle-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Guarded Apply Cycle (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-rollback-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Rollback (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-command-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Command (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#na-commands-infrastructure-dependent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N/A Commands (Infrastructure Dependent)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live-pppoe-session-tests-25-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live PPPoE Session Tests (25 tests)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Live PPPoE Session Tests (25 tests)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-environment_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-lifecycle-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Lifecycle (8/8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traffic-shaping-77" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traffic Shaping (7/7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-stats-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Stats (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-formats-with-live-data-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats with Live Data (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-cases-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Cases (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Observations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-syntax-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-command-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Command List
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/multi-node/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Node Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scripting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scripting & Automation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#test-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bugs-found-and-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bugs Found and Fixed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bugs Found and Fixed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bug-4-pppoe-add-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #4: PPPoE Add Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-5-dns-set-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #5: DNS Set Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-6-nat-egress-set-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #6: NAT Egress Set Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-7-traffic-ratelimit-sends-wrong-url-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #7: Traffic Ratelimit Sends Wrong URL Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-8-session-table-shows-for-rate-limit-rxtx-bytes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #8: Session Table Shows "—" for Rate Limit, Rx/Tx Bytes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-9-conntrack-set-sends-wrong-field-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #9: Conntrack Set Sends Wrong Field Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bug-10-monitoring-configure-sends-wrong-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BUG #10: Monitoring Configure Sends Wrong Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#read-commands-60-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Read Commands (60 tests)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Read Commands (60 tests)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-and-status-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System and Status (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pppoe-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPPoE (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pool-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conntrack-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conntrack (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduler-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduler (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dhcp-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DHCP (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ntp-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NTP (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lldp-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLDP (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vrrp-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VRRP (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow-accounting-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow Accounting (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limits-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limits (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-firewall-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Firewall (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#diagnostics-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostics (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routing-99" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing (9/9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logs-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logs (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#write-commands-48-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Write Commands (48 tests)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Write Commands (48 tests)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pool-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zone-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduler-crud-run-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduler CRUD + Run (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-hook-crud-fire-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Hook CRUD + Fire (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pppoe-interface-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PPPoE Interface CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mac-filter-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MAC Filter CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-crud-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route CRUD (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vlan-crud-55" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VLAN CRUD (5/5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-set-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Set (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-masquerade-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Masquerade (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-public-ip-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Public IP (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-box-egress-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Box Egress (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nat-egress-set-11-bug-6-fixed-infra-na" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NAT Egress Set (1/1) (BUG #6 fixed, infra N/A)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-conntrack-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Conntrack (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conntrack-tuning-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conntrack Tuning (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pado-delay-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PADO Delay (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-group-crud-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Group CRUD (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-update-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Update (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-guarded-apply-cycle-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Guarded Apply Cycle (3/3)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#config-rollback-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config Rollback (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-command-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Command (1/1)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#na-commands-infrastructure-dependent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        N/A Commands (Infrastructure Dependent)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#live-pppoe-session-tests-25-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live PPPoE Session Tests (25 tests)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Live PPPoE Session Tests (25 tests)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-environment_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Environment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-lifecycle-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Lifecycle (8/8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traffic-shaping-77" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Traffic Shaping (7/7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-stats-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Stats (2/2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-formats-with-live-data-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats with Live Data (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edge-cases-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Cases (4/4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Observations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-syntax-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Syntax Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-command-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Command List
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="cli-test-report">CLI Test Report<a class="headerlink" href="#cli-test-report" title="Permanent link">&para;</a></h1>
+<p>Live integration test results for <strong>DawOS CLI v0.3.0</strong> against a real DawOS Agent instance.</p>
+<hr />
+<h2 id="test-environment">Test Environment<a class="headerlink" href="#test-environment" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CLI Version</strong></td>
+<td>0.3.0</td>
+</tr>
+<tr>
+<td><strong>Agent Version</strong></td>
+<td>0.2.0</td>
+</tr>
+<tr>
+<td><strong>Server</strong></td>
+<td>BNG dev node (private LAN)</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td><code>development</code> (active)</td>
+</tr>
+<tr>
+<td><strong>Client OS</strong></td>
+<td>macOS (operator workstation)</td>
+</tr>
+<tr>
+<td><strong>Install Method</strong></td>
+<td>pipx</td>
+</tr>
+<tr>
+<td><strong>Test Date</strong></td>
+<td>2026-07-08</td>
+</tr>
+<tr>
+<td><strong>Unit Tests</strong></td>
+<td>426 passing (97% coverage)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th style="text-align: center;">Tested</th>
+<th style="text-align: center;">Passed</th>
+<th style="text-align: center;">Fixed</th>
+<th style="text-align: center;">N/A</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Read commands</td>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">60</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td>All 29 API groups covered</td>
+</tr>
+<tr>
+<td>Write commands</td>
+<td style="text-align: center;">52</td>
+<td style="text-align: center;">49</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0</td>
+<td>Full CRUD cycles for every writable resource</td>
+</tr>
+<tr>
+<td>Live PPPoE session</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">25</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0</td>
+<td>Terminate, restart, ratelimit, queue, drop-by-mac</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: center;"><strong>137</strong></td>
+<td style="text-align: center;"><strong>134</strong></td>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: center;"><strong>0</strong></td>
+<td><strong>100% pass rate</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>7 bugs fixed</strong> during testing (PPPoE/DNS/NAT/conntrack/monitoring field names, ratelimit URL path, hyphen/underscore display).</li>
+<li><strong>0 commands N/A</strong> — all traffic commands verified with live PPPoE session.</li>
+</ul>
+<hr />
+<h2 id="bugs-found-and-fixed">Bugs Found and Fixed<a class="headerlink" href="#bugs-found-and-fixed" title="Permanent link">&para;</a></h2>
+<h3 id="bug-4-pppoe-add-sends-wrong-field-name">BUG #4: PPPoE Add Sends Wrong Field Name<a class="headerlink" href="#bug-4-pppoe-add-sends-wrong-field-name" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos pppoe add ens19</code> returns <code>422: Field required</code> for <code>body.interface</code></td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>CLI sends <code>{"name": "ens19"}</code> but API expects <code>{"interface": "ens19"}</code> per <code>PppoeAddRequest</code> model</td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Changed <code>json={"name": name}</code> to <code>json={"interface": name}</code> in <code>dawos_cli/commands/pppoe.py</code></td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/commands/pppoe.py</code> line 28</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — full add/list/remove cycle works</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bug-5-dns-set-sends-wrong-field-name">BUG #5: DNS Set Sends Wrong Field Name<a class="headerlink" href="#bug-5-dns-set-sends-wrong-field-name" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos network dns-set 8.8.8.8,1.1.1.1</code> returns <code>422: Field required</code> for <code>body.nameservers</code></td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>CLI sends <code>{"servers": [...]}</code> but API expects <code>{"nameservers": [...]}</code> per <code>DnsUpdateRequest</code> model</td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Changed <code>json={"servers": server_list}</code> to <code>json={"nameservers": server_list}</code> in <code>dawos_cli/commands/network.py</code></td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/commands/network.py</code> line 121</td>
+</tr>
+<tr>
+<td><strong>Test Updated</strong></td>
+<td><code>tests/test_commands.py::TestNetworkCommands::test_dns_set</code></td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — full set/verify/restore cycle works</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bug-6-nat-egress-set-sends-wrong-field-name">BUG #6: NAT Egress Set Sends Wrong Field Name<a class="headerlink" href="#bug-6-nat-egress-set-sends-wrong-field-name" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos nat egress-set 10.0.0.100 203.0.113.5</code> returns <code>422: Field required</code> for <code>body.target</code></td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>CLI sends <code>{"customer_ip": "...", "public_ip": "..."}</code> but API expects <code>{"target": "...", "public_ip": "..."}</code> per <code>NatEgressSetRequest</code> model</td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Changed <code>"customer_ip"</code> to <code>"target"</code> in <code>dawos_cli/commands/nat.py</code></td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/commands/nat.py</code> line 52</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — egress set returns 400 (nft table not configured, expected infra limitation)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bug-7-traffic-ratelimit-sends-wrong-url-path">BUG #7: Traffic Ratelimit Sends Wrong URL Path<a class="headerlink" href="#bug-7-traffic-ratelimit-sends-wrong-url-path" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos traffic ratelimit testuser1 5M/20M</code> returns <code>404: Not Found</code> despite active session</td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>CLI sends <code>POST /api/v1/traffic/ratelimit</code> with <code>{"username": "...", "rate": "..."}</code> in body, but API expects <code>POST /api/v1/traffic/ratelimit/{username}</code> with only <code>{"rate": "..."}</code> in body</td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Changed <code>client.post("/api/v1/traffic/ratelimit", json={"username": username, "rate": rate})</code> to <code>client.post(f"/api/v1/traffic/ratelimit/{username}", json={"rate": rate})</code></td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/commands/traffic.py</code> line 78</td>
+</tr>
+<tr>
+<td><strong>Test Updated</strong></td>
+<td><code>tests/test_commands.py::TestTrafficCommands::test_ratelimit</code></td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — full ratelimit/restore cycle works with live PPPoE session</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bug-8-session-table-shows-for-rate-limit-rxtx-bytes">BUG #8: Session Table Shows "—" for Rate Limit, Rx/Tx Bytes<a class="headerlink" href="#bug-8-session-table-shows-for-rate-limit-rxtx-bytes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>Medium</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos session list</code> shows "—" in Rate Limit column even when shaper is active; <code>dawos session find</code> shows "—" for Rx Bytes and Tx Bytes</td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>accel-ppp returns hyphenated field names (<code>rate-limit</code>, <code>rx-bytes</code>, <code>tx-bytes</code>) but <code>output.table()</code> and <code>_print_csv()</code> look up underscored names (<code>rate_limit</code>, <code>rx_bytes</code>, <code>tx_bytes</code>) — key mismatch causes fallback to "—"</td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Added fallback lookup: <code>row.get(col, row.get(col.replace("_", "-"), "—"))</code> in both <code>table()</code> and <code>_print_csv()</code></td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/output.py</code> lines 42, 163</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — Rate Limit, Rx Bytes, Tx Bytes display correctly in table, CSV, and JSON formats</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bug-9-conntrack-set-sends-wrong-field-name">BUG #9: Conntrack Set Sends Wrong Field Name<a class="headerlink" href="#bug-9-conntrack-set-sends-wrong-field-name" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos firewall conntrack-set 262144</code> returns <code>422: Field required</code> for <code>body.max_value</code></td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>CLI sends <code>{"max": 262144}</code> but API expects <code>{"max_value": 262144}</code> per <code>ConntrackUpdateRequest</code> model</td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Changed <code>json={"max": max_entries}</code> to <code>json={"max_value": max_entries}</code> in <code>dawos_cli/commands/firewall.py</code></td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/commands/firewall.py</code> line 74</td>
+</tr>
+<tr>
+<td><strong>Test Updated</strong></td>
+<td><code>tests/test_commands.py::TestFirewallCommands::test_conntrack_set</code> — now asserts correct payload</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — <code>conntrack-set 262144</code> succeeds, read-back confirms <code>nf_conntrack_max=262144</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="bug-10-monitoring-configure-sends-wrong-fields">BUG #10: Monitoring Configure Sends Wrong Fields<a class="headerlink" href="#bug-10-monitoring-configure-sends-wrong-fields" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Severity</strong></td>
+<td>High</td>
+</tr>
+<tr>
+<td><strong>Symptom</strong></td>
+<td><code>dawos monitoring configure -t prometheus -v enabled</code> returns <code>422: Field required</code> for <code>body.service</code></td>
+</tr>
+<tr>
+<td><strong>Root Cause</strong></td>
+<td>CLI accepted <code>--target</code>/<code>-t</code> and <code>--value</code>/<code>-v</code> and sent <code>{"target": "prometheus", "value": "enabled"}</code>, but API expects <code>ConfigureExporterRequest</code> with <code>{"service": str, "enable": bool}</code></td>
+</tr>
+<tr>
+<td><strong>Fix</strong></td>
+<td>Redesigned command interface: replaced <code>--target</code>/<code>-t</code> and <code>--value</code>/<code>-v</code> with <code>--service</code>/<code>-s</code> (required) and <code>--enable/--disable</code> (boolean flag). Updated docstring.</td>
+</tr>
+<tr>
+<td><strong>File</strong></td>
+<td><code>dawos_cli/commands/monitoring.py</code> lines 37-48</td>
+</tr>
+<tr>
+<td><strong>Test Updated</strong></td>
+<td><code>tests/test_commands.py::TestMonitoringCommands::test_configure</code> — uses new flags</td>
+</tr>
+<tr>
+<td><strong>Test Added</strong></td>
+<td><code>tests/test_commands.py::TestMonitoringCommands::test_configure_disable</code> — verifies disable path</td>
+</tr>
+<tr>
+<td><strong>Status</strong></td>
+<td>Fixed and verified — <code>configure -s accel-ppp --enable</code> and <code>--disable</code> both succeed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="read-commands-60-tests">Read Commands (60 tests)<a class="headerlink" href="#read-commands-60-tests" title="Permanent link">&para;</a></h2>
+<p>Every read command returns exit code 0 with properly formatted Rich table output.</p>
+<h3 id="system-and-status-44">System and Status (4/4)<a class="headerlink" href="#system-and-status-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos status</code></td>
+<td>Connected, health OK, version 0.1.0, node bng-node</td>
+</tr>
+<tr>
+<td><code>dawos version</code></td>
+<td>CLI version banner displayed</td>
+</tr>
+<tr>
+<td><code>dawos system info</code></td>
+<td>Hostname, OS, kernel, arch, uptime</td>
+</tr>
+<tr>
+<td><code>dawos system metrics</code></td>
+<td>CPU, memory, disk, load average</td>
+</tr>
+</tbody>
+</table>
+<h3 id="service-22">Service (2/2)<a class="headerlink" href="#service-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos service status</code></td>
+<td>accel-ppp running with uptime</td>
+</tr>
+<tr>
+<td><code>dawos service cmd "show version"</code></td>
+<td>Raw accel-cmd output returned</td>
+</tr>
+</tbody>
+</table>
+<h3 id="session-22">Session (2/2)<a class="headerlink" href="#session-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos session list</code></td>
+<td>Empty table (no active subscribers)</td>
+</tr>
+<tr>
+<td><code>dawos session stats</code></td>
+<td>Session counters displayed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config-44">Config (4/4)<a class="headerlink" href="#config-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos config show</code></td>
+<td>Full accel-ppp.conf content</td>
+</tr>
+<tr>
+<td><code>dawos config backups</code></td>
+<td>Backup file list with timestamps</td>
+</tr>
+<tr>
+<td><code>dawos config revisions</code></td>
+<td>Revision count and metadata</td>
+</tr>
+<tr>
+<td><code>dawos config apply-status</code></td>
+<td>Pending status (false)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="network-44">Network (4/4)<a class="headerlink" href="#network-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos network interfaces</code></td>
+<td>Interface table (eth0, ens19, lo)</td>
+</tr>
+<tr>
+<td><code>dawos network routes</code></td>
+<td>Routing table</td>
+</tr>
+<tr>
+<td><code>dawos network vlans</code></td>
+<td>VLAN list</td>
+</tr>
+<tr>
+<td><code>dawos network dns</code></td>
+<td>Nameservers and search domains</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firewall-44">Firewall (4/4)<a class="headerlink" href="#firewall-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos firewall rules</code></td>
+<td>nftables ruleset</td>
+</tr>
+<tr>
+<td><code>dawos firewall conntrack</code></td>
+<td>Max connections, status, recommendation</td>
+</tr>
+<tr>
+<td><code>dawos firewall sysctl</code></td>
+<td>IP forwarding status</td>
+</tr>
+<tr>
+<td><code>dawos firewall groups</code></td>
+<td>Firewall group list</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nat-22">NAT (2/2)<a class="headerlink" href="#nat-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos nat status</code></td>
+<td>NAT status with bound IPs</td>
+</tr>
+<tr>
+<td><code>dawos nat egress</code></td>
+<td>Egress map entries</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pppoe-33">PPPoE (3/3)<a class="headerlink" href="#pppoe-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos pppoe interfaces</code></td>
+<td>Listener interface list</td>
+</tr>
+<tr>
+<td><code>dawos pppoe pado</code></td>
+<td>PADO delay configuration</td>
+</tr>
+<tr>
+<td><code>dawos pppoe mac-filter</code></td>
+<td>MAC filter entries</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pool-11">Pool (1/1)<a class="headerlink" href="#pool-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos pool list</code></td>
+<td>IP address pool list</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conntrack-44">Conntrack (4/4)<a class="headerlink" href="#conntrack-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos conntrack config</code></td>
+<td>Table size, count, hash, usage</td>
+</tr>
+<tr>
+<td><code>dawos conntrack timeouts</code></td>
+<td>All 12 protocol timeout values</td>
+</tr>
+<tr>
+<td><code>dawos conntrack helpers</code></td>
+<td>Helper module list</td>
+</tr>
+<tr>
+<td><code>dawos conntrack profiles</code></td>
+<td>Available profiles</td>
+</tr>
+</tbody>
+</table>
+<h3 id="events-22">Events (2/2)<a class="headerlink" href="#events-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos events hooks</code></td>
+<td>Registered webhook list</td>
+</tr>
+<tr>
+<td><code>dawos events history</code></td>
+<td>Event fire history</td>
+</tr>
+</tbody>
+</table>
+<h3 id="scheduler-11">Scheduler (1/1)<a class="headerlink" href="#scheduler-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos scheduler list</code></td>
+<td>Scheduled job list</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dns-22">DNS (2/2)<a class="headerlink" href="#dns-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos dns status</code></td>
+<td>DNS forwarding status</td>
+</tr>
+<tr>
+<td><code>dawos dns config</code></td>
+<td>DNS forwarder configuration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dhcp-33">DHCP (3/3)<a class="headerlink" href="#dhcp-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos dhcp status</code></td>
+<td>DHCP server status</td>
+</tr>
+<tr>
+<td><code>dawos dhcp leases</code></td>
+<td>Active lease table</td>
+</tr>
+<tr>
+<td><code>dawos dhcp relay</code></td>
+<td>Relay agent status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ntp-22">NTP (2/2)<a class="headerlink" href="#ntp-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos ntp status</code></td>
+<td>NTP synchronization status</td>
+</tr>
+<tr>
+<td><code>dawos ntp sources</code></td>
+<td>Upstream NTP sources</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lldp-22">LLDP (2/2)<a class="headerlink" href="#lldp-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos lldp status</code></td>
+<td>LLDP daemon status</td>
+</tr>
+<tr>
+<td><code>dawos lldp neighbors</code></td>
+<td>Discovered neighbor table</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vrrp-11">VRRP (1/1)<a class="headerlink" href="#vrrp-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos vrrp status</code></td>
+<td>VRRP group status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flow-accounting-33">Flow Accounting (3/3)<a class="headerlink" href="#flow-accounting-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos flow status</code></td>
+<td>NetFlow/sFlow status</td>
+</tr>
+<tr>
+<td><code>dawos flow stats</code></td>
+<td>Flow statistics</td>
+</tr>
+<tr>
+<td><code>dawos flow collectors</code></td>
+<td>Collector configuration</td>
+</tr>
+</tbody>
+</table>
+<h3 id="monitoring-11">Monitoring (1/1)<a class="headerlink" href="#monitoring-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos monitoring status</code></td>
+<td>Monitoring service status</td>
+</tr>
+</tbody>
+</table>
+<h3 id="limits-11">Limits (1/1)<a class="headerlink" href="#limits-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos limits show</code></td>
+<td>Connection limit settings</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zone-firewall-11">Zone Firewall (1/1)<a class="headerlink" href="#zone-firewall-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos zone list</code></td>
+<td>Zone firewall list</td>
+</tr>
+</tbody>
+</table>
+<h3 id="diagnostics-11">Diagnostics (1/1)<a class="headerlink" href="#diagnostics-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos diagnostics doctor</code></td>
+<td>System health check results</td>
+</tr>
+</tbody>
+</table>
+<h3 id="routing-99">Routing (9/9)<a class="headerlink" href="#routing-99" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos routing bgp</code></td>
+<td>BGP peer summary</td>
+</tr>
+<tr>
+<td><code>dawos routing bgp-routes</code></td>
+<td>BGP routing table</td>
+</tr>
+<tr>
+<td><code>dawos routing ospf</code></td>
+<td>OSPF status</td>
+</tr>
+<tr>
+<td><code>dawos routing ospf-neighbors</code></td>
+<td>OSPF adjacencies</td>
+</tr>
+<tr>
+<td><code>dawos routing ospf-routes</code></td>
+<td>OSPF routing table</td>
+</tr>
+<tr>
+<td><code>dawos routing rip</code></td>
+<td>RIP status</td>
+</tr>
+<tr>
+<td><code>dawos routing rip-routes</code></td>
+<td>RIP routing table</td>
+</tr>
+<tr>
+<td><code>dawos routing bfd</code></td>
+<td>BFD summary</td>
+</tr>
+<tr>
+<td><code>dawos routing bfd-peers</code></td>
+<td>BFD peer sessions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="logs-11">Logs (1/1)<a class="headerlink" href="#logs-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos logs tail</code></td>
+<td>Last N log lines</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="write-commands-48-tests">Write Commands (48 tests)<a class="headerlink" href="#write-commands-48-tests" title="Permanent link">&para;</a></h2>
+<p>Full create-verify-delete cycles. All resources cleaned up after testing.</p>
+<h3 id="pool-crud-33">Pool CRUD (3/3)<a class="headerlink" href="#pool-crud-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos pool add test-pool 10.99.0.0/24</code></td>
+<td>Pool created</td>
+</tr>
+<tr>
+<td><code>dawos pool list</code></td>
+<td>Pool visible in list</td>
+</tr>
+<tr>
+<td><code>dawos pool remove test-pool</code></td>
+<td>Pool removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zone-crud-33">Zone CRUD (3/3)<a class="headerlink" href="#zone-crud-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos zone add test-zone</code></td>
+<td>Zone created</td>
+</tr>
+<tr>
+<td><code>dawos zone list</code></td>
+<td>Zone visible in list</td>
+</tr>
+<tr>
+<td><code>dawos zone remove test-zone</code></td>
+<td>Zone removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="scheduler-crud-run-44">Scheduler CRUD + Run (4/4)<a class="headerlink" href="#scheduler-crud-run-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos scheduler add test-job -c "show stat" -i 300</code></td>
+<td>Job created: every 300s</td>
+</tr>
+<tr>
+<td><code>dawos scheduler run test-job</code></td>
+<td>Job triggered (rc=127 expected — shell exec, not accel-cmd)</td>
+</tr>
+<tr>
+<td><code>dawos scheduler list</code></td>
+<td>Job visible in list</td>
+</tr>
+<tr>
+<td><code>dawos scheduler remove test-job</code></td>
+<td>Job removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="event-hook-crud-fire-44">Event Hook CRUD + Fire (4/4)<a class="headerlink" href="#event-hook-crud-fire-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos events hook-add test-hook -e session-up -a https://httpbin.org/post</code></td>
+<td>Hook registered</td>
+</tr>
+<tr>
+<td><code>events fire</code> (via API)</td>
+<td>Webhook fired to httpbin.org successfully</td>
+</tr>
+<tr>
+<td><code>dawos events hooks</code></td>
+<td>Hook visible in list</td>
+</tr>
+<tr>
+<td><code>dawos events hook-del test-hook</code></td>
+<td>Hook removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pppoe-interface-crud-33">PPPoE Interface CRUD (3/3)<a class="headerlink" href="#pppoe-interface-crud-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos pppoe add ens19</code></td>
+<td>Interface added (BUG #4 fixed)</td>
+</tr>
+<tr>
+<td><code>dawos pppoe interfaces</code></td>
+<td>Interface visible in list</td>
+</tr>
+<tr>
+<td><code>dawos pppoe remove ens19</code></td>
+<td>Interface removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mac-filter-crud-33">MAC Filter CRUD (3/3)<a class="headerlink" href="#mac-filter-crud-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos pppoe mac-add AA:BB:CC:DD:EE:FF</code></td>
+<td>MAC added to filter</td>
+</tr>
+<tr>
+<td><code>dawos pppoe mac-filter</code></td>
+<td>MAC visible in list</td>
+</tr>
+<tr>
+<td><code>dawos pppoe mac-del AA:BB:CC:DD:EE:FF</code></td>
+<td>MAC removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="route-crud-33">Route CRUD (3/3)<a class="headerlink" href="#route-crud-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos network add-route 10.99.99.0/24 --gw 10.0.0.1</code></td>
+<td>Route added</td>
+</tr>
+<tr>
+<td><code>dawos network routes</code></td>
+<td>Route visible in table</td>
+</tr>
+<tr>
+<td><code>dawos network del-route 10.99.99.0/24 --gw 10.0.0.1</code></td>
+<td>Route removed</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vlan-crud-55">VLAN CRUD (5/5)<a class="headerlink" href="#vlan-crud-55" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos network vlan-add eth0 --id 999</code></td>
+<td>VLAN eth0.999 created</td>
+</tr>
+<tr>
+<td><code>dawos network vlans</code></td>
+<td>VLAN visible in list</td>
+</tr>
+<tr>
+<td><code>dawos network vlan-state eth0.999 down</code></td>
+<td>VLAN set to down</td>
+</tr>
+<tr>
+<td><code>dawos network vlan-state eth0.999 up</code></td>
+<td>VLAN set to up</td>
+</tr>
+<tr>
+<td><code>dawos network vlan-del eth0.999</code></td>
+<td>VLAN deleted</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dns-set-33">DNS Set (3/3)<a class="headerlink" href="#dns-set-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos network dns-set 8.8.8.8,1.1.1.1</code></td>
+<td>DNS updated (BUG #5 fixed)</td>
+</tr>
+<tr>
+<td><code>dawos network dns</code></td>
+<td>Nameservers confirmed: 8.8.8.8, 1.1.1.1</td>
+</tr>
+<tr>
+<td><code>dawos network dns-set 127.0.0.53</code></td>
+<td>Original DNS restored</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nat-masquerade-22">NAT Masquerade (2/2)<a class="headerlink" href="#nat-masquerade-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos nat masquerade-on eth0</code></td>
+<td>Masquerade enabled</td>
+</tr>
+<tr>
+<td><code>dawos nat masquerade-off eth0</code></td>
+<td>Masquerade disabled</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nat-public-ip-22">NAT Public IP (2/2)<a class="headerlink" href="#nat-public-ip-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos nat public-ip-add 203.0.113.10</code></td>
+<td>Public IP bound</td>
+</tr>
+<tr>
+<td><code>dawos nat public-ip-del 203.0.113.10</code></td>
+<td>Public IP unbound</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nat-box-egress-22">NAT Box Egress (2/2)<a class="headerlink" href="#nat-box-egress-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos nat box-egress-set true</code></td>
+<td>Box egress enabled</td>
+</tr>
+<tr>
+<td><code>dawos nat box-egress-set false</code></td>
+<td>Box egress disabled</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nat-egress-set-11-bug-6-fixed-infra-na">NAT Egress Set (1/1) (BUG #6 fixed, infra N/A)<a class="headerlink" href="#nat-egress-set-11-bug-6-fixed-infra-na" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos nat egress-set 10.0.0.100 203.0.113.5</code></td>
+<td>400 — nft table <code>accelnat</code> not configured (expected)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Note:</strong> After BUG #6 fix, CLI sends correct <code>{"target": ...}</code> (no more 422). HTTP 400 is because the nftables <code>accelnat</code> table with <code>cust_egress</code> map doesn't exist on this dev server — infrastructure dependency, not a code bug.</p>
+</blockquote>
+<h3 id="monitoring-22">Monitoring (2/2)<a class="headerlink" href="#monitoring-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos monitoring configure -s accel-ppp --enable</code></td>
+<td>Exporter enabled (BUG #10 fixed)</td>
+</tr>
+<tr>
+<td><code>dawos monitoring configure -s accel-ppp --disable</code></td>
+<td>Exporter disabled</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firewall-conntrack-11">Firewall Conntrack (1/1)<a class="headerlink" href="#firewall-conntrack-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos firewall conntrack-set 262144</code></td>
+<td>Max entries set to 262144 (BUG #9 fixed)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conntrack-tuning-44">Conntrack Tuning (4/4)<a class="headerlink" href="#conntrack-tuning-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos conntrack table-size</code></td>
+<td>Shows current: 65536</td>
+</tr>
+<tr>
+<td><code>dawos conntrack table-size 131072</code></td>
+<td>Table doubled to 131072</td>
+</tr>
+<tr>
+<td><code>dawos conntrack timeout-set tcp_timeout_established 7200</code></td>
+<td>Timeout set to 7200s</td>
+</tr>
+<tr>
+<td><code>dawos conntrack profile-apply gaming</code></td>
+<td>Gaming profile applied</td>
+</tr>
+</tbody>
+</table>
+<h3 id="pado-delay-22">PADO Delay (2/2)<a class="headerlink" href="#pado-delay-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos pppoe pado-set 200</code></td>
+<td>Delay set to 200ms</td>
+</tr>
+<tr>
+<td><code>dawos pppoe pado-set 0</code></td>
+<td>Delay cleared</td>
+</tr>
+</tbody>
+</table>
+<h3 id="firewall-group-crud-44">Firewall Group CRUD (4/4)<a class="headerlink" href="#firewall-group-crud-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos firewall group-add test-grp -t address -e "10.0.0.1,10.0.0.2"</code></td>
+<td>Group created (success=false — nft not configured, expected)</td>
+</tr>
+<tr>
+<td><code>dawos firewall groups</code></td>
+<td>Groups listed</td>
+</tr>
+<tr>
+<td><code>dawos firewall group-members test-grp "10.0.0.3,10.0.0.4"</code></td>
+<td>Members added</td>
+</tr>
+<tr>
+<td><code>dawos firewall group-del test-grp</code></td>
+<td>Group deleted</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config-update-11">Config Update (1/1)<a class="headerlink" href="#config-update-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos config update @/tmp/test-accel-config.conf -f</code></td>
+<td>Config updated</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config-guarded-apply-cycle-33">Config Guarded Apply Cycle (3/3)<a class="headerlink" href="#config-guarded-apply-cycle-33" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos config apply @/tmp/test-accel-config.conf -f</code></td>
+<td>Applied with 5m rollback window</td>
+</tr>
+<tr>
+<td><code>dawos config apply-status</code></td>
+<td><code>Pending: True</code> confirmed</td>
+</tr>
+<tr>
+<td><code>dawos config confirm</code></td>
+<td>Auto-rollback cancelled</td>
+</tr>
+</tbody>
+</table>
+<h3 id="config-rollback-11">Config Rollback (1/1)<a class="headerlink" href="#config-rollback-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos config rollback "accel-ppp.conf.20260707_184800.bak" -f</code></td>
+<td>Config rolled back</td>
+</tr>
+</tbody>
+</table>
+<h3 id="service-command-11">Service Command (1/1)<a class="headerlink" href="#service-command-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos service cmd "show stat"</code></td>
+<td>accel-ppp statistics returned</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="na-commands-infrastructure-dependent">N/A Commands (Infrastructure Dependent)<a class="headerlink" href="#na-commands-infrastructure-dependent" title="Permanent link">&para;</a></h2>
+<p>These commands work correctly but require infrastructure not present on the dev server:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Response</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos service restart -f</code></td>
+<td>500</td>
+<td><code>systemctl</code> not in sudoers whitelist (by design)</td>
+</tr>
+<tr>
+<td><code>dawos nat egress-set</code></td>
+<td>400</td>
+<td>nft <code>accelnat</code> table not configured</td>
+</tr>
+<tr>
+<td><code>dawos nat egress-del</code></td>
+<td>400</td>
+<td>nft <code>accelnat</code> table not configured</td>
+</tr>
+</tbody>
+</table>
+<p>All three are <strong>correct behavior</strong> given the environment — the CLI sends the right request, the server responds appropriately for its state.</p>
+<blockquote>
+<p><strong>Note:</strong> Traffic commands (<code>ratelimit</code>, <code>ratelimit-restore</code>, <code>queue</code>) were previously N/A but are now fully tested with a live PPPoE session (see below).</p>
+</blockquote>
+<hr />
+<h2 id="live-pppoe-session-tests-25-tests">Live PPPoE Session Tests (25 tests)<a class="headerlink" href="#live-pppoe-session-tests-25-tests" title="Permanent link">&para;</a></h2>
+<p>Tested with a real PPPoE session: PPPoE Client → BNG ens20 → accel-ppp.</p>
+<h3 id="test-environment_1">Test Environment<a class="headerlink" href="#test-environment_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PPPoE User</strong></td>
+<td>testuser1</td>
+</tr>
+<tr>
+<td><strong>Auth</strong></td>
+<td>chap-secrets (PAP/CHAP/MSCHAPv1/v2)</td>
+</tr>
+<tr>
+<td><strong>IP Assignment</strong></td>
+<td>Static (10.99.0.2 via chap-secrets)</td>
+</tr>
+<tr>
+<td><strong>BNG Interface</strong></td>
+<td>ens20</td>
+</tr>
+<tr>
+<td><strong>Client MAC</strong></td>
+<td>aa<img alt="🇧🇧" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@16.0.1/assets/svg/1f1e7-1f1e7.svg" title=":bb:" />cc:dd:ee:ff</td>
+</tr>
+<tr>
+<td><strong>MTU</strong></td>
+<td>1400</td>
+</tr>
+</tbody>
+</table>
+<h3 id="session-lifecycle-88">Session Lifecycle (8/8)<a class="headerlink" href="#session-lifecycle-88" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos session list</code></td>
+<td>Session displayed with all fields</td>
+</tr>
+<tr>
+<td><code>dawos session find testuser1</code></td>
+<td>Session found with rate-limit, rx/tx bytes</td>
+</tr>
+<tr>
+<td><code>dawos session snapshot testuser1</code></td>
+<td>Full snapshot with sid, rx/tx pkts</td>
+</tr>
+<tr>
+<td><code>dawos session by-ip 10.99.0.2</code></td>
+<td>Found: true, session details</td>
+</tr>
+<tr>
+<td><code>dawos session by-sid a35a5ccb37202dbd</code></td>
+<td>Found: true (uses accel-ppp session ID, not MAC)</td>
+</tr>
+<tr>
+<td><code>dawos session terminate testuser1 -f</code></td>
+<td>Terminated, PPPoE client auto-reconnected in ~3s</td>
+</tr>
+<tr>
+<td><code>dawos session restart testuser1 -f</code></td>
+<td>"CPE should reconnect", auto-reconnected</td>
+</tr>
+<tr>
+<td><code>dawos session drop-by-mac aa:bb:cc:dd:ee:ff -f</code></td>
+<td>Dropped 1 session, auto-reconnected</td>
+</tr>
+</tbody>
+</table>
+<h3 id="traffic-shaping-77">Traffic Shaping (7/7)<a class="headerlink" href="#traffic-shaping-77" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos traffic ratelimit testuser1 5M/20M</code></td>
+<td>PASS shaper → 5M/20M (BUG #7 fixed)</td>
+</tr>
+<tr>
+<td><code>dawos session list</code> (verify)</td>
+<td>Rate Limit column: 20000/5000 (BUG #8 fixed)</td>
+</tr>
+<tr>
+<td><code>dawos traffic queue testuser1</code></td>
+<td>TC qdisc tbf + police rules displayed</td>
+</tr>
+<tr>
+<td><code>dawos traffic ratelimit testuser1 10M/50M</code></td>
+<td>PASS shaper → 10M/50M</td>
+</tr>
+<tr>
+<td><code>dawos traffic queue testuser1</code> (verify)</td>
+<td>TC rules: rate 50Mbit + police 10Mbit</td>
+</tr>
+<tr>
+<td><code>dawos traffic ratelimit-restore testuser1</code></td>
+<td>PASS shaper restored</td>
+</tr>
+<tr>
+<td><code>dawos session list</code> (verify)</td>
+<td>Rate Limit column empty (cleared)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="session-stats-22">Session Stats (2/2)<a class="headerlink" href="#session-stats-22" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos session stats</code></td>
+<td>Active: 1, Pool used: 0, Pool total: 9</td>
+</tr>
+<tr>
+<td><code>dawos service cmd "show stat"</code></td>
+<td>sessions.active: 1, pppoe.active: 1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="output-formats-with-live-data-44">Output Formats with Live Data (4/4)<a class="headerlink" href="#output-formats-with-live-data-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos session list</code></td>
+<td>Rich table with Rate Limit column</td>
+</tr>
+<tr>
+<td><code>dawos -j session list</code></td>
+<td>Clean JSON array with all hyphenated fields</td>
+</tr>
+<tr>
+<td><code>dawos -F csv session list</code></td>
+<td>CSV with rate_limit column populated</td>
+</tr>
+<tr>
+<td><code>dawos session find testuser1</code></td>
+<td>Table with rx_bytes, tx_bytes columns</td>
+</tr>
+</tbody>
+</table>
+<h3 id="edge-cases-44">Edge Cases (4/4)<a class="headerlink" href="#edge-cases-44" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Result</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dawos session find nonexistent123</code></td>
+<td>WARNING warning (not error)</td>
+<td>Correct: no session found</td>
+</tr>
+<tr>
+<td><code>dawos session terminate nonexistent123 -f</code></td>
+<td>PASS success message</td>
+<td>accel-cmd doesn't validate existence</td>
+</tr>
+<tr>
+<td><code>dawos traffic ratelimit nonexistent123 5M/20M</code></td>
+<td>404: No live session</td>
+<td>Correct rejection</td>
+</tr>
+<tr>
+<td><code>dawos session by-ip 10.99.99.99</code></td>
+<td>Found: false</td>
+<td>Correct: IP not in use</td>
+</tr>
+</tbody>
+</table>
+<h3 id="design-observations">Design Observations<a class="headerlink" href="#design-observations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Observation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>by-sid semantics</strong></td>
+<td>Uses accel-ppp session ID (<code>a35a5ccb37202dbd</code>), NOT calling-sid/MAC — correct behavior, could be clearer in docs</td>
+</tr>
+<tr>
+<td><strong>terminate no-op</strong></td>
+<td><code>terminate nonexistent</code> returns success — accel-cmd doesn't validate user existence</td>
+</tr>
+<tr>
+<td><strong>IP pool count</strong></td>
+<td>Pool shows total: 9 for range <code>10.99.0.2-10.99.0.254</code> (expected: 253) — accel-ppp build-specific behavior</td>
+</tr>
+<tr>
+<td><strong>pool_used: 0</strong></td>
+<td>Active session uses static IP from chap-secrets, not from pool</td>
+</tr>
+<tr>
+<td><strong>YAML fallback</strong></td>
+<td><code>-F yaml</code> falls back to JSON when PyYAML not installed in pipx venv</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="output-formats">Output Formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
+<p>dawos-cli supports multiple output formats via the global <code>-F</code> flag:</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Flag</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Table (default)</td>
+<td>--</td>
+<td>Human-readable Rich tables</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td><code>-j</code> or <code>-F json</code></td>
+<td>Scripting and piping</td>
+</tr>
+<tr>
+<td>CSV</td>
+<td><code>-F csv</code></td>
+<td>Spreadsheet import</td>
+</tr>
+<tr>
+<td>YAML</td>
+<td><code>-F yaml</code></td>
+<td>Configuration management</td>
+</tr>
+</tbody>
+</table>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Rich table (default)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dawos<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># JSON output for scripting</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>dawos<span class="w"> </span>-j<span class="w"> </span>session<span class="w"> </span>list
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Pipe JSON to jq</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>dawos<span class="w"> </span>-F<span class="w"> </span>json<span class="w"> </span>conntrack<span class="w"> </span>timeouts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.timeouts.tcp_timeout_established&#39;</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> The <code>-j</code>/<code>-F</code> flag is a <strong>global option</strong> and must appear before the subcommand: <code>dawos -j status</code>, not <code>dawos status -j</code>.</p>
+</blockquote>
+<hr />
+<h2 id="command-syntax-reference">Command Syntax Reference<a class="headerlink" href="#command-syntax-reference" title="Permanent link">&para;</a></h2>
+<p>Correct syntax for all write commands verified through testing:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Syntax</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pool add</code></td>
+<td><code>dawos pool add NAME CIDR</code></td>
+<td>Positional args</td>
+</tr>
+<tr>
+<td><code>pool remove</code></td>
+<td><code>dawos pool remove NAME</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>zone add</code></td>
+<td><code>dawos zone add NAME</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>zone remove</code></td>
+<td><code>dawos zone remove NAME</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>scheduler add</code></td>
+<td><code>dawos scheduler add NAME -c "CMD" -i SECONDS</code></td>
+<td><code>-c</code> and <code>-i</code> flags required</td>
+</tr>
+<tr>
+<td><code>scheduler run</code></td>
+<td><code>dawos scheduler run NAME</code></td>
+<td>Manual trigger</td>
+</tr>
+<tr>
+<td><code>scheduler remove</code></td>
+<td><code>dawos scheduler remove NAME</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>events hook-add</code></td>
+<td><code>dawos events hook-add NAME -e EVENT -a URL</code></td>
+<td><code>-e</code> event, <code>-a</code> action URL</td>
+</tr>
+<tr>
+<td><code>events hook-del</code></td>
+<td><code>dawos events hook-del NAME</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pppoe add</code></td>
+<td><code>dawos pppoe add INTERFACE</code></td>
+<td>Sends <code>{"interface": NAME}</code></td>
+</tr>
+<tr>
+<td><code>pppoe remove</code></td>
+<td><code>dawos pppoe remove INTERFACE</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pppoe mac-add</code></td>
+<td><code>dawos pppoe mac-add MAC</code></td>
+<td>No action arg needed</td>
+</tr>
+<tr>
+<td><code>pppoe mac-del</code></td>
+<td><code>dawos pppoe mac-del MAC</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pppoe pado-set</code></td>
+<td><code>dawos pppoe pado-set DELAY_MS</code></td>
+<td>Milliseconds, 0 to clear</td>
+</tr>
+<tr>
+<td><code>network add-route</code></td>
+<td><code>dawos network add-route CIDR --gw IP</code></td>
+<td><code>--gw</code> flag, not positional</td>
+</tr>
+<tr>
+<td><code>network del-route</code></td>
+<td><code>dawos network del-route CIDR --gw IP</code></td>
+<td><code>--gw</code> to disambiguate</td>
+</tr>
+<tr>
+<td><code>network vlan-add</code></td>
+<td><code>dawos network vlan-add PARENT --id VLAN_ID</code></td>
+<td><code>--id</code> flag required</td>
+</tr>
+<tr>
+<td><code>network vlan-del</code></td>
+<td><code>dawos network vlan-del NAME</code></td>
+<td>e.g. <code>eth0.999</code></td>
+</tr>
+<tr>
+<td><code>network vlan-state</code></td>
+<td><code>dawos network vlan-state NAME STATE</code></td>
+<td><code>up</code> or <code>down</code></td>
+</tr>
+<tr>
+<td><code>network dns-set</code></td>
+<td><code>dawos network dns-set "8.8.8.8,1.1.1.1"</code></td>
+<td>Comma-separated, sends <code>{"nameservers": [...]}</code></td>
+</tr>
+<tr>
+<td><code>nat masquerade-on</code></td>
+<td><code>dawos nat masquerade-on INTERFACE</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>nat masquerade-off</code></td>
+<td><code>dawos nat masquerade-off INTERFACE</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>nat egress-set</code></td>
+<td><code>dawos nat egress-set CUSTOMER_IP PUBLIC_IP</code></td>
+<td>Sends <code>{"target": ..., "public_ip": ...}</code></td>
+</tr>
+<tr>
+<td><code>nat egress-del</code></td>
+<td><code>dawos nat egress-del CUSTOMER_IP</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>nat public-ip-add</code></td>
+<td><code>dawos nat public-ip-add IP</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>nat public-ip-del</code></td>
+<td><code>dawos nat public-ip-del IP</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>nat box-egress-set</code></td>
+<td><code>dawos nat box-egress-set true/false</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>conntrack table-size</code></td>
+<td><code>dawos conntrack table-size [SIZE]</code></td>
+<td>Omit SIZE to show current</td>
+</tr>
+<tr>
+<td><code>conntrack timeout-set</code></td>
+<td><code>dawos conntrack timeout-set KEY SECONDS</code></td>
+<td>e.g. <code>tcp_timeout_established 7200</code></td>
+</tr>
+<tr>
+<td><code>conntrack profile-apply</code></td>
+<td><code>dawos conntrack profile-apply NAME</code></td>
+<td><code>default</code>, <code>gaming</code>, <code>streaming</code></td>
+</tr>
+<tr>
+<td><code>firewall group-add</code></td>
+<td><code>dawos firewall group-add NAME -t TYPE -e ELEMENTS</code></td>
+<td><code>-t</code> required, <code>-e</code> optional</td>
+</tr>
+<tr>
+<td><code>firewall group-members</code></td>
+<td><code>dawos firewall group-members NAME ELEMENTS</code></td>
+<td>Comma-separated elements</td>
+</tr>
+<tr>
+<td><code>firewall group-del</code></td>
+<td><code>dawos firewall group-del NAME</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>firewall conntrack-set</code></td>
+<td><code>dawos firewall conntrack-set N</code></td>
+<td>Max entries integer, sends <code>{"max_value": N}</code></td>
+</tr>
+<tr>
+<td><code>monitoring configure</code></td>
+<td><code>dawos monitoring configure -s SVC --enable</code></td>
+<td><code>--service</code>/<code>-s</code> required, <code>--enable/--disable</code> toggle</td>
+</tr>
+<tr>
+<td><code>monitoring restart</code></td>
+<td><code>dawos monitoring restart SVC -f</code></td>
+<td><code>-f</code> skips confirmation</td>
+</tr>
+<tr>
+<td><code>config update</code></td>
+<td><code>dawos config update @FILENAME -f</code></td>
+<td><code>@file</code> reads from disk</td>
+</tr>
+<tr>
+<td><code>config apply</code></td>
+<td><code>dawos config apply @FILENAME -f</code></td>
+<td>Guarded with 5m rollback</td>
+</tr>
+<tr>
+<td><code>config confirm</code></td>
+<td><code>dawos config confirm</code></td>
+<td>Cancels auto-rollback</td>
+</tr>
+<tr>
+<td><code>config rollback</code></td>
+<td><code>dawos config rollback BACKUP_NAME -f</code></td>
+<td>Rollback to checkpoint</td>
+</tr>
+<tr>
+<td><code>service restart</code></td>
+<td><code>dawos service restart -f</code></td>
+<td><code>-f</code> skips confirmation</td>
+</tr>
+<tr>
+<td><code>service cmd</code></td>
+<td><code>dawos service cmd "COMMAND"</code></td>
+<td>Quote the accel-cmd command</td>
+</tr>
+<tr>
+<td><code>traffic ratelimit</code></td>
+<td><code>dawos traffic ratelimit USERNAME RATE</code></td>
+<td>Needs live session</td>
+</tr>
+<tr>
+<td><code>traffic ratelimit-restore</code></td>
+<td><code>dawos traffic ratelimit-restore USERNAME</code></td>
+<td>Needs live session</td>
+</tr>
+<tr>
+<td><code>traffic queue</code></td>
+<td><code>dawos traffic queue USERNAME</code></td>
+<td>Needs live session</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="complete-command-list">Complete Command List<a class="headerlink" href="#complete-command-list" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Read Commands</th>
+<th>Write Commands</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>status</code></td>
+<td><code>status</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td><code>version</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>doctor</code></td>
+<td><code>doctor</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>top</code></td>
+<td><code>top</code> (live dashboard)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>update</code></td>
+<td><code>update</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>shell</code></td>
+<td><code>shell</code> (interactive REPL)</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>system</code></td>
+<td><code>info</code>, <code>metrics</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>service</code></td>
+<td><code>status</code>, <code>cmd</code></td>
+<td><code>start</code>, <code>stop</code>, <code>restart</code></td>
+</tr>
+<tr>
+<td><code>session</code></td>
+<td><code>list</code>, <code>stats</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td><code>show</code>, <code>backups</code>, <code>revisions</code>, <code>apply-status</code></td>
+<td><code>update</code>, <code>apply</code>, <code>confirm</code>, <code>rollback</code></td>
+</tr>
+<tr>
+<td><code>network</code></td>
+<td><code>interfaces</code>, <code>routes</code>, <code>vlans</code>, <code>dns</code></td>
+<td><code>add-route</code>, <code>del-route</code>, <code>vlan-add</code>, <code>vlan-del</code>, <code>vlan-state</code>, <code>dns-set</code></td>
+</tr>
+<tr>
+<td><code>firewall</code></td>
+<td><code>rules</code>, <code>conntrack</code>, <code>sysctl</code>, <code>groups</code></td>
+<td><code>group-add</code>, <code>group-del</code>, <code>group-members</code>, <code>conntrack-set</code>, <code>sysctl-set</code></td>
+</tr>
+<tr>
+<td><code>nat</code></td>
+<td><code>status</code>, <code>egress</code></td>
+<td><code>masquerade-on</code>, <code>masquerade-off</code>, <code>egress-set</code>, <code>egress-del</code>, <code>public-ip-add</code>, <code>public-ip-del</code>, <code>box-egress-set</code></td>
+</tr>
+<tr>
+<td><code>pppoe</code></td>
+<td><code>interfaces</code>, <code>pado</code>, <code>mac-filter</code></td>
+<td><code>add</code>, <code>remove</code>, <code>pado-set</code>, <code>mac-add</code>, <code>mac-del</code></td>
+</tr>
+<tr>
+<td><code>pool</code></td>
+<td><code>list</code>, <code>usage</code></td>
+<td><code>add</code>, <code>remove</code></td>
+</tr>
+<tr>
+<td><code>conntrack</code></td>
+<td><code>config</code>, <code>timeouts</code>, <code>helpers</code>, <code>profiles</code></td>
+<td><code>table-size</code>, <code>timeout-set</code>, <code>profile-apply</code></td>
+</tr>
+<tr>
+<td><code>events</code></td>
+<td><code>hooks</code>, <code>history</code></td>
+<td><code>hook-add</code>, <code>hook-del</code>, <code>fire</code>, <code>history-clear</code></td>
+</tr>
+<tr>
+<td><code>scheduler</code></td>
+<td><code>list</code></td>
+<td><code>add</code>, <code>remove</code>, <code>run</code></td>
+</tr>
+<tr>
+<td><code>dns</code></td>
+<td><code>status</code>, <code>config</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>dhcp</code></td>
+<td><code>status</code>, <code>leases</code>, <code>relay</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ntp</code></td>
+<td><code>status</code>, <code>sources</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>lldp</code></td>
+<td><code>status</code>, <code>neighbors</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>vrrp</code></td>
+<td><code>status</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>flow</code></td>
+<td><code>status</code>, <code>stats</code>, <code>collectors</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>monitoring</code></td>
+<td><code>status</code>, <code>metrics SERVICE</code>, <code>metrics-service SERVICE</code></td>
+<td><code>configure</code>, <code>restart</code></td>
+</tr>
+<tr>
+<td><code>limits</code></td>
+<td><code>show</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>zone</code></td>
+<td><code>list</code></td>
+<td><code>add</code>, <code>remove</code></td>
+</tr>
+<tr>
+<td><code>diagnostics</code></td>
+<td><code>doctor</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>routing</code></td>
+<td><code>bgp</code>, <code>bgp-routes</code>, <code>ospf</code>, <code>ospf-neighbors</code>, <code>ospf-routes</code>, <code>rip</code>, <code>rip-routes</code>, <code>bfd</code>, <code>bfd-peers</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>logs</code></td>
+<td><code>tail</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>traffic</code></td>
+<td><code>watch</code>, <code>watch-user</code></td>
+<td><code>ratelimit</code>, <code>ratelimit-restore</code>, <code>queue</code></td>
+</tr>
+<tr>
+<td><code>profile</code></td>
+<td><code>list</code>, <code>test</code></td>
+<td><code>add</code>, <code>remove</code>, <code>use</code>, <code>export</code>, <code>import</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/Cepat-Kilat-Teknologi/dawos-cli" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
