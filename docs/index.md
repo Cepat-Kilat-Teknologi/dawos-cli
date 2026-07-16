@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo-banner.png" alt="DawOS CLI" width="480">
+</p>
+
 # DawOS CLI
 
 **Broadband management, simplified. Remote CLI for DawOS Agent.**
