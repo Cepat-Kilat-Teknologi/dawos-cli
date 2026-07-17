@@ -332,3 +332,47 @@ class TestGetText:
         )
         with pytest.raises(SystemExit):
             client_mod.get_text("/api/v1/export/sessions")
+
+
+class TestCheckTls:
+    """CLI-05: DAWOS_REQUIRE_HTTPS rejects plaintext HTTP URLs."""
+
+    def test_https_url_allowed(self):
+        """HTTPS URL passes regardless of DAWOS_REQUIRE_HTTPS."""
+        with patch.dict("os.environ", {"DAWOS_REQUIRE_HTTPS": "1"}):
+            client_mod._check_tls("https://secure-agent:8470")
+
+    def test_http_url_blocked_when_required(self):
+        """HTTP URL is rejected when DAWOS_REQUIRE_HTTPS=1."""
+        with patch.dict("os.environ", {"DAWOS_REQUIRE_HTTPS": "1"}):
+            with pytest.raises(SystemExit):
+                client_mod._check_tls("http://insecure-agent:8470")
+
+    def test_http_url_blocked_with_true(self):
+        """Accepts 'true' as a truthy value for the env var."""
+        with patch.dict("os.environ", {"DAWOS_REQUIRE_HTTPS": "true"}):
+            with pytest.raises(SystemExit):
+                client_mod._check_tls("http://agent:8470")
+
+    def test_http_url_blocked_with_yes(self):
+        """Accepts 'yes' as a truthy value for the env var."""
+        with patch.dict("os.environ", {"DAWOS_REQUIRE_HTTPS": "yes"}):
+            with pytest.raises(SystemExit):
+                client_mod._check_tls("http://agent:8470")
+
+    def test_http_url_allowed_when_not_set(self):
+        """HTTP URLs are allowed when DAWOS_REQUIRE_HTTPS is not set."""
+        with patch.dict("os.environ", {}, clear=True):
+            client_mod._check_tls("http://agent:8470")
+
+    def test_http_url_allowed_when_empty(self):
+        """HTTP URLs are allowed when DAWOS_REQUIRE_HTTPS is empty string."""
+        with patch.dict("os.environ", {"DAWOS_REQUIRE_HTTPS": ""}):
+            client_mod._check_tls("http://agent:8470")
+
+    def test_get_client_calls_check_tls(self):
+        """_get_client integrates _check_tls before creating the client."""
+        state.current.base_url = "http://agent:8470"
+        with patch.dict("os.environ", {"DAWOS_REQUIRE_HTTPS": "1"}):
+            with pytest.raises(SystemExit):
+                client_mod._get_client()

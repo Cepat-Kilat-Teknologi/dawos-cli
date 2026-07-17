@@ -8,6 +8,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-07-17
+
+### Security
+
+- **Profile key masking (Phase 3.7)** — `dawos profile list` and
+  `dawos profile show` now display API keys as `****...XXXX` (last 4 chars
+  only). Full keys are never printed to the terminal, preventing shoulder
+  surfing and accidental exposure in screen recordings or shared terminals.
+
+### Changed
+
+- **745 tests** — up from 728 (17 new tests covering profile key masking).
+  100% test coverage maintained.
+
 ## [0.4.0] - 2026-07-14
 
 ### Added
@@ -204,10 +218,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ---
 
+[0.4.1]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.3...v0.4.0
 [0.3.3]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.3
 [0.3.2]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.2
 [0.3.1]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.0
 [0.1.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.2.0
-[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.4.1...HEAD

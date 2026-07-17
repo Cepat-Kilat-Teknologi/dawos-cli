@@ -80,7 +80,10 @@ def _save(data: Dict[str, Any]) -> None:
     0600 (no world-readable window), then moved over the config file with
     ``os.replace`` so readers never observe a partial write.
     """
-    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    # Enforce 0700 on existing directories (mkdir won't change perms)
+    if sys.platform != "win32":
+        CONFIG_DIR.chmod(0o700)
     tmp = CONFIG_FILE.with_name(CONFIG_FILE.name + ".tmp")
     tmp.unlink(missing_ok=True)  # clear stale temp file from a failed write
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)

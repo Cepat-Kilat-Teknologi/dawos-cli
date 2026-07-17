@@ -22,13 +22,33 @@ def add(
     url: str = typer.Option(
         ..., "--url", "-u", help="Agent URL (e.g. http://192.168.1.1:8470)"
     ),
-    key: str = typer.Option(..., "--key", "-k", help="API key for X-API-Key header"),
+    key: Optional[str] = typer.Option(
+        None,
+        "--key",
+        "-k",
+        help="API key (prefer DAWOS_API_KEY env var or interactive prompt)",
+    ),
     display_name: str = typer.Option(
         "", "--name", "-n", help="Human-readable node name"
     ),
     check: bool = typer.Option(True, help="Verify connectivity before saving"),
 ) -> None:
-    """Add or update a connection profile."""
+    """Add or update a connection profile.
+
+    The API key is resolved in order: ``--key`` flag, ``DAWOS_API_KEY``
+    environment variable, interactive secure prompt.  Using the env var
+    or prompt avoids leaking the key in shell history (QA-160726 /
+    DAWOS-05).
+    """
+    # Resolve API key: --key flag → env var → secure prompt
+    if key is None:
+        key = os.environ.get("DAWOS_API_KEY", "")
+    if not key:
+        key = typer.prompt("API Key", hide_input=True)
+    if not key:
+        output.error("API key is required. Use --key, DAWOS_API_KEY env, or prompt.")
+        raise typer.Exit(1)
+
     if check:
         output.info(f"Checking connectivity to {url} ...")
         health = client.health(url)
@@ -68,7 +88,7 @@ def list_profiles() -> None:
 
     for name, prof in profiles.items():
         marker = "[green]●[/]" if name == active else " "
-        masked_key = prof.get("api_key", "")[:8] + "…" if prof.get("api_key") else "—"
+        masked_key = prof.get("api_key", "")[:4] + "…" if prof.get("api_key") else "—"
         t.add_row(
             marker, name, prof.get("url", ""), prof.get("display_name", ""), masked_key
         )
@@ -124,6 +144,17 @@ def test(
     output.kvtable(health, title="Health")
 
 
+def _mask_key(key: str) -> str:
+    """Mask an API key, showing only the first 4 and last 3 characters.
+
+    Short keys (≤ 8 chars) are fully replaced with ``****`` to avoid
+    leaking enough material for brute-force recovery (DAWOS-15).
+    """
+    if len(key) <= 8:
+        return "****"
+    return f"{key[:4]}****{key[-3:]}"
+
+
 @app.command("export")
 def export_profiles(
     name: Optional[str] = typer.Option(
@@ -131,6 +162,11 @@ def export_profiles(
     ),
     file: Optional[Path] = typer.Option(
         None, "--file", "-f", help="Write to file instead of stdout."
+    ),
+    mask: bool = typer.Option(
+        False,
+        "--mask",
+        help="Replace API keys with masked placeholders (DAWOS-15).",
     ),
 ) -> None:
     """Export profiles to JSON (for backup or sharing)."""
@@ -142,11 +178,17 @@ def export_profiles(
 
     count = len(data["profiles"])
 
-    # Warn that exported data contains plaintext API keys.
-    output.warning(
-        f"Export contains [bold]{count}[/] API key(s) in plaintext. "
-        "Store the output securely and do not commit it to version control."
-    )
+    if mask:
+        for prof in data["profiles"].values():
+            if prof.get("api_key"):
+                prof["api_key"] = _mask_key(prof["api_key"])
+        output.info(f"API keys masked in export ({count} profile(s)).")
+    else:
+        # Warn that exported data contains plaintext API keys.
+        output.warning(
+            f"Export contains [bold]{count}[/] API key(s) in plaintext. "
+            "Store the output securely and do not commit it to version control."
+        )
 
     payload = json.dumps(data, indent=2) + "\n"
     if file:

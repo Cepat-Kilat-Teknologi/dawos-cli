@@ -133,6 +133,13 @@ class TestSaveAtomicPermissions:
     """DC-M07: config is written atomically and never world-readable."""
 
     @pytest.mark.skipif(sys.platform == "win32", reason="POSIX permissions")
+    def test_config_dir_mode_is_0700(self, tmp_config):
+        """CLI-03: config directory must be 0700 (owner-only)."""
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
+        mode = stat.S_IMODE(config.CONFIG_DIR.stat().st_mode)
+        assert mode == 0o700
+
+    @pytest.mark.skipif(sys.platform == "win32", reason="POSIX permissions")
     def test_saved_file_mode_is_0600(self, tmp_config):
         config.add_profile("bng1", "http://10.0.0.1:8470", "key1")
         mode = stat.S_IMODE(config.CONFIG_FILE.stat().st_mode)

@@ -9,6 +9,7 @@ Wraps httpx with:
 
 from __future__ import annotations
 
+import os
 from typing import Any, Dict, Generator, Optional
 
 import httpx
@@ -22,6 +23,23 @@ console = Console(stderr=True)
 _client: Optional[httpx.Client] = None
 
 
+def _check_tls(url: str) -> None:
+    """Reject plaintext HTTP URLs when DAWOS_REQUIRE_HTTPS is set.
+
+    Operators can set ``DAWOS_REQUIRE_HTTPS=1`` to enforce encrypted transport
+    for all API communication (QA-160726 / CLI-05).
+    """
+    if os.environ.get("DAWOS_REQUIRE_HTTPS", "").strip() in ("1", "true", "yes"):
+        if url.startswith("http://"):
+            console.print(
+                "[bold red]Error:[/] DAWOS_REQUIRE_HTTPS is enabled but the "
+                f"profile URL uses plaintext HTTP: [cyan]{url}[/]\n"
+                "Change the profile URL to [bold]https://...[/] or unset "
+                "DAWOS_REQUIRE_HTTPS to allow insecure connections."
+            )
+            raise SystemExit(1)
+
+
 def _get_client() -> httpx.Client:
     """Return (or create) the httpx client from current state."""
     global _client  # pylint: disable=global-statement
@@ -30,9 +48,12 @@ def _get_client() -> httpx.Client:
         if not s.base_url:
             console.print(
                 "[bold red]Error:[/] No profile configured.\n"
-                "Run [bold]dawos profile add <name> --url <url> --key <key>[/] first."
+                "Run [bold]dawos profile add <name> --url <url>[/] first.\n"
+                "The API key can be set via [bold]DAWOS_API_KEY[/] env var or "
+                "interactive prompt."
             )
             raise SystemExit(1)
+        _check_tls(s.base_url)
         _client = httpx.Client(
             base_url=s.base_url,
             headers={"X-API-Key": s.api_key},

@@ -342,6 +342,71 @@ class TestProfileCommands:
         result = cli("profile", "list")
         assert result.exit_code == 0
 
+    def test_list_masks_api_key_to_4_chars(self, cli, mock_client, tmp_config):
+        """API key preview must show at most 4 characters (QA-160726)."""
+        from dawos_cli import config
+
+        config.add_profile("bng1", "http://10.0.0.1:8470", "ABCDEFGHIJKLMNOP")
+        result = cli("profile", "list")
+        assert result.exit_code == 0
+        # Only first 4 chars visible, NOT 8
+        assert "ABCD" in result.output
+        assert "ABCDEFGH" not in result.output
+
+    def test_add_key_from_env_var(self, cli, mock_client, tmp_config, monkeypatch):
+        """DAWOS_API_KEY env var provides the key when --key is omitted."""
+        monkeypatch.setenv("DAWOS_API_KEY", "env-secret-key")
+        result = cli(
+            "profile", "add", "envnode", "--url", "http://10.0.0.1:8470", "--no-check"
+        )
+        assert result.exit_code == 0
+
+        from dawos_cli import config
+
+        prof = config.get_profile("envnode")
+        assert prof["api_key"] == "env-secret-key"
+
+    def test_add_key_from_prompt(self, cli, mock_client, tmp_config, monkeypatch):
+        """Interactive prompt provides the key when --key and env are absent."""
+        monkeypatch.delenv("DAWOS_API_KEY", raising=False)
+        result = cli(
+            "profile",
+            "add",
+            "promptnode",
+            "--url",
+            "http://10.0.0.1:8470",
+            "--no-check",
+            input="prompted-secret\n",
+        )
+        assert result.exit_code == 0
+
+        from dawos_cli import config
+
+        prof = config.get_profile("promptnode")
+        assert prof["api_key"] == "prompted-secret"
+
+    def test_add_key_flag_takes_precedence(
+        self, cli, mock_client, tmp_config, monkeypatch
+    ):
+        """--key flag overrides DAWOS_API_KEY env var."""
+        monkeypatch.setenv("DAWOS_API_KEY", "env-key")
+        result = cli(
+            "profile",
+            "add",
+            "flagnode",
+            "--url",
+            "http://10.0.0.1:8470",
+            "--key",
+            "flag-key",
+            "--no-check",
+        )
+        assert result.exit_code == 0
+
+        from dawos_cli import config
+
+        prof = config.get_profile("flagnode")
+        assert prof["api_key"] == "flag-key"
+
     def test_remove_exists(self, cli, mock_client, tmp_config):
         from dawos_cli import config
 

@@ -303,6 +303,59 @@ class TestProfileExportWarning:
 
 
 # ═══════════════════════════════════════════════════════════════════
+# DAWOS-15: --mask flag on profile export
+# ═══════════════════════════════════════════════════════════════════
+
+
+class TestProfileExportMask:
+    """DAWOS-15: --mask flag replaces API keys with masked placeholders."""
+
+    def test_mask_long_key(self, cli, tmp_config, mock_client):
+        """Long key (>8 chars) shows first 4 + **** + last 3."""
+        config.add_profile(
+            "bng1", "http://10.0.0.1:8470", "TFYaNsVgkUooIHNX35wnvQrpM2rp"
+        )
+        result = cli("profile", "export", "--mask")
+        assert result.exit_code == 0
+        assert "TFYa****2rp" in result.output
+        assert "TFYaNsVgkUooIHNX35wnvQrpM2rp" not in result.output
+
+    def test_mask_short_key(self, cli, tmp_config, mock_client):
+        """Short key (≤8 chars) is fully replaced with ****."""
+        config.add_profile("bng1", "http://10.0.0.1:8470", "shortkey")
+        result = cli("profile", "export", "--mask")
+        assert result.exit_code == 0
+        assert "****" in result.output
+        assert "shortkey" not in result.output
+
+    def test_mask_no_plaintext_warning(self, cli, tmp_config, mock_client):
+        """--mask suppresses the plaintext key warning."""
+        config.add_profile("bng1", "http://10.0.0.1:8470", "key123456")
+        result = cli("profile", "export", "--mask")
+        assert result.exit_code == 0
+        assert "plaintext" not in result.output.lower()
+
+    def test_mask_to_file(self, cli, tmp_config, mock_client, tmp_path):
+        """--mask works with --file output."""
+        config.add_profile(
+            "bng1", "http://10.0.0.1:8470", "TFYaNsVgkUooIHNX35wnvQrpM2rp"
+        )
+        outfile = tmp_path / "masked.json"
+        result = cli("profile", "export", "--mask", "--file", str(outfile))
+        assert result.exit_code == 0
+        content = outfile.read_text(encoding="utf-8")
+        assert "TFYa****2rp" in content
+        assert "TFYaNsVgkUooIHNX35wnvQrpM2rp" not in content
+
+    def test_no_mask_by_default(self, cli, tmp_config, mock_client):
+        """Without --mask, full keys are exported (backward compat)."""
+        config.add_profile("bng1", "http://10.0.0.1:8470", "full-key-here-abc")
+        result = cli("profile", "export")
+        assert result.exit_code == 0
+        assert "full-key-here-abc" in result.output
+
+
+# ═══════════════════════════════════════════════════════════════════
 # DC-M06: Profile structure validation on import
 # ═══════════════════════════════════════════════════════════════════
 
