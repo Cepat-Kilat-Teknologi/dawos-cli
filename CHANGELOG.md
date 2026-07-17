@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-07-17
+
+### Fixed
+
+- **Version display** — `dawos version` and `dawos doctor` now report the
+  correct installed version. Previously `__version__` was hardcoded and could
+  drift from the package metadata after a release. Now reads from
+  `importlib.metadata.version()` like dawos-agent does.
+
 ## [0.4.1] - 2026-07-17
 
 ### Security
@@ -226,4 +235,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 [0.3.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.3.0
 [0.1.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.1.0
 [0.2.0]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/releases/tag/v0.2.0
-[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.4.1...HEAD
+[0.4.2]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.4.1...v0.4.2
+[Unreleased]: https://github.com/Cepat-Kilat-Teknologi/dawos-cli/compare/v0.4.2...HEAD

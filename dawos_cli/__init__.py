@@ -1,3 +1,5 @@
 """dawos-cli — remote CLI client for dawos-agent."""
 
-__version__ = "0.4.0"
+from importlib.metadata import version
+
+__version__ = version("dawos-cli")
